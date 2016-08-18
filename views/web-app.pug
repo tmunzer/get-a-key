@@ -1,0 +1,112 @@
+doctype html5
+html
+    head
+        title= title
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        script(src="/i18n/web-app/en.js")
+        script(src="/i18n/web-app/fr.js")
+        link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
+        link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
+        link(rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css")
+        link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
+        link(rel='stylesheet' href='/css/ah-tm.tags.css')
+        link(rel='stylesheet' href='/css/ah-tm.cards.css')
+        link(rel='stylesheet' href='/css/ah-tm.md-table.css')
+        link(rel='stylesheet' href='/css/ah-tm.md-list.css')
+        link(rel='stylesheet' href='/css/ah-tm.header.css')
+        link(rel='stylesheet' href='/css/ah-tm.label.css')
+        link(rel='stylesheet' href='/css/ah-tm.datetime.css')
+        script(src="/bower_components/angular/angular.min.js")
+        script(src="/bower_components/angular-aria/angular-aria.js")
+        script(src="/bower_components/angular-animate/angular-animate.min.js")
+        script(src="/bower_components/angular-material/angular-material.js")
+        script(src="/bower_components/angular-messages/angular-messages.js")
+        script(src="/bower_components/angular-route/angular-route.min.js")
+        script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
+        script(src="/bower_components/angular-translate/angular-translate.min.js")
+        script(src="/web-app/app.js")
+        script(src="/web-app/ng-sanitize.js")
+    body(ng-app="gak" ng-controller="AppCtrl").icons-docs
+
+        header.md-page-header
+            div.header
+            md-toolbar.header.fixed(layout='row')
+                h1.logo.md-toolbar-tools
+                    img(src="/images/logo.png" alt="Aerohive")
+                span(flex)
+                md-menu
+                    md-button(aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"language" | translate}}
+                        md-icon(class="material-icons" aria-label="language") language
+                    md-menu-content
+                        md-menu-item
+                            md-button(ng-click="translate('en')")
+                                span(style="display: inline-flex; margin-right: 5px;")
+                                    div.iti-flag.gb
+                                span English
+                        md-menu-item
+                            md-button(ng-click="translate('fr')")
+                                span(style="display: inline-flex; margin-right: 5px;")
+                                    div.iti-flag.fr
+                                span Francais
+                md-menu
+                    md-button(aria-label="menu" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"menu" | translate}}
+                        md-icon(class="material-icons" aria-label="menu") more_vert
+                    md-menu-content
+                        md-menu-item
+                            md-button(ng-click="myAccount()")
+                                md-icon(md-menu-align-target) info
+                                span(translate="details")
+                        md-menu-item
+                            md-button(href="/login/logout/")
+                                md-icon(md-menu-align-target) exit_to_app
+                                span(translate="logout")
+            
+        div(id="main")
+            md-content(md-whiteframe="7" style="margin: 50px" layout="column")
+                md-toolbar.md-hue-2
+                    div.md-toolbar-tools 
+                        h2(translate="title")
+                div(ng-show="!isWorking" style="background-color: rgb(76,175,80); height: 5px; width: 100%")
+                md-progress-linear(ng-show="isWorking" md-mode="indeterminate" class="md-accent")
+                md-content(style="padding: 40px")                
+                    md-list.flex
+                        md-subheader.md-no-sticky 
+                            h2(translate="header")
+                        md-divider
+                        md-list-item.md-3-line 
+                            i.material-icons.md-avatar-icon business
+                            div.md-list-item-text(layout="column")                        
+                                span(translate="one")
+                        md-divider
+                        md-list-item.md-3-line       
+                            i.material-icons.md-avatar-icon fingerprint
+                            div.md-list-item-text(layout="column")
+                                span(translate="two")
+                        md-divider
+                        md-list-item.md-3-line       
+                            i.material-icons.md-avatar-icon  block
+                            div.md-list-item-text(layout="column")
+                                span(translate="three")
+                        md-divider
+                        md-list-item.md-3-line     
+                            i.material-icons.md-avatar-icon  recent_actors  
+                            div.md-list-item-text(layout="column")
+                                span(translate="four")
+                        md-divider
+                        md-list-item.md-3-line       
+                            i.material-icons.md-avatar-icon  vpn_key
+                            div.md-list-item-text(layout="column")
+                                span(translate="five")
+                        md-divider
+                        md-list-item.md-3-line       
+                            i.material-icons.md-avatar-icon  cloud_done
+                            div.md-list-item-text(layout="column")
+                                span(translate="six")
+                        md-divider
+                    br                
+                    md-content(layout="column" layout-gt-sm="row")
+                        md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getMyKey()" translate="get" aria-label="get") 
+                        md-button.md-primary.md-raised(ng-disabled="isWorking" translate="send" aria-label="send") 
+                        md-button.md-primary(ng-disabled="isWorking" translate="revoke" aria-label="revoke") 

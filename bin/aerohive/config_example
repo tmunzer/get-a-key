@@ -1,0 +1,5 @@
+//move this file to bin/aerohive/config
+
+module.exports.redirectUrl = "https://<your_server_IP_or_FQDN>/oauth/reg";
+module.exports.secret = "put_here_your_secret";
+module.exports.clientId = "put_here_your_clientID";

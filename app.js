@@ -10,7 +10,7 @@ var app = express();
 
 // Passport 
 var passport = require('passport');
-require('./passport/config.js');
+require("./passport/config.js");
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -27,6 +27,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static('./bower_components'));
+
+
 
 
 

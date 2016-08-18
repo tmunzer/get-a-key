@@ -2,10 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 function validUser(req, res, next) {
-    //if (!req.user) {
-    //  res.redirect('http://get-a-key.ah-lab.fr:3000/adfs/');
-    //} else next();
-    next();
+    if (!req.user) {
+      res.redirect('/adfs/');
+    } else next();
+    
   }
 
 router.get('/', validUser, function(req, res, next) {

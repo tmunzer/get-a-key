@@ -81,6 +81,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
         if (request) request.abort();
         request = MyKeyService.getMyKey();
         request.then(function (promise) {
+            $scope.isWorking = false;
             if (promise && promise.error) {
                 console.log(promise);
             } else {

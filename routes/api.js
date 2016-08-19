@@ -21,10 +21,10 @@ function createCredential(username, groupId, callback) {
         policy: "PERSONAL"
     };
     console.log(hmCredentialsRequestVo);
-        API.identity.credentials.createCredential(req.session.xapi, null, null, hmCredentialsRequestVo, function (err, result) {
-            if (err) callback(err, null);
-            else callback(null, result);
-        })
+    API.identity.credentials.createCredential(req.session.xapi, null, null, hmCredentialsRequestVo, function (err, result) {
+        if (err) callback(err, null);
+        else callback(null, result);
+    })
     
 };
 function deleteCredential(id, callback) {

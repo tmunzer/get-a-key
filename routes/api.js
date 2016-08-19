@@ -4,7 +4,7 @@ var API = require("./../bin/aerohive/api/main");
 var groupId = require("./../config.js").groupId;
 /* GET users listing. */
 
-function getCredentials(username, callback) {
+function getCredentials(req, username, callback) {
     var credentials = [];
 
     //module.exports.getCredentials = function (xapi, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
@@ -14,7 +14,7 @@ function getCredentials(username, callback) {
     });
 
 };
-function createCredential(username, groupId, callback) {
+function createCredential(req, username, groupId, callback) {
     var hmCredentialsRequestVo = {
         email: username,
         groupId: groupId,
@@ -28,7 +28,7 @@ function createCredential(username, groupId, callback) {
     })
     
 };
-function deleteCredential(id, callback) {
+function deleteCredential(req, id, callback) {
 
         API.identity.credentials.deleteCredential(req.session.xapi, null, null, id, function (err, result) {
             if (err) callback(err, null);
@@ -53,14 +53,14 @@ function deliverCredential(req, res, next) {
 router.get("/myKey", function (req, res, next) {
     if (req.session.hasOwnProperty('passport')) {
         var username = req.session.passport.user.upn;
-        createCredential(username, groupId, function (err, result) {
+        createCredential(req, username, groupId, function (err, result) {
             console.log(result);
             if (err && err.code == "registration.service.item.already.exist") {
-                getCredentials(username, function (err, result) {
+                getCredentials(req, username, function (err, result) {
                     if (err) res.status(400).json({ error: err });
-                    else deleteCredential(id, function (err, result) {
+                    else deleteCredential(req, id, function (err, result) {
                         if (err) res.status(400).json({ error: err });
-                        else createCredential(username, gorupId, next, function (err, result) {
+                        else createCredential(req, username, gorupId, next, function (err, result) {
                             if (err) res.status(400).json({ error: err });
                             else res.json(result);
                         })
@@ -76,9 +76,9 @@ router.get("/myKey", function (req, res, next) {
 router.delete("/myKey", function (req, res, next) {
     var username = req.session.passport.user;
     if (req.session.xapi) {
-        getCredentials(username, function (err, result) {
+        getCredentials(req, username, function (err, result) {
             if (err) res.status(400).json({ error: err });
-            else deleteCredential(id, function (err, result) {
+            else deleteCredential(req, id, function (err, result) {
                 if (err) res.status(400).json({ error: err });
                 else res.json({});
             });
@@ -90,11 +90,11 @@ router.delete("/myKey", function (req, res, next) {
 router.post("/myKey", function (req, res, next) {
     var username = req.session.passport.user;
     if (req.session.xapi) {
-        getCredentials(username, function (err, result) {
+        getCredentials(req, username, function (err, result) {
             if (err) res.status(400).json({ error: err });
                 
                 //TODO
-            else deliverCredential(id, function (err, result) {
+            else deliverCredential(req, id, function (err, result) {
                 if (err) res.status(400).json({ error: err });
                 else res.json({});
             });

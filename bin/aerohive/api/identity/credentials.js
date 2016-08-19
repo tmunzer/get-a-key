@@ -16,6 +16,8 @@ module.exports.getCredentials = function (xapi, credentialType, userGroup, membe
     if (page && page!="") path += '&page=' + page;
     if (pageSize && pageSize!="") path += '&pageSize=' + pageSize;
     api.GET(xapi, path, function (err, result) {
+        console.log("Error:", err);
+        console.log("Result:", result);
         if (err) {
             callback(err, null);
         } else if (result) {

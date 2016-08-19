@@ -51,6 +51,7 @@ function deliverCredential(req, res, next) {
 
 router.get("/myKey", function (req, res, next) {
     var groupId = 5145371753562;
+    console.log(req.session);
     if (req.session.hasOwnProperty('passport')) {
         var username = req.session.passport.user;
         createCredential(username, gorupId, next, function (err, result) {

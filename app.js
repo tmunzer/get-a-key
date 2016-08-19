@@ -10,7 +10,6 @@ var app = express();
 
 // Passport 
 var passport = require('passport');
-require("./passport/config.js");
 app.use(passport.initialize());
 app.use(passport.session());
 

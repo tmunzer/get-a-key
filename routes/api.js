@@ -59,6 +59,7 @@ router.get("/myKey", function (req, res, next) {
             console.log(result);
             if (err && err.code == "registration.service.item.already.exist") {
                 getCredentials(req, username, function (err, account) {
+                    console.log(account);
                     if (err) res.status(400).json({ error: err });
                     else deleteCredential(req, account, function (err, result) {
                         if (err) res.status(400).json({ error: err });

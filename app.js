@@ -17,17 +17,22 @@ var SamlStrategy = require('passport-saml').Strategy;
 
 var adfsOptions = require("./passport/config.js").adfsOptions;
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
+  console.log("============ serializeUser");
+  console.log(user);
+  console.log("============ serializeUser Done");
   done(null, user);
 });
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
+    console.log("============ deserializeUser");
+  console.log(user);
+  console.log("============ deserializeUser Done");
   done(null, user);
 });
 
 passport.use(new SamlStrategy(
   adfsOptions,
   function (profile, done) {
-    console.log(profile);
     return done(null,
       {
         upn: profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn'],
@@ -63,7 +68,7 @@ app.use('/web-app', webApp);
 var api = require('./routes/api');
 app.use('/api', api);
 app.get("*", function (req, res) {
-  res.redirect("/web-app");
+  res.redirect("/web-app/");
 })
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

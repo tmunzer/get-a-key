@@ -5,7 +5,7 @@ function validUser(req, res, next) {
     console.log("=====================");
     console.log(req);
     if (!req.user) {
-      res.redirect('/adfs/');
+      res.redirect('/adfs/login/');
     } else next();
     
   }

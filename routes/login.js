@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET login page. */
 
-  router.get('/',
+  router.get('/login',
     passport.authenticate('saml', { failureRedirect: '/', failureFlash: true })
 );
   
@@ -11,6 +11,7 @@ var router = express.Router();
 router.post('/postResponse', 
     passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
     function (req, res) {
+      console.log(req.session);
       res.redirect('/web-app/');
     }
 );

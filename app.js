@@ -26,7 +26,8 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new SamlStrategy(
   adfsOptions,
-  function(profile, done) {
+  function (profile, done) {
+    console.log(profile);
     return done(null,
       {
         upn: profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn'],

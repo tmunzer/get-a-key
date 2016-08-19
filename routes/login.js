@@ -4,16 +4,13 @@ var router = express.Router();
 /* GET login page. */
 
   router.get('/',
-    passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
-    function(req, res) {
-      res.redirect('/web-app/');
-    }
+    passport.authenticate('saml', { failureRedirect: '/', failureFlash: true })
 );
   
 /* Handle Login POST */
 router.post('/postResponse', 
     passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
-    function(req, res) {
+    function (req, res) {
       res.redirect('/web-app/');
     }
 );

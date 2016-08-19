@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 function validUser(req, res, next) {
+    console.log("=====================");
+    console.log(req);
     if (!req.user) {
       res.redirect('/adfs/');
     } else next();

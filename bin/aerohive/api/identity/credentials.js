@@ -18,13 +18,7 @@ module.exports.getCredentials = function (xapi, credentialType, userGroup, membe
     api.GET(xapi, path, function (err, result) {
         console.log("Error:", err);
         console.log("Result:", result);
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
+        callback(err, result);        
     })
 };
 

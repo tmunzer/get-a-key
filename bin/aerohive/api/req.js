@@ -105,8 +105,6 @@ function httpRequest(options, callback, body){
             }
             switch (result.result.status) {
                 case 200:
-                    console.log("=====RESULT DATA");
-                    console.log(result.data);
                     callback(null, result.data);
                     break;
                 default:

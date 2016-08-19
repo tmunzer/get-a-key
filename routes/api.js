@@ -10,7 +10,7 @@ function getCredentials(req, username, callback) {
     //module.exports.getCredentials = function (xapi, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
     API.identity.credentials.getCredentials(req.session.xapi, null, null, null, null, null, username, null, null, null, null, null, null, function (err, result) {
         if (err) callback(err, null);
-        else callback(null, credentials);
+        else callback(null, result);
     });
 
 };

@@ -77,11 +77,11 @@ router.get("/myKey", function (req, res, next) {
 
 
 router.delete("/myKey", function (req, res, next) {
-    var username = req.session.passport.user;
+    var username = req.session.passport.user.upn;
     if (req.session.xapi) {
-        getCredentials(req, username, function (err, result) {
+        getCredentials(req, username, function (err, account) {
             if (err) res.status(400).json({ error: err });
-            else deleteCredential(req, id, function (err, result) {
+            else deleteCredential(req, account, function (err, result) {
                 if (err) res.status(400).json({ error: err });
                 else res.json({});
             });

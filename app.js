@@ -19,32 +19,6 @@ app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
 
-
-var SamlStrategy = require('passport-saml').Strategy;
-
-var adfsOptions = require("./passport/config.js").adfsOptions;
-
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.use(new SamlStrategy(
-  adfsOptions,
-  function (profile, done) {
-    return done(null,
-      {
-        upn: profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn'],
-        // e.g. if you added a Group claim
-        group: profile['http://schemas.xmlsoap.org/claims/Group']
-    });
-  }
-));
-
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

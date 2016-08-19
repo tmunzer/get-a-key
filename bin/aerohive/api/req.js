@@ -1,5 +1,5 @@
 var https = require('https');
-var api = require("./../config");
+var api = require("./../../../config.js").xapi;
 
 
 module.exports.GET = function (xapi, path, callback) {

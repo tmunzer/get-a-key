@@ -51,8 +51,8 @@ function deliverCredential(req, res, next) {
 
 router.get("/myKey", function (req, res, next) {
     var groupId = 5145371753562;
-    if (req.session.hasOwnProperty('user')) {
-        var username = req.session.user;
+    if (req.session.hasOwnProperty('passport')) {
+        var username = req.session.passport.user;
         createCredential(username, gorupId, next, function (err, result) {
             if (err && err.code == "registration.service.item.already.exist") {
                 getCredentials(username, function (err, result) {
@@ -72,8 +72,8 @@ router.get("/myKey", function (req, res, next) {
 });
 
 
-router.delete("/", function (req, res, next) {
-    var username = req.session.user;
+router.delete("/myKey", function (req, res, next) {
+    var username = req.session.passport.user;
     var groupId = 5145371753562;
     if (req.session.xapi) {
         getCredentials(username, function (err, result) {
@@ -87,8 +87,8 @@ router.delete("/", function (req, res, next) {
 })
 
 
-router.post("/", function (req, res, next) {
-       var username = req.session.user;
+router.post("/myKey", function (req, res, next) {
+    var username = req.session.passport.user;
     var groupId = 5145371753562;
     if (req.session.xapi) {
         getCredentials(username, function (err, result) {

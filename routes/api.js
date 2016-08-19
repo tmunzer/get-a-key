@@ -55,7 +55,7 @@ router.get("/myKey", function (req, res, next) {
     if (req.session.hasOwnProperty('passport')) {
         var username = req.session.passport.user.upn;
         console.log(username);
-        createCredential(username, gorupId, next, function (err, result) {
+        createCredential(username, gorupId, function (err, result) {
             console.log(result);
             if (err && err.code == "registration.service.item.already.exist") {
                 getCredentials(username, function (err, result) {

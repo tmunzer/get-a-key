@@ -63,7 +63,7 @@ router.get("/myKey", function (req, res, next) {
                     if (err) res.status(400).json({ error: err });
                     else deleteCredential(req, account, function (err, result) {
                         if (err) res.status(400).json({ error: err });
-                        else createCredential(req, username, gorupId, next, function (err, result) {
+                        else createCredential(req, username, gorupId, function (err, result) {
                             if (err) res.status(400).json({ error: err });
                             else res.json(result);
                         })

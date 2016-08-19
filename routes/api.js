@@ -14,7 +14,8 @@ function getCredentials(username, callback) {
 
 };
 function createCredential(username, groupId, callback) {
-
+    console.log("create");
+    console.log(username, groupId);
     var hmCredentialsRequestVo = {
         email: username,
         groupId: groupId,

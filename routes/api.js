@@ -28,6 +28,7 @@ function createCredential(req, username, groupId, callback) {
     
 };
 function deleteCredential(req, account, callback) {
+    console.log(account);
     var id = account[0].id;
     
         API.identity.credentials.deleteCredential(req.session.xapi, null, null, id, function (err, result) {

@@ -90,6 +90,17 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
         })
     }    
 
+    $scope.revoke = function () {
+        $scope.isWorking = true;
+        if (request) request.abort();
+        request = MyKeyService.removeMyKey();
+        request.then(function (promise) {
+            $scope.isWorking = false;
+            if (promise && promise.error) console.log(promise);
+            else console.log(promise);
+        })
+    }
+
 $translate('errorTitle').then(function (errorTitle) {
     $scope.errorTitle = errorTitle;
   }, function (translationId) {
@@ -174,7 +185,7 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
         return promise; 
     }
 
-    function removeMyKey(ids) {
+    function removeMyKey() {
 
         var canceller = $q.defer();
         var request = $http({

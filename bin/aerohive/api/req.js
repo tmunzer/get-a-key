@@ -13,9 +13,9 @@ module.exports.GET = function (xapi, path, callback) {
         path: path,
         method: "GET",
         headers: {
-            'X-AH-API-CLIENT-SECRET': ApiConf.secret,
-            'X-AH-API-CLIENT-ID': ApiConf.clientId,
-            'X-AH-API-CLIENT-REDIRECT-URI': ApiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': apiConf.secret,
+            'X-AH-API-CLIENT-ID': apiConf.clientId,
+            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken
         }
     };
@@ -33,9 +33,9 @@ module.exports.POST = function (xapi, path, data, callback) {
         path: path,
         method: "POST",
         headers: {
-            'X-AH-API-CLIENT-SECRET': ApiConf.secret,
-            'X-AH-API-CLIENT-ID': ApiConf.clientId,
-            'X-AH-API-CLIENT-REDIRECT-URI': ApiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': apiConf.secret,
+            'X-AH-API-CLIENT-ID': apiConf.clientId,
+            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken,
             'Content-Type': 'application/json'
         }
@@ -55,9 +55,9 @@ module.exports.PUT = function (xapi, path, callback) {
         path: path,
         method: "PUT",
         headers: {
-            'X-AH-API-CLIENT-SECRET': ApiConf.secret,
-            'X-AH-API-CLIENT-ID': ApiConf.clientId,
-            'X-AH-API-CLIENT-REDIRECT-URI': ApiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': apiConf.secret,
+            'X-AH-API-CLIENT-ID': apiConf.clientId,
+            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken,
             'Content-Type': 'application/json'
         }
@@ -74,9 +74,9 @@ module.exports.DELETE = function (xapi, path, callback) {
         path: path,
         method: "DELETE",
         headers: {
-            'X-AH-API-CLIENT-SECRET': ApiConf.secret,
-            'X-AH-API-CLIENT-ID': ApiConf.clientId,
-            'X-AH-API-CLIENT-REDIRECT-URI': ApiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': apiConf.secret,
+            'X-AH-API-CLIENT-ID': apiConf.clientId,
+            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken
         }
     };

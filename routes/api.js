@@ -27,19 +27,14 @@ function createCredential(req, username, groupId, callback) {
     })
     
 };
-function deleteCredential(req, ids, callback) {
-
-    for (var i = 0; i < ids.length; i++){
+function deleteCredential(req, account, callback) {
+    var id = account[0].id;
+    
         API.identity.credentials.deleteCredential(req.session.xapi, null, null, id, function (err, result) {
-            if (err) {
-                i = ids.length;
-                callback(err, null);
-            }
-            else {
-                if (i == ids.length) callback(null, result);
-            }
+            if (err) callback(err, null);
+            else callback(null, result);
         })        
-    }
+    
 };
 
 function deliverCredential(req, res, next) {
@@ -62,9 +57,9 @@ router.get("/myKey", function (req, res, next) {
         createCredential(req, username, groupId, function (err, result) {
             console.log(result);
             if (err && err.code == "registration.service.item.already.exist") {
-                getCredentials(req, username, function (err, ids) {
+                getCredentials(req, username, function (err, account) {
                     if (err) res.status(400).json({ error: err });
-                    else deleteCredential(req, ids, function (err, result) {
+                    else deleteCredential(req, account, function (err, result) {
                         if (err) res.status(400).json({ error: err });
                         else createCredential(req, username, gorupId, next, function (err, result) {
                             if (err) res.status(400).json({ error: err });

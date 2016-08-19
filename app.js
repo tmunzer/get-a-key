@@ -9,9 +9,33 @@ var bodyParser = require('body-parser');
 var app = express();
 
 // Passport 
-var passport = require('passport');
+global.passport = require('passport');
 app.use(passport.initialize());
 app.use(passport.session());
+
+var SamlStrategy = require('passport-saml').Strategy;
+
+var adfsOptions = require("./passport/config.js").adfsOptions;
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.use(new SamlStrategy(
+  adfsOptions,
+  function(profile, done) {
+    return done(null,
+      {
+        upn: profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn'],
+        // e.g. if you added a Group claim
+        group: profile['http://schemas.xmlsoap.org/claims/Group']
+    });
+  }
+));
+
 
 
 // view engine setup

@@ -10,9 +10,7 @@ function validUser(req, res, next) {
     
   }
 
-router.get('/', function (req, res, next) {
-        console.log("=====================");
-    console.log(req);
+router.get('/', validUser, function (req, res, next) {
     res.render('web-app', {
         title: 'Get a Key!',                    
     });            

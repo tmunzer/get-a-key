@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var API = require("./../bin/aerohive/api/main");
+var groupId = require("./../config.js").groupId;
 /* GET users listing. */
 
 function getCredentials(username, callback) {
@@ -49,7 +50,6 @@ function deliverCredential(req, res, next) {
 };
 
 router.get("/myKey", function (req, res, next) {
-    var groupId = 5145371753562;
     if (req.session.hasOwnProperty('passport')) {
         var username = req.session.passport.user.upn;
         createCredential(username, groupId, function (err, result) {
@@ -74,7 +74,6 @@ router.get("/myKey", function (req, res, next) {
 
 router.delete("/myKey", function (req, res, next) {
     var username = req.session.passport.user;
-    var groupId = 5145371753562;
     if (req.session.xapi) {
         getCredentials(username, function (err, result) {
             if (err) res.status(400).json({ error: err });
@@ -89,7 +88,6 @@ router.delete("/myKey", function (req, res, next) {
 
 router.post("/myKey", function (req, res, next) {
     var username = req.session.passport.user;
-    var groupId = 5145371753562;
     if (req.session.xapi) {
         getCredentials(username, function (err, result) {
             if (err) res.status(400).json({ error: err });

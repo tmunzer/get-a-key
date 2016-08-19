@@ -27,14 +27,14 @@ module.exports.getCredentials = function (xapi, credentialType, userGroup, membe
 };
 
 module.exports.createCredential = function (xapi, memberOf, adUser, hmCredentialsRequestVo, callback) {
-    console.log("I'm here!!!");
     var path = "/xapi/v1/identity/credentials?ownerId=" + xapi.ownerId;
     if (memberOf && memberOf!="") path += '&memberOf=' + memberOf;
     if (adUser && adUser!="") path += '&adUser=' + adUser;
-    console.log(path);
     for (var key in hmCredentialsRequestVo) {
         if (hmCredentialsRequestVo[key] === '') delete hmCredentialsRequestVo[key];
     }
+    console.log(xapi);
+    console.log("test");
     api.POST(xapi, path, hmCredentialsRequestVo, function (err, result) {
         if (err) {
             callback(err, null);

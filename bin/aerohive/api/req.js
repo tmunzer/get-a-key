@@ -24,6 +24,7 @@ module.exports.GET = function (xapi, path, callback) {
 
 module.exports.POST = function (xapi, path, data, callback) {
     var rejectUnauthorized = true;
+    console.log("test2");
     if (xapi.hasOwnProperty('rejectUnauthorized')) rejectUnauthorized = xapi.rejectUnauthorized;
     var options = {
         rejectUnauthorized: rejectUnauthorized,

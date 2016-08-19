@@ -42,7 +42,7 @@ router.post('/postResponse',
 
 /* Handle Logout */
 router.get('/logout/', function (req, res) {
-    logger.info("User " + req.user.username + " is now logged out.");
+    console.log("User " + req.user.username + " is now logged out.");
     req.logout();
     req.session.destroy();
     res.redirect('/login/');

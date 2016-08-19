@@ -24,7 +24,6 @@ module.exports.GET = function (xapi, path, callback) {
 
 module.exports.POST = function (xapi, path, data, callback) {
     var rejectUnauthorized = true;
-    console.log("test2");
     if (xapi.hasOwnProperty('rejectUnauthorized')) rejectUnauthorized = xapi.rejectUnauthorized;
     var options = {
         rejectUnauthorized: rejectUnauthorized,
@@ -40,9 +39,7 @@ module.exports.POST = function (xapi, path, data, callback) {
             'Content-Type': 'application/json'
         }
     };
-    console.log(options);
     var body = JSON.stringify(data);
-    console.log(body);
     httpRequest(options, callback, body);
 };
 module.exports.PUT = function (xapi, path, callback) {

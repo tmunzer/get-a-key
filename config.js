@@ -1,10 +1,14 @@
 
-module.exports.xapi = {
+module.exports.apiConf = {
     redirectUrl: "https://127.0.0.1:3000/oauth/reg",
     secret: "7240d7d508f5f29568fe326d89084954",
     clientId: "356f11aa"
 }
-
+module.exports.xapi = {
+    vpcUrl: "cloud-va.aerohive.com",
+    accessToken: "ds5htexNQQRQ-8EbU98ESAJU-07ugFfv356f11aa",
+    ownerId: "1198"
+}
 var fs = require('fs');
 
 module.exports.adfsOptions = {

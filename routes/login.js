@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-
+var xapi = require('./../config.js').xapi;
 var SamlStrategy = require('passport-saml').Strategy;
 
 var adfsOptions = require("./../config.js").adfsOptions;
@@ -35,8 +35,8 @@ passport.use(new SamlStrategy(
 router.post('/postResponse', 
     passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
     function (req, res) {
-      console.log(req.session);
-      res.redirect('/web-app/');
+        req.session.xapi = xapi;
+            res.redirect('/web-app/');
     }
 );
 

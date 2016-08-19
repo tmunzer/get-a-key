@@ -14,13 +14,12 @@ function getCredentials(username, callback) {
 
 };
 function createCredential(username, groupId, callback) {
-    console.log("create");
-    console.log(username, groupId);
     var hmCredentialsRequestVo = {
         email: username,
         groupId: groupId,
         policy: "PERSONAL"
-        };
+    };
+    console.log(hmCredentialsRequestVo);
         API.identity.credentials.createCredential(req.session.xapi, null, null, hmCredentialsRequestVo, function (err, result) {
             if (err) callback(err, null);
             else callback(null, result);
@@ -51,10 +50,8 @@ function deliverCredential(req, res, next) {
 
 router.get("/myKey", function (req, res, next) {
     var groupId = 5145371753562;
-    console.log(req.session);
     if (req.session.hasOwnProperty('passport')) {
         var username = req.session.passport.user.upn;
-        console.log(username);
         createCredential(username, groupId, function (err, result) {
             console.log(result);
             if (err && err.code == "registration.service.item.already.exist") {

@@ -19,7 +19,7 @@ function createCredential(req, username, groupId, callback) {
         email: username,
         groupId: groupId,
         policy: "PERSONAL",
-        NO_DELIVERY_METHOD: "EMAIL"
+        deliverMethod: "EMAIL"
     };
     API.identity.credentials.createCredential(req.session.xapi, null, null, hmCredentialsRequestVo, function (err, result) {
         if (err) callback(err, null);

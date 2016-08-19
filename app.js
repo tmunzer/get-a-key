@@ -18,15 +18,9 @@ var SamlStrategy = require('passport-saml').Strategy;
 var adfsOptions = require("./passport/config.js").adfsOptions;
 
 passport.serializeUser(function (user, done) {
-  console.log("============ serializeUser");
-  console.log(user);
-  console.log("============ serializeUser Done");
   done(null, user);
 });
 passport.deserializeUser(function (user, done) {
-    console.log("============ deserializeUser");
-  console.log(user);
-  console.log("============ deserializeUser Done");
   done(null, user);
 });
 

@@ -4,7 +4,7 @@ var router = express.Router();
 function validUser(req, res, next) {
     console.log("=====================");
     console.log(req);
-    if (!req.user) {
+    if (!req.session.passport.user) {
       res.redirect('/adfs/login/');
     } else next();
     

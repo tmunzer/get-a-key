@@ -42,6 +42,7 @@ router.post('/postResponse',
 
 /* Handle Logout */
 router.get('/logout/', function (req, res) {
+    console.log(req.session);
     console.log("User " + req.session.passport.user.upn + " is now logged out.");
     req.logout();
     req.session.destroy();

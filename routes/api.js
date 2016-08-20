@@ -42,7 +42,7 @@ function deliverCredential(req, account, callback) {
     if (account.length > 0) {
         var hmCredentialDeliveryInfoVo = {
             email: req.session.passport.user.upn,
-            groupId: groupId,
+            id: account[0].id,
             deliverMethod: "EMAIL"
         }
             API.identity.credentials.deliverCredential(req.session.xapi, null, null, hmCredentialDeliveryInfoVo, function (err, result) {

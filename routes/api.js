@@ -45,15 +45,11 @@ function deliverCredential(req, account, callback) {
             groupId: groupId,
             deliverMethod: "EMAIL"
         }
-        if (req.body.hasOwnProperty("hmCredentialDeliveryInfoVo")) {
-            var hmCredentialDeliveryInfoVo = req.body.hmCredentialDeliveryInfoVo;
-            console.log(req.query);
-            if (req.query.hasOwnProperty("id")) id = req.query.id;
             API.identity.credentials.deliverCredential(req.session.xapi, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
                 if (err) callback(err, null);
                 else callback(null, result);
             })
-        }
+
     } else callback();
 };
 

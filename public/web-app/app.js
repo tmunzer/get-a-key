@@ -230,7 +230,7 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
 
     return {
         getMyKey: getMyKey,
-        resendMyKey: resendMyKey,
+        deliverMyKey: deliverMyKey,
         removeMyKey: removeMyKey
     }
 });

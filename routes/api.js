@@ -38,7 +38,7 @@ function deleteCredential(req, account, callback) {
     } else callback();
 };
 
-function deliverCredential(req, account, next) {
+function deliverCredential(req, account, callback) {
     if (account.length > 0) {
         var hmCredentialDeliveryInfoVo = {
             email: req.session.passport.user.upn,

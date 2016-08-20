@@ -4,9 +4,9 @@ var API = require("./../bin/aerohive/api/main");
 var groupId = require("./../config.js").groupId;
 /* GET users listing. */
 
-function getCredentials(req, username, callback) {
+function getCredentials(req, callback) {
     var credentials = [];
-
+    var username = req.session.passport.user.upn;
     //module.exports.getCredentials = function (xapi, credentialType, userGroup, memberOf, adUser, creator, loginName, firstName, lastName, phone, email, page, pageSize, callback) {
     API.identity.credentials.getCredentials(req.session.xapi, null, null, null, null, null, username, null, null, null, null, null, null, function (err, result) {
         if (err) callback(err, null);
@@ -14,9 +14,9 @@ function getCredentials(req, username, callback) {
     });
 
 };
-function createCredential(req, username, groupId, callback) {
+function createCredential(req, groupId, callback) {
     var hmCredentialsRequestVo = {
-        email: username,
+        email: req.session.passport.user.upn,
         groupId: groupId,
         policy: "PERSONAL",
         deliverMethod: "EMAIL"
@@ -29,17 +29,22 @@ function createCredential(req, username, groupId, callback) {
 };
 function deleteCredential(req, account, callback) {
     console.log(account);
-    var id = account[0].id;
-    
+    if (account.length > 0) {
+        var id = account[0].id;
         API.identity.credentials.deleteCredential(req.session.xapi, null, null, id, function (err, result) {
             if (err) callback(err, null);
             else callback(null, result);
         })        
-    
+    }
 };
 
 function deliverCredential(req, res, next) {
-    
+    if (account.length > 0) {
+        var hmCredentialDeliveryInfoVo = {
+            email: req.session.passport.user.upn,
+            groupId: groupId,
+            deliverMethod: "EMAIL"
+        }
         if (req.body.hasOwnProperty("hmCredentialDeliveryInfoVo")) {
             var hmCredentialDeliveryInfoVo = req.body.hmCredentialDeliveryInfoVo;
             console.log(req.query);
@@ -49,41 +54,37 @@ function deliverCredential(req, res, next) {
                 else callback(null, result);
             })
         }
-    
+    }
 };
 
 router.get("/myKey", function (req, res, next) {
     if (req.session.hasOwnProperty('passport')) {
-        var username = req.session.passport.user.upn;
-        createCredential(req, username, groupId, function (err, result) {
-            console.log(result);
+        createCredential(req, groupId, function (err, result) {
             if (err && err.code == "registration.service.item.already.exist") {
-                getCredentials(req, username, function (err, account) {
-                    console.log(account);
-                    if (err) res.status(400).json({ error: err });
+                getCredentials(req, function (err, account) {
+                    if (err) res.status(400).json({action:"create",error: err });
                     else deleteCredential(req, account, function (err, result) {
-                        if (err) res.status(400).json({ error: err });
-                        else createCredential(req, username, groupId, function (err, result) {
-                            if (err) res.status(400).json({ error: err });
-                            else res.json(result);
+                        if (err) res.status(400).json({ action:"create",error: err });
+                        else createCredential(req, groupId, function (err, result) {
+                            if (err) res.status(400).json({action:"create", error: err });
+                            else res.json({action:"create", email: req.session.passport.user.upn });
                         })
                     })
                 })
             } else if (err) res.status(400).json({ error: err });
-            else res.json(result);
+            else res.json({action:"create", email: req.session.passport.user.upn });
         })
     } else res.status(403).send('Unknown session');
 });
 
 
 router.delete("/myKey", function (req, res, next) {
-    var username = req.session.passport.user.upn;
     if (req.session.xapi) {
-        getCredentials(req, username, function (err, account) {
-            if (err) res.status(400).json({ error: err });
+        getCredentials(req, function (err, account) {
+            if (err) res.status(400).json({ action:"delete", error: err });
             else deleteCredential(req, account, function (err, result) {
-                if (err) res.status(400).json({ error: err });
-                else res.json({});
+                if (err) res.status(400).json({ action:"delete", error: err });
+                else res.json({ action:"delete", email: req.session.passport.user.upn });
             });
         });
     } else res.status(403).send('Unknown session');        
@@ -91,15 +92,12 @@ router.delete("/myKey", function (req, res, next) {
 
 
 router.post("/myKey", function (req, res, next) {
-    var username = req.session.passport.user;
     if (req.session.xapi) {
-        getCredentials(req, username, function (err, result) {
-            if (err) res.status(400).json({ error: err });
-                
-                //TODO
-            else deliverCredential(req, id, function (err, result) {
-                if (err) res.status(400).json({ error: err });
-                else res.json({});
+        getCredentials(req, function (err, account) {
+            if (err) res.status(400).json({action:"deliver", error: err });                            
+            else deliverCredential(req, account, function (err, result) {
+                if (err) res.status(400).json({action:"deliver", error: err });
+                else res.json({action:"deliver", email: req.session.passport.user.upn});
             });
         });
     } else res.status(403).send('Unknown session');  

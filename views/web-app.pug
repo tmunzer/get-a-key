@@ -108,5 +108,5 @@ html
                     br                
                     md-content(layout="column" layout-gt-sm="row")
                         md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getMyKey()" translate="get" aria-label="get") 
-                        md-button.md-primary.md-raised(ng-disabled="isWorking" translate="send" aria-label="send") 
+                        md-button.md-primary.md-raised(ng-disabled="isWorking" translate="send" ng-click="deliver()" aria-label="send") 
                         md-button.md-primary(ng-disabled="isWorking" translate="revoke" ng-click="revoke()" aria-label="revoke") 

@@ -101,6 +101,17 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
         })
     }
 
+        $scope.deliver = function () {
+        $scope.isWorking = true;
+        if (request) request.abort();
+        request = MyKeyService.deliverMyKey();
+        request.then(function (promise) {
+            $scope.isWorking = false;
+            if (promise && promise.error) console.log(promise);
+            else console.log(promise);
+        })
+    }
+
 $translate('errorTitle').then(function (errorTitle) {
     $scope.errorTitle = errorTitle;
   }, function (translationId) {
@@ -154,7 +165,7 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
         return promise; 
     }
 
-    function resendMyKey() {
+    function deliverMyKey() {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/myKey/deliver",

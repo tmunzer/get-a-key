@@ -168,7 +168,7 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
     function deliverMyKey() {
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/myKey/deliver",
+            url: "/api/myKey/",
             method: "POST",
             timeout: canceller.promise
         });

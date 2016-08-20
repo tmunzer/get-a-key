@@ -34,8 +34,8 @@ function deleteCredential(req, account, callback) {
         API.identity.credentials.deleteCredential(req.session.xapi, null, null, id, function (err, result) {
             if (err) callback(err, null);
             else callback(null, result);
-        })        
-    }
+        })
+    } else callback();
 };
 
 function deliverCredential(req, res, next) {
@@ -54,7 +54,7 @@ function deliverCredential(req, res, next) {
                 else callback(null, result);
             })
         }
-    }
+    } else callback();
 };
 
 router.get("/myKey", function (req, res, next) {

@@ -13,12 +13,43 @@ var fr = {
     six: "Le réseau auquel vous accédez avec cette clé n'a pas accès aux ressources internes. Il vous permet uniquement d'accéder aux ressources externes.",
     get: "Obtenir une clé",
     send: "Renvoyer ma clé (par E-mail)",
-    revoke: "Révoquer ma clé", 
+    revoke: "Révoquer ma clé",
 
     errorTitle: "Une erreur est survenue...",
     newKeyTitle: "Voici votre clé!",
     successTitle: "Succès!",
     revokeText: "Votre clé est maintenant révoquée!",
-    resendText: "Votre clé a été envoyée. Vous devriez la recevoir bientôt!"
+    resendText: "Votre clé a été envoyée. Vous devriez la recevoir bientôt!",
+
+    modal: {
+        confirm: {
+            title: "Demande de confirmation",
+            message_delete: "Êtes vous sûr de vouloir supprimer votre clé?"
+        },
+        notFound: {
+            title: "Aucune clé trouvée",
+            message_notFound: "Aucune clé trouvée pour l'utilisateur {{user}}.",
+        },
+        done: {
+            title: "Terminé!",
+            message_created: "Une nouvelle clé a été générée. Elle a été envoyée à {{email}}.",
+            message_oldKey: "Votre clé a été supprimée. Tous vos équipements vont être déconnectés du réseau et devrons être reconfigurés.",
+            message_delivered: "Votre clé a été envoyé à {{email}}",
+            message_deleted: "Votre clé a été supprimée. Tous vos équipements vont être déconnectés du réseau."
+        },
+        warning: {
+            title: "Quelque chose s'est mal passé...",
+            instruction: "Veuillez contacter votre administrateur en communiquant les information ci-desssous:",
+            status: "Status HTTP",
+            message: "Message",
+            code: "Code"
+        },
+        button: {
+            close: 'Fermer',
+            back: 'Retour',            
+            cancel: "Annuler",
+            yes: "Oui"
+        },
+    }
 };
 

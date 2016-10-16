@@ -15,12 +15,6 @@ md-sidenav {
     outline: none;
 }
 
-md-tooltip,
-.md-sidenav-left,
-md-button {
-    transition: all .1s ease-in-out;
-}
-
 md-icon,
 .card {
     transition: all .2s ease-in-out;
@@ -82,28 +76,6 @@ h3, .h3 {
     border-top: 4px solid rgb(76, 175, 80);
 }
 
-.header {
-    height: 70px;
-    width: 100%;
-}
-
-.header.fixed {
-    position: fixed;
-    top: 0;
-    z-index: 75;
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1e88ef+0,1e88ef+25,0060c7+100 */
-    background: #1e88ef; /* Old browsers */
-    background: -moz-linear-gradient(45deg, #1e88ef 0%, #1e88ef 25%, #0060c7 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(45deg, #1e88ef 0%, #1e88ef 25%, #0060c7 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(45deg, #1e88ef 0%, #1e88ef 25%, #0060c7 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e88ef', endColorstr='#0060c7', GradientType=1); /* IE6-9 fallback on horizontal gradient */
-
-}
-
-.header .md-button:hover {
-    border: none;
-    background-color: transparent;
-}
 
 @media (min-width: 1025px) {
     md-sidenav {
@@ -139,4 +111,11 @@ md-input-container.search-tool {
 
 .tight {
     margin: 5px 0 0 0 !important;
+}
+
+
+@media (min-width: 600px) {
+  .panel {
+    margin: 50px;
+  }
 }

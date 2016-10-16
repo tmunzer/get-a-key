@@ -1,0 +1,16 @@
+<md-dialog aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate="modal.confirm.title"></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <span translate="modal.confirm.message_delete"></span>                        
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="cancel()" translate="modal.button.cancel" aria-label="cancel"></md-button>
+        <md-button ng-click="confirm()" class="md-raised md-primary" translate="modal.button.yes" aria-label="ok"></md-button>
+    </md-dialog-actions>
+</md-dialog>

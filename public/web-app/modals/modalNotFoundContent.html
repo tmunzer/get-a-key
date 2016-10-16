@@ -1,0 +1,15 @@
+<md-dialog aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate="modal.notFound.title"></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <span translate="modal.notFound.message_notFound" translate-value-email={{items.email}}></span>                        
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="close()" class="md-raised md-primary" translate="modal.button.close" aria-label="close"></md-button>
+    </md-dialog-actions>
+</md-dialog>

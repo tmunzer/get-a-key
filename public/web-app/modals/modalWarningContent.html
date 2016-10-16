@@ -1,0 +1,29 @@
+<md-dialog aria-label="List dialog">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2 translate="modal.warning.title"></h2>
+		</div>
+	</md-toolbar>
+	<md-dialog-content>
+		<div class="md-dialog-content">
+            <div translate="modal.warning.instruction"></div>
+			<table style="text-align: left">
+				<tr>
+					<th style="padding: 10px;"><span translate="modal.warning.status"></span>:</th>
+					<td>{{items.status}}</td>
+				</tr>
+				<tr>
+					<th style="padding: 10px;"><span translate="modal.warning.message"></span>:</th>
+					<td>{{items.message}}</td>
+				</tr>
+				<tr>
+					<th style="padding: 10px;"><span translate="modal.warning.code"></span>:</th>
+					<td>{{items.code}}</td>
+				</tr>
+			</table>
+		</div>
+	</md-dialog-content>
+	<md-dialog-actions layout="row">
+		<md-button class="md-raised md-primary" ng-click="close()" translate="modal.button.close" aria-label="close"></md-button>
+	</md-dialog-actions>
+</md-dialog>

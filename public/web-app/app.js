@@ -1,4 +1,7 @@
+angular.module("Modals", []);
+
 var gak = angular.module("gak", [
+    'Modals',
     "ngRoute",
     'ui.bootstrap',
     'ngSanitize',
@@ -15,16 +18,33 @@ gak
                 controller: "AppCtrl"
             })
             .otherwise({
-                redirectTo: "/classroom/"
+                redirectTo: "/"
             });
     })
     .config(function ($mdThemingProvider) {
-        $mdThemingProvider.theme('default')
-            .primaryPalette("blue", {
+        $mdThemingProvider.definePalette('ahBlue', {
+            '50': 'eaf1f4',
+            '100': 'daf4ff',
+            '200': 'bedaf6',
+            '300': '0093d1',
+            '400': '0093d1',
+            '500': '0093d1',
+            '600': '0093d1',
+            '700': '0093d1',
+            '800': '0093d1',
+            '900': '0093d1',
+            'A100': '0093d1',
+            'A200': '0093d1',
+            'A400': '0093d1',
+            'A700': '0093d1',
+            'contrastDefaultColor': 'light'
+        })
+            .theme('default')
+            .primaryPalette("ahBlue", {
                 'default': '600'
             })
-            .accentPalette('green', {
-                'default': '400' // by default use shade 400 from the pink palette for primary intentions
+            .accentPalette('ahBlue', {
+                'default': '200' // by default use shade 400 from the pink palette for primary intentions
             });
     }).config(['$httpProvider', function ($httpProvider) {
         //initialize get if not there
@@ -58,15 +78,15 @@ gak
 
 
 gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $translate, MyKeyService) {
-    $scope.translate = function (langKey){
+    $scope.translate = function (langKey) {
         $translate.use(langKey);
     }
 
     $scope.openMenu = function ($mdOpenMenu, ev) {
-            originatorEv = ev;
-            $mdOpenMenu(ev);
-        };
-    
+        originatorEv = ev;
+        $mdOpenMenu(ev);
+    };
+
     $scope.isWorking = false;
 
     var request;
@@ -75,58 +95,104 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
         text: "",
     }
 
-    
+    function userNotFound(error) {
+        $mdDialog.show({
+            controller: 'DialogController',
+            templateUrl: 'modals/modalNotFoundContent.html',
+            locals: {
+                items: {
+                    email: error.email
+                }
+            }
+        })
+    }
+
+    function reqDone(data) {
+        $mdDialog.show({
+            controller: 'DialogController',
+            templateUrl: 'modals/modalDoneContent.html',
+            locals: {
+                items: data
+            }
+        })
+    }
+
+    function apiWarning(warning) {
+        $mdDialog.show({
+            controller: 'DialogController',
+            templateUrl: 'modals/modalWarningContent.html',
+            escapeToClose: false,
+            locals: {
+                items: warning.error
+            }
+        });
+    }
+
     $scope.getMyKey = function () {
         $scope.isWorking = true;
         if (request) request.abort();
         request = MyKeyService.getMyKey();
         request.then(function (promise) {
             $scope.isWorking = false;
-            if (promise && promise.error) {
-                console.log(promise);
-            } else {
-                console.log(promise);
-            } 
-        })
-    }    
-
-    $scope.revoke = function () {
-        $scope.isWorking = true;
-        if (request) request.abort();
-        request = MyKeyService.removeMyKey();
-        request.then(function (promise) {
-            $scope.isWorking = false;
-            if (promise && promise.error) console.log(promise);
-            else console.log(promise);
+            if (promise && promise.error) apiWarning(promise.error);
+            else reqDone(promise.data);
         })
     }
 
-        $scope.deliver = function () {
+    $scope.revoke = function () {
+        $mdDialog.show({
+            controller: 'DialogConfirmController',
+            templateUrl: 'modals/modalConfirmContent.html',
+            locals: {
+                items: {
+                    action: 'delete'
+                }
+            }
+        }).then(function () {
+            $scope.isWorking = true;
+            if (request) request.abort();
+            request = MyKeyService.removeMyKey();
+            request.then(function (promise) {
+                $scope.isWorking = false;
+                if (promise && promise.error) {
+                    if (promise.error.status == "not_found") userNotFound(promise.error);
+                    else apiWarning(promise.error);
+                }
+                else reqDone(promise.data);
+            })
+        });
+
+    }
+
+    $scope.deliver = function () {
         $scope.isWorking = true;
         if (request) request.abort();
         request = MyKeyService.deliverMyKey();
         request.then(function (promise) {
             $scope.isWorking = false;
-            if (promise && promise.error) console.log(promise);
-            else console.log(promise);
+            if (promise && promise.error) {
+                if (promise.error.status == "not_found") userNotFound(promise.error);
+                else apiWarning(promise.error);
+            }
+            else reqDone(promise.data);
         })
     }
 
-$translate('errorTitle').then(function (errorTitle) {
-    $scope.errorTitle = errorTitle;
-  }, function (translationId) {
-    $scope.errorTitle = translationId;
-  });
-  $translate('successTitle').then(function (successTitle) {
-    $scope.successTitle = successTitle;
-  }, function (translationId) {
-    $scope.successTitle = translationId;
-  });
-  $translate('newKeyTitle').then(function (newKey) {
-    $scope.newKey = newKey;
-  }, function (translationId) {
-    $scope.newKey = translationId;
-  });
+    $translate('errorTitle').then(function (errorTitle) {
+        $scope.errorTitle = errorTitle;
+    }, function (translationId) {
+        $scope.errorTitle = translationId;
+    });
+    $translate('successTitle').then(function (successTitle) {
+        $scope.successTitle = successTitle;
+    }, function (translationId) {
+        $scope.successTitle = translationId;
+    });
+    $translate('newKeyTitle').then(function (newKey) {
+        $scope.newKey = newKey;
+    }, function (translationId) {
+        $scope.newKey = translationId;
+    });
 });
 
 
@@ -141,28 +207,7 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
             method: "GET",
             timeout: canceller.promise
         });
-        var promise = request.then(
-            function (response) {
-                if (response && response.data && response.data.error) return response.data;
-                else return response;
-            },
-            function (response) {
-                if (response.status && response.status >= 0) {
-                    $rootScope.$broadcast('serverError', response);
-                    return ($q.reject("error"));
-                }
-            });
-
-        promise.abort = function () {
-            canceller.resolve();
-        };
-        promise.finally(function () {
-            console.info("Cleaning up object references.");
-            promise.abort = angular.noop;
-            canceller = request = promise = null;
-        });
-
-        return promise; 
+        return httpReq(request);
     }
 
     function deliverMyKey() {
@@ -172,48 +217,26 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
             method: "POST",
             timeout: canceller.promise
         });
-        var promise = request.then(
-            function (response) {
-                if (response && response.data && response.data.error) return response.data;
-                else return response;
-            },
-            function (response) {
-                if (response.status && response.status >= 0) {
-                    $rootScope.$broadcast('serverError', response);
-                    return ($q.reject("error"));
-                }
-            });
-
-        promise.abort = function () {
-            canceller.resolve();
-        };
-        promise.finally(function () {
-            console.info("Cleaning up object references.");
-            promise.abort = angular.noop;
-            canceller = request = promise = null;
-        });
-
-        return promise; 
+        return httpReq(request);
     }
 
     function removeMyKey() {
-
         var canceller = $q.defer();
         var request = $http({
             url: "/api/myKey",
             method: "DELETE",
             timeout: canceller.promise
         });
+        return httpReq(request);
+    }
+
+    function httpReq(request) {
         var promise = request.then(
             function (response) {
-                if (response && response.data && response.data.error) return response.data;
-                else return response;
+                return response;
             },
             function (response) {
-                if (response.status && response.status >= 0) {
-                    $rootScope.$broadcast('serverError', response);
-                    return ($q.reject("error"));
-                }
+                return { error: response.data };
             });
 
         promise.abort = function () {

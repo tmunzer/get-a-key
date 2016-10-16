@@ -20,5 +20,37 @@ var en = {
     newKeyTitle: "Here is your key!",
     successTitle: "Success!",
     revokeText: "Your key is now revoked!",
-    resendText: "Your key has been sent. You should receive it soon!"
+    resendText: "Your key has been sent. You should receive it soon!",
+
+    modal: {
+        confirm: {
+            title: "Confirmation Needed",
+            message_delete: "Are you sure you want to delete your key?",
+        },
+        notFound: {
+            title: "No Key Found",
+            message_notFound: "No key found for user {{email}}.",
+        },
+        done: {
+            title: "Finished!",
+            message_created: "A new key has been generated. You will receive it at {{email}}.",
+            message_oldKey: "Your key has been deleted. All your devices will be disconnected from the network and you will have to reconfigure them.",
+            message_delivered: "Your key has beed sent to {{email}}",
+            message_deleted: "Your key has been deleted. All your devices will be disconnected from the network."
+        },
+        warning: {
+            title: "Something went wrong...",
+            instruction: "Please contact your administrator and provide these information:",
+            status: "HTTP Status",
+            message: "Message",
+            code: "Code"
+        },
+        button: {
+            close: 'Close',
+            back: 'Back',
+            cancel: "Cancel",
+            yes: "Yes"
+        }
+    },
+
 };

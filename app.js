@@ -30,18 +30,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components',  express.static('./bower_components'));
+app.use('/bower_components',  express.static('./../bower_components'));
 
 
 
-
-
-var login = require('./routes/login');
-app.use('/adfs', login);
+//Azure AD
+var aad = require('./routes/aad');
+app.use('/aad', aad);
+//ADFS
+var adfs = require('./routes/adfs');
+app.use('/adfs', adfs);
+//ADFS
+var logout = require('./routes/logout');
+app.use('/logout', logout);
+//Get a Key
 var webApp = require('./routes/web-app');
 app.use('/web-app', webApp);
+//API
 var api = require('./routes/api');
 app.use('/api', api);
+//Otherwise
 app.get("*", function (req, res) {
   res.redirect("/web-app/");
 })

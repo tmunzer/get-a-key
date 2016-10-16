@@ -1,8 +1,5 @@
-html,body {
-    height:100%;
-
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#cccccc+0,eeeeee+100 */
-    background-color: #F5F5F5;
+body {
+    width: 100%;
 }
 
 .ah-logo {
@@ -26,6 +23,8 @@ html,body {
     height: 20px;
     border-left: 1px solid #6f6f6f;
     margin-left: 2px;
+    margin-bottom: 10px;
+    border: none;
 }
 
 

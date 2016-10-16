@@ -34,7 +34,8 @@ router.get('/callback',
     passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
     function (req, res) {
         req.session.xapi = xapi;
-        req.session.email = req.session.passport.user.email;
+        if (req.session.passport.user.email) req.session.email = req.session.passport.user.email;
+        else req.session.email = req.session.passport.user.upn;
         res.redirect('/web-app/');
     }
 );

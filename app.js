@@ -40,15 +40,15 @@ app.use('/aad', aad);
 //ADFS
 var adfs = require('./routes/adfs');
 app.use('/adfs', adfs);
-//ADFS
-var logout = require('./routes/logout');
-app.use('/logout', logout);
 //Get a Key
 var webApp = require('./routes/web-app');
 app.use('/web-app', webApp);
 //API
 var api = require('./routes/api');
 app.use('/api', api);
+// Login and Logout 
+var login = require('./routes/login');
+app.use('/', login);
 //Otherwise
 app.get("*", function (req, res) {
   res.redirect("/web-app/");

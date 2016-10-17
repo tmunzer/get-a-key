@@ -65,7 +65,7 @@ html
                 md-toolbar.md-hue-2
                     div.md-toolbar-tools 
                         h2(translate="title")
-                div(ng-show="!isWorking" style="background-color: #bedaf6; height: 5px; width: 100%")
+                div(ng-hide="isWorking" style="background-color: #bedaf6; height: 5px; width: 100%")
                 md-progress-linear(ng-show="isWorking" md-mode="indeterminate" class="md-accent")
                 md-content(style="padding: 0 40px 10px 40px" )                
                     md-list.flex

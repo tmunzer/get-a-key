@@ -34,6 +34,8 @@ var fr = {
             title: "Terminé!",
             message_created: "Une nouvelle clé a été générée. Elle a été envoyée à {{email}}.",
             message_oldKey: "Votre clé a été supprimée. Tous vos équipements vont être déconnectés du réseau et devrons être reconfigurés.",
+            message_yourKey: "Votre clé personnelle: ",
+            message_wifiNetwork: "Réseau Wi-Fi: ",
             message_delivered: "Votre clé a été envoyé à {{email}}",
             message_deleted: "Votre clé a été supprimée. Tous vos équipements vont être déconnectés du réseau."
         },

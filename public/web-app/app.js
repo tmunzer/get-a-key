@@ -1,7 +1,8 @@
 angular.module("Modals", []);
-
+angular.module("CustomFilters", []);
 var gak = angular.module("gak", [
     'Modals',
+    'CustomFilters',
     "ngRoute",
     'ui.bootstrap',
     'ngSanitize',
@@ -107,7 +108,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
         })
     }
 
-    function reqDone(data) {
+    function reqDone(data) {                
         $mdDialog.show({
             controller: 'DialogController',
             templateUrl: 'modals/modalDoneContent.html',

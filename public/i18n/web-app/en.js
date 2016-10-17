@@ -35,6 +35,8 @@ var en = {
             title: "Finished!",
             message_created: "A new key has been generated. You will receive it at {{email}}.",
             message_oldKey: "Your key has been deleted. All your devices will be disconnected from the network and you will have to reconfigure them.",
+            message_yourKey: "Your personnal key: ",
+            message_wifiNetwork: "Wi-Fi Network: ",
             message_delivered: "Your key has beed sent to {{email}}",
             message_deleted: "Your key has been deleted. All your devices will be disconnected from the network."
         },

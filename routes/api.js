@@ -76,12 +76,12 @@ router.get("/myKey", function (req, res, next) {
                         if (err) res.status(400).json({ action: "create", error: err });
                         else createCredential(req, groupId, function (err, result) {
                             if (err) res.status(400).json({ action: "create", error: err });
-                            else res.status(200).json({ action: "create", email: req.session.email, status: 'deleted_and_done' });
+                            else res.status(200).json({ action: "create", email: req.session.email, status: 'deleted_and_done', result: result });
                         })
                     })
                 })
             } else if (err) res.status(400).json({ error: err });
-            else res.status(200).json({ action: "create", email: req.session.email, status: 'done' });
+            else res.status(200).json({ action: "create", email: req.session.email, status: 'done', result: result });
         })
     } else res.status(403).send('Unknown session');
 });

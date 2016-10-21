@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-var auth = require("./../config.js").auth;
+var config = require("./../config.js");
+var auth = config.auth;
 
 router.get("/login/", function (req, res) {
     var method = "";
     if (auth == 'aad') method = "/aad/login";
     else if (auth == "adfs") method = "/adfs/login";
     res.render("login", {
-        title: 'Get a Key!', 
+        title: 'Get a Key!',
         method: method
     });
 })
@@ -16,6 +17,8 @@ router.get("/login/", function (req, res) {
 router.get("/logout/", function (req, res) {
     req.logout();
     req.session.destroy();
-    res.redirect("/");
+    if (auth == 'aad') {
+        res.redirect("https://login.windows.net/" + config.azureAd.tenant + "/oauth2/logout?post_logout_redirect_uri=" + config.azureAd.logoutURL);
+    } else res.redirect("/");
 })
 module.exports = router;

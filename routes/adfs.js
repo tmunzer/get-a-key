@@ -32,7 +32,7 @@ router.get('/login',
 );
 
 /* Handle Login POST */
-router.post('/callback',
+router.post('/postResponse',
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
   function (req, res) {
     req.session.xapi = xapi;

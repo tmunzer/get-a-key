@@ -8,13 +8,27 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-// Passport 
+//===============MONGODB=================
+var mongoose = require('mongoose');
+var mongoConfig = require('./config').mongoConfig;
+global.db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    // Create your schemas and models here.
+});
+
+mongoose.connect('mongodb://'+ mongoConfig.host +'/' + mongoConfig.base);
+
+
+
+//===============PASSPORT=================
 global.passport = require('passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-
+//===============APP=================
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
@@ -33,6 +47,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static('./../bower_components'));
 
 
+//===============ROUTES=================
+app.get('/fail', function (req, res, next) {
+  setTimeout(function () {
+    var nu = null;
+    nu.access();
+
+    res.send('Hello World');
+  }, 1000);
+});
 
 //Azure AD
 var aad = require('./routes/aad');
@@ -46,6 +69,9 @@ app.use('/web-app', webApp);
 //API
 var api = require('./routes/api');
 app.use('/api', api);
+//Admin
+var admin = require('./routes/admin');
+app.use('/admin', admin);
 // Login and Logout 
 var login = require('./routes/login');
 app.use('/', login);

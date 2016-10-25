@@ -31,6 +31,7 @@ html
                 h1.logo.md-toolbar-tools
                     img(src="/images/logo_w.png" alt="Aerohive")
                 span(flex)
+                
                 div(style="display:flex; padding-right: 20px")
                     md-menu(style="margin: auto;")
                         md-button(aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
@@ -49,6 +50,10 @@ html
                                     span Francais                                
         div.page-footer
             span © 2016 Aerohive Networks. All Rights Reserved.
+
+            md-button(aria-label="settings" href=oauthUrl style="margin: auto; display: inline-flex;")   
+                md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"settings" | translate}}                     
+                md-icon(class="material-icons" aria-label="menu") settings
 
 
         div(layout="column" layout-align="center center" layout-gt-sm="row" layout-align-gt-sm="center start")

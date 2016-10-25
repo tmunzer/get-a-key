@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var API = require("./../bin/aerohive/api/main");
 var groupId = require("./../config.js").groupId;
+
+var Account = require("./../bin/models/account");
+
 /* GET users listing. */
 
 function getCredentials(req, callback) {
@@ -71,16 +74,16 @@ router.get("/myKey", function (req, res, next) {
         createCredential(req, groupId, function (err, result) {
             if (err && err.code == "registration.service.item.already.exist") {
                 getCredentials(req, function (err, account) {
-                    if (err) res.status(400).json({ action: "create", error: err });
+                    if (err) res.status(500).json({ action: "create", error: err });
                     else deleteCredential(req, account, function (err, result) {
-                        if (err) res.status(400).json({ action: "create", error: err });
+                        if (err) res.status(500).json({ action: "create", error: err });
                         else createCredential(req, groupId, function (err, result) {
-                            if (err) res.status(400).json({ action: "create", error: err });
+                            if (err) res.status(500).json({ action: "create", error: err });
                             else res.status(200).json({ action: "create", email: req.session.email, status: 'deleted_and_done', result: result });
                         })
                     })
                 })
-            } else if (err) res.status(400).json({ error: err });
+            } else if (err) res.status(500).json({ error: err });
             else res.status(200).json({ action: "create", email: req.session.email, status: 'done', result: result });
         })
     } else res.status(403).send('Unknown session');
@@ -91,9 +94,9 @@ router.delete("/myKey", function (req, res, next) {
     if (req.session.xapi) {
         getCredentials(req, function (err, account) {
             console.log(account);
-            if (err) res.status(400).json({ action: "delete", error: err });
+            if (err) res.status(500).json({ action: "delete", error: err });
             else if (account) deleteCredential(req, account, function (err, result) {
-                if (err) res.status(400).json({ action: "delete", error: err });
+                if (err) res.status(500).json({ action: "delete", error: err });
                 else res.status(200).json({ action: "delete", email: req.session.email, status: 'done' });
             });
             else res.status(404).json({ action: "delete", email: req.session.email, status: 'not_found' });
@@ -105,13 +108,68 @@ router.delete("/myKey", function (req, res, next) {
 router.post("/myKey", function (req, res, next) {
     if (req.session.xapi) {
         getCredentials(req, function (err, account) {
-            if (err) res.status(400).json({ action: "deliver", error: err });
+            if (err) res.status(500).json({ action: "deliver", error: err });
             else if (account) deliverCredential(req, account, function (err, result) {
-                if (err) res.status(400).json({ action: "deliver", error: err });
+                if (err) res.status(500).json({ action: "deliver", error: err });
                 else res.status(200).json({ action: "deliver", email: req.session.email, status: 'done' });
             });
             else res.status(404).json({ action: "deliver", email: req.session.email, status: 'not_found' });
         });
+    } else res.status(403).send('Unknown session');
+})
+
+
+router.get("/aad", function (req, res, next) {
+    if (req.session.xapi) {
+        Account
+            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+            .populate("azureAd")
+            .exec(function (err, account) {
+                console.log(req.session.xapi);
+                console.log(account);
+                if (err) res.status(500).json({ error: err });
+                else if (account.length == 0) res.status(200).json({});
+                else if (account.length == 1)
+                    res.status(200).json({
+                        signin: "https://get-a-key.ah-lab.fr/" + account[0]._id + "/",
+                        callback: "https://get-a-key.ah-lab.fr/aad/" + account[0]._id + "/callback",
+                        logout: "https://get-a-key.ah-lab.fr/aad/" + account[0]._id + "/",
+                        aad: account[0].aad
+
+                    });
+                else res.status(500).json({ err: "not able to retrieve the account" });
+            })
+    } else res.status(403).send('Unknown session');
+})
+
+router.post("/aad/", function (req, res, next) {
+    if (req.session.xapi) {
+        if (req.body.aad) {
+            var aad = req.body.aad;
+            Account
+                .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+                .populate("AzureAd")
+                .exec(function (err, account) {
+                    if (err) res.status(500).json({ error: err });
+                    else if (account.length == 1) {
+                        account[0].azureAd = aad;
+                        account[0].save(function (err, result) {
+                            if (err) res.status(500).json({ error: "not able to save data" });
+                            else res.stauts(200).json({ action: "save", status: 'done' });
+                        })
+                    }
+                    else res.status(500).json({ error: "not able to retrieve the account" });
+                });
+        } else res.status(500).send({ error: "missing aad" });
+    } else res.status(403).send('Unknown session');
+})
+
+router.get("/admin/userGroups", function (req, res, next) {
+    if (req.session.xapi) {
+        API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, result) {
+            if (err) res.status(500).json({ error: err });
+            else res.status(200).json(result);
+        })
     } else res.status(403).send('Unknown session');
 })
 module.exports = router;

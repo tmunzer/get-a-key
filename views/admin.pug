@@ -1,0 +1,110 @@
+doctype html5
+html
+    head
+        title= title
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        script(src="/bower_components/angular/angular.min.js")
+        script(src="/i18n/admin/en.js")
+        script(src="/i18n/admin/fr.js")
+        script(src="/bower_components/angular-aria/angular-aria.js")
+        script(src="/bower_components/angular-animate/angular-animate.min.js")
+        script(src="/bower_components/angular-material/angular-material.js")
+        script(src="/bower_components/angular-messages/angular-messages.js")
+        script(src="/bower_components/angular-route/angular-route.min.js")
+        script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
+        script(src="/bower_components/angular-translate/angular-translate.min.js")
+        script(src="/web-app/ng-sanitize.js")    
+        script(src="/web-app/admin.js")
+        script(src="/web-app/filters.js")
+        script(src="/web-app/modals/controller.js")
+        link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
+        link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
+        link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
+        link(rel='stylesheet' href='/css/ah-tm.tags.css')
+        link(rel='stylesheet' href='/css/ah-tm.cards.css')
+        link(rel='stylesheet' href='/css/ah-tm.md-table.css')
+        link(rel='stylesheet' href='/css/ah-tm.md-list.css')
+        link(rel='stylesheet' href='/css/ah-tm.header.css')
+        link(rel='stylesheet' href='/css/ah-tm.label.css')
+        link(rel='stylesheet' href='/css/ah-tm.datetime.css')
+
+
+        
+    body(ng-app="gak" ng-controller="AppCtrl").icons-docs
+
+        header.md-page-header
+            div.header
+            md-toolbar.header.fixed(layout='row')
+                h1.logo.md-toolbar-tools
+                    img(src="/images/logo_w.png" alt="Aerohive")
+                span(flex)
+                div(style="display:flex; padding-right: 20px")
+                    md-menu(style="margin: auto;")
+                        md-button(aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                            md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"language" | translate}}
+                            md-icon(class="material-icons" aria-label="language") language
+                        md-menu-content
+                            md-menu-item
+                                md-button(ng-click="translate('en')")
+                                    span(style="display: inline-flex; margin-right: 5px;")
+                                        div.iti-flag.gb
+                                    span English
+                            md-menu-item
+                                md-button(ng-click="translate('fr')")
+                                    span(style="display: inline-flex; margin-right: 5px;")
+                                        div.iti-flag.fr
+                                    span Francais                                
+                    md-button(aria-label="logout" href="/logout/" style="margin: auto;")                        
+                        md-icon(class="material-icons" aria-label="menu") exit_to_app
+                        span {{"logout" | translate}}
+
+            
+        div(id="main")
+            
+            md-tabs(md-dynamic-height md-border-bottom)
+                md-tab(label="{{'aad' | translate}}")
+                    md-content(layout-margin)
+                        md-switch.md-primary(ng-model="admin.aad.enabled" aria-label="enable AzureAD") 
+                            span(ng-show="!admin.aad.enabled") {{"disabled" | translate}}
+                            span(ng-show="admin.aad.enabled") {{"enabled" | translate}}
+                        fieldset(ng-style="!admin.aad.enabled && {'color': 'gray'}")
+                            legend {{"userAccount" | translate}}                                                                                                  
+                            md-input-container.md-block.flex-gt-sm
+                                label
+                                    span(translate="userGroup")
+                                    span(style="color: red") *
+                                md-select(ng-model="admin.aad.uesrGroup" ng-selected="admin.userGroup" ng-disabled="!admin.aad.enabled")
+                                    md-option(ng-repeat='userGroup in userGroups' value="{{userGroup.id}}") {{userGroup.name}}
+                            md-input-container.md-block.flex-gt-sm
+                                label(for="aadConcurSessions" translate="aad.concurSessions")
+                                input(id="aadConcurSessions" type="number" ng-model="aad.concurSessions" ng-disabled="!admin.aad.enabled")
+                        fieldset(ng-style="!admin.aad.enabled && {'color': 'gray'}")
+                            legend {{"aad.params" | translate}}
+                            md-input-container.md-block.flex-gt-sm.md-input-focused
+                                label(for="aadSignin" translate="aad.signinURL") 
+                                span(id="aadSignin" disabled="disabled") {{admin.aad.signin}}
+                            md-input-container.md-block.flex-gt-sm.md-input-focused
+                                label(for="aadCallback" translate="aad.callbackURL") 
+                                span(id="aadCallback" disabled="disabled") {{admin.aad.callback}}
+                            md-input-container.md-block.flex-gt-sm.md-input-focused
+                                label(for="aadLogout" translate="aad.logoutURL") 
+                                span(id="aadLogout" disabled="disabled") {{admin.aad.logout}}
+                            md-input-container.md-block.flex-gt-sm
+                                label(for="clientID") 
+                                    span(translate="aad.clientID")
+                                    span(style="color: red") *
+                                input(id="clientID" type="text" ng-model="admin.aad.clientID" ng-disabled="!admin.aad.enabled")
+                            md-input-container.md-block.flex-gt-sm
+                                label(for="clientSecret") 
+                                    span(translate="aad.clientSecret")
+                                    span(style="color: red") *
+                                input(id="clientSecret" type="text" ng-model="admin.aad.clientSecret" ng-disabled="!admin.aad.enabled")
+                            md-input-container.md-block.flex-gt-sm
+                                label(for="tenant" translate="aad.tenant")
+                                input(id="tenant" type="text" ng-model="admin.aad.tenant" ng-disabled="!admin.aad.enabled")
+                            md-input-container.md-block.flex-gt-sm
+                                label(for="resource" translate="aad.resource")
+                                input(id="resource" type="text" ng-model="admin.aad.resource" ng-disabled="!admin.aad.enabled")
+                        md-content(layout="column" layout-gt-sm="row")
+                            md-button.md-primary.md-raised(ng-disabled="isWorking || !aadValid()" ng-click="aadSave()" translate="save" aria-label="get") 
+                md-tab(label="{{'adfs' | translate}}" disabled=disabled)

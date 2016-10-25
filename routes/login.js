@@ -10,6 +10,7 @@ router.get("/login/", function (req, res) {
     else if (auth == "adfs") method = "/adfs/login";
     res.render("login", {
         title: 'Get a Key!',
+        oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id="+config.aerohiveApp.clientID+"&redirect_uri="+config.aerohiveApp.redirectUrl,
         method: method
     });
 })

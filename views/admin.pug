@@ -62,49 +62,52 @@ html
         div(id="main")
             
             md-tabs(md-dynamic-height md-border-bottom)
-                md-tab(label="{{'aad' | translate}}")
+                md-tab(label="{{'azureAd' | translate}}")
                     md-content(layout-margin)
-                        md-switch.md-primary(ng-model="admin.aad.enabled" aria-label="enable AzureAD") 
-                            span(ng-show="!admin.aad.enabled") {{"disabled" | translate}}
-                            span(ng-show="admin.aad.enabled") {{"enabled" | translate}}
-                        fieldset(ng-style="!admin.aad.enabled && {'color': 'gray'}")
-                            legend {{"userAccount" | translate}}                                                                                                  
+                        md-switch.md-primary(ng-model="admin.azureAd.enabled" aria-label="enable AzureAD") 
+                            span(ng-show="!admin.azureAd.enabled") {{"disabled" | translate}}
+                            span(ng-show="admin.azureAd.enabled") {{"enabled" | translate}}
+                        fieldset(ng-style="!admin.azureAd.enabled && {'color': 'gray'}")
+                            legend {{"userAccount" | translate}}     
+                            md-input-container.md-block.flex-gt-sm.md-input-focused
+                                label(for="azureAdLogin" translate="LoginUrl") 
+                                span(id="azureAdLogin" disabled="disabled") {{admin.azureAd.login}}                                                                                             
                             md-input-container.md-block.flex-gt-sm
                                 label
                                     span(translate="userGroup")
                                     span(style="color: red") *
-                                md-select(ng-model="admin.aad.uesrGroup" ng-selected="admin.userGroup" ng-disabled="!admin.aad.enabled")
+                                md-select(ng-model="admin.azureAd.userGroup" ng-selected="admin.userGroup" ng-disabled="!admin.azureAd.enabled")
                                     md-option(ng-repeat='userGroup in userGroups' value="{{userGroup.id}}") {{userGroup.name}}
                             md-input-container.md-block.flex-gt-sm
-                                label(for="aadConcurSessions" translate="aad.concurSessions")
-                                input(id="aadConcurSessions" type="number" ng-model="aad.concurSessions" ng-disabled="!admin.aad.enabled")
-                        fieldset(ng-style="!admin.aad.enabled && {'color': 'gray'}")
-                            legend {{"aad.params" | translate}}
+                                label(for="azureAdConcurSessions" translate="azureAd.concurSessions")
+                                input(id="azureAdConcurSessions" type="number" ng-model="azureAd.concurSessions" ng-disabled="!admin.azureAd.enabled")
+                        fieldset(ng-style="!admin.azureAd.enabled && {'color': 'gray'}")
+                            legend {{"azureAd.params" | translate}}
                             md-input-container.md-block.flex-gt-sm.md-input-focused
-                                label(for="aadSignin" translate="aad.signinURL") 
-                                span(id="aadSignin" disabled="disabled") {{admin.aad.signin}}
+                                label(for="azureAdSignin" translate="azureAd.signinURL") 
+                                span(id="azureAdSignin" disabled="disabled") {{admin.azureAd.signin}}
                             md-input-container.md-block.flex-gt-sm.md-input-focused
-                                label(for="aadCallback" translate="aad.callbackURL") 
-                                span(id="aadCallback" disabled="disabled") {{admin.aad.callback}}
+                                label(for="azureAdCallback" translate="azureAd.callbackURL") 
+                                span(id="azureAdCallback" disabled="disabled") {{admin.azureAd.callback}}
                             md-input-container.md-block.flex-gt-sm.md-input-focused
-                                label(for="aadLogout" translate="aad.logoutURL") 
-                                span(id="aadLogout" disabled="disabled") {{admin.aad.logout}}
+                                label(for="azureAdLogout" translate="azureAd.logoutURL") 
+                                span(id="azureAdLogout" disabled="disabled") {{admin.azureAd.logout}}
                             md-input-container.md-block.flex-gt-sm
                                 label(for="clientID") 
-                                    span(translate="aad.clientID")
+                                    span(translate="azureAd.clientID")
                                     span(style="color: red") *
-                                input(id="clientID" type="text" ng-model="admin.aad.clientID" ng-disabled="!admin.aad.enabled")
+                                input(id="clientID" type="text" ng-model="admin.azureAd.clientID" ng-disabled="!admin.azureAd.enabled")
                             md-input-container.md-block.flex-gt-sm
                                 label(for="clientSecret") 
-                                    span(translate="aad.clientSecret")
+                                    span(translate="azureAd.clientSecret")
                                     span(style="color: red") *
-                                input(id="clientSecret" type="text" ng-model="admin.aad.clientSecret" ng-disabled="!admin.aad.enabled")
+                                input(id="clientSecret" type="text" ng-model="admin.azureAd.clientSecret" ng-disabled="!admin.azureAd.enabled")
                             md-input-container.md-block.flex-gt-sm
-                                label(for="tenant" translate="aad.tenant")
-                                input(id="tenant" type="text" ng-model="admin.aad.tenant" ng-disabled="!admin.aad.enabled")
+                                label(for="tenant" translate="azureAd.tenant")
+                                input(id="tenant" type="text" ng-model="admin.azureAd.tenant" ng-disabled="!admin.azureAd.enabled")
                             md-input-container.md-block.flex-gt-sm
-                                label(for="resource" translate="aad.resource")
-                                input(id="resource" type="text" ng-model="admin.aad.resource" ng-disabled="!admin.aad.enabled")
+                                label(for="resource" translate="azureAd.resource")
+                                input(id="resource" type="text" ng-model="admin.azureAd.resource" ng-disabled="!admin.azureAd.enabled")
                         md-content(layout="column" layout-gt-sm="row")
-                            md-button.md-primary.md-raised(ng-disabled="isWorking || !aadValid()" ng-click="aadSave()" translate="save" aria-label="get") 
+                            md-button.md-primary.md-raised(ng-disabled="isWorking || !azureAdValid()" ng-click="azureAdSave()" translate="save" aria-label="get") 
                 md-tab(label="{{'adfs' | translate}}" disabled=disabled)

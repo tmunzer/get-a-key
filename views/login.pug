@@ -64,10 +64,12 @@ html
                         div.md-toolbar-tools
                             h2(translate="login.title")
                     md-content(layout="column" layout-padding)
-                        img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")                                                
-                        div(translate="login.instruction")
-                        br                    
-                        md-button.md-raised.md-primary(href=method translate="login.connect" aria-label="connect" style="margin: auto; width: 90%; max-width: 450px; margin-bottom: 10px;")
-
+                        img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
+                        if method                                              
+                            div(translate="login.instruction")
+                            br                    
+                            md-button.md-raised.md-primary(href=method translate="login.connect" aria-label="connect" style="margin: auto; width: 90%; max-width: 450px; margin-bottom: 10px;")
+                        else 
+                            div Something went wrong. It seems that something is misconfigured...
 
 

@@ -58,20 +58,20 @@ app.get('/fail', function (req, res, next) {
 });
 
 //Azure AD
-var aad = require('./routes/aad');
-app.use('/aad', aad);
+var azureAd = require('./routes/azureAd');
+app.use('/aad/', azureAd);
 //ADFS
 var adfs = require('./routes/adfs');
-app.use('/adfs', adfs);
+app.use('/adfs/', adfs);
 //Get a Key
 var webApp = require('./routes/web-app');
-app.use('/web-app', webApp);
+app.use('/web-app/', webApp);
 //API
 var api = require('./routes/api');
-app.use('/api', api);
+app.use('/api/', api);
 //Admin
 var admin = require('./routes/admin');
-app.use('/admin', admin);
+app.use('/admin/', admin);
 // Login and Logout 
 var login = require('./routes/login');
 app.use('/', login);

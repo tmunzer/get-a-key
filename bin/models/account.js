@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var AzureAd = require('./aad');
+var AzureAd = require('./azureAd');
 
 var AccountSchema = new mongoose.Schema({
     ownerId: {type: String, required: true},

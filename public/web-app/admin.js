@@ -78,7 +78,7 @@ gak
     });
 
 
-gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $translate, UserGroupsService, AadService) {
+gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $translate, UserGroupsService, AzureAdService) {
     $scope.translate = function (langKey) {
         $translate.use(langKey);
     }
@@ -91,7 +91,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
     var request;
     $scope.isWorking = false;
     $scope.admin = {
-        aad: null,
+        azureAd: null,
         adfs: null
     };
     $scope.userGroups = [];
@@ -99,7 +99,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
     function apiWarning(warning) {
         $mdDialog.show({
             controller: 'DialogController',
-            templateUrl: 'modals/modalWarningContent.html',
+            templateUrl: '/web-app/modals/modalWarningContent.html',
             escapeToClose: false,
             locals: {
                 items: warning.error
@@ -109,21 +109,20 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
     function reqDone(data) {
         $mdDialog.show({
             controller: 'DialogConfirmController',
-            templateUrl: 'modals/modalConfirmContent.html',
+            templateUrl: '/web-app/modals/modalConfirmContent.html',
             locals: {
                 action: "save"
             }
         })
     }
-    function aadSaveConfig() {
-        console.log("yes");
+    function azureAdSaveConfig() {
         $scope.isWorking = true;
         if (request) request.abort();
-        request = AadService.post($scope.admin.aad);
+        request = AzureAdService.post($scope.admin.azureAd);
         request.then(function (promise) {
             $scope.isWorking = false;
             if (promise && promise.error) apiWarning(promise.error);
-            
+
         })
     }
 
@@ -134,16 +133,19 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
         if (promise && promise.error) apiWarning(promise.error);
         else {
             $scope.userGroups = promise.data.userGroups;
-            request = AadService.get();
+            request = AzureAdService.get();
             request.then(function (promise) {
                 $scope.isWorking = false;
                 if (promise && promise.error) apiWarning(promise.error);
                 else {
-                    if (promise.data.aad) $scope.admin.aad = promise.data.aad;
-                    else $scope.admin.aad = { enabled: false };
-                    $scope.admin.aad.signin = promise.data.signin;
-                    $scope.admin.aad.callback = promise.data.callback;
-                    $scope.admin.aad.logout = promise.data.logout;
+                    if (promise.data.azureAd) {
+                        $scope.admin.azureAd = promise.data.azureAd;
+                        $scope.admin.azureAd.enabled = true;
+                    } else $scope.admin.azureAd = { enabled: false };
+                    $scope.admin.azureAd.login = promise.data.login;
+                    $scope.admin.azureAd.signin = promise.data.signin;
+                    $scope.admin.azureAd.callback = promise.data.callback;
+                    $scope.admin.azureAd.logout = promise.data.logout;
                 }
             })
         }
@@ -152,55 +154,55 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
 
 
 
-    $scope.aadValid = function () {
-        if (initialized && $scope.admin.aad.enabled) {
-            if (!$scope.admin.aad.userGroup || !$scope.admin.aad.userGroup > 0) return false;
-            else if (!$scope.admin.aad.clientID || $scope.admin.aad.clientID == "") return false;
-            else if (!$scope.admin.aad.clientSecret || $scope.admin.aad.clientSecret == "") return false;
+    $scope.azureAdValid = function () {
+        if (initialized && $scope.admin.azureAd.enabled) {
+            if (!$scope.admin.azureAd.userGroup || !$scope.admin.azureAd.userGroup > 0) return false;
+            else if (!$scope.admin.azureAd.clientID || $scope.admin.azureAd.clientID == "") return false;
+            else if (!$scope.admin.azureAd.clientSecret || $scope.admin.azureAd.clientSecret == "") return false;
             else return true;
         } else return true;
     }
 
-    $scope.aadSave = function () {
-        if ($scope.admin.aad.enabled == false)
+    $scope.azureAdSave = function () {
+        if ($scope.admin.azureAd.enabled == false)
             $mdDialog.show({
                 controller: 'DialogConfirmController',
-                templateUrl: 'modals/modalAdminConfirmContent.html',
+                templateUrl: '/web-app/modals/modalAdminConfirmContent.html',
                 locals: {
                     items: {
-                        type: 'aad',
+                        type: 'azureAd',
                         action: 'disable'
                     }
                 }
             }).then(function () {
-                aadSaveConfig();
+                azureAdSaveConfig();
             });
-        else aadSaveConfig();
+        else azureAdSaveConfig();
     }
 
 });
 
 
 
-gak.factory("AadService", function ($http, $q, $rootScope) {
+gak.factory("AzureAdService", function ($http, $q, $rootScope) {
 
-    function get(aadConfig) {
+    function get(azureAdConfig) {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/aad/",
             method: "GET",
-            data: { aad: aadConfig },
+            data: { azureAd: azureAdConfig },
             timeout: canceller.promise
         });
         return httpReq(request);
     }
 
-    function post(aadConfig) {
+    function post(azureAdConfig) {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/aad/",
             method: "POST",
-            data: { aad: aadConfig },
+            data: { azureAd: azureAdConfig },
             timeout: canceller.promise
         });
         return httpReq(request);

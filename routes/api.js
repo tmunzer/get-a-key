@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var API = require("./../bin/aerohive/api/main");
-var groupId = require("./../config.js").groupId;
+
+var serverHostname = require("./../config.js").serverHostname;
 
 var Account = require("./../bin/models/account");
-
+var AzureAd = require("./../bin/models/azureAd");
 /* GET users listing. */
 
 function getCredentials(req, callback) {
@@ -29,10 +30,10 @@ function getCredentials(req, callback) {
     });
 
 };
-function createCredential(req, groupId, callback) {
+function createCredential(req, callback) {
     var hmCredentialsRequestVo = {
         email: req.session.email,
-        groupId: groupId,
+        groupId: req.session.groupId,
         policy: "PERSONAL",
         deliverMethod: "EMAIL"
     };
@@ -70,14 +71,15 @@ function deliverCredential(req, account, callback) {
 };
 
 router.get("/myKey", function (req, res, next) {
+    console.log(req.session);
     if (req.session.hasOwnProperty('passport')) {
-        createCredential(req, groupId, function (err, result) {
+        createCredential(req, function (err, result) {
             if (err && err.code == "registration.service.item.already.exist") {
                 getCredentials(req, function (err, account) {
                     if (err) res.status(500).json({ action: "create", error: err });
                     else deleteCredential(req, account, function (err, result) {
                         if (err) res.status(500).json({ action: "create", error: err });
-                        else createCredential(req, groupId, function (err, result) {
+                        else createCredential(req, function (err, result) {
                             if (err) res.status(500).json({ action: "create", error: err });
                             else res.status(200).json({ action: "create", email: req.session.email, status: 'deleted_and_done', result: result });
                         })
@@ -131,10 +133,11 @@ router.get("/aad", function (req, res, next) {
                 else if (account.length == 0) res.status(200).json({});
                 else if (account.length == 1)
                     res.status(200).json({
-                        signin: "https://get-a-key.ah-lab.fr/" + account[0]._id + "/",
-                        callback: "https://get-a-key.ah-lab.fr/aad/" + account[0]._id + "/callback",
-                        logout: "https://get-a-key.ah-lab.fr/aad/" + account[0]._id + "/",
-                        aad: account[0].aad
+                        login: "https://"+serverHostname+"/login/" + account[0]._id + "/",
+                        signin: "https://"+serverHostname+"/login/" + account[0]._id + "/",
+                        callback: "https://"+serverHostname+"/aad/" + account[0]._id + "/callback",
+                        logout: "https://"+serverHostname+"/login/" + account[0]._id + "/",
+                        azureAd: account[0].azureAd
 
                     });
                 else res.status(500).json({ err: "not able to retrieve the account" });
@@ -142,25 +145,60 @@ router.get("/aad", function (req, res, next) {
     } else res.status(403).send('Unknown session');
 })
 
-router.post("/aad/", function (req, res, next) {
-    if (req.session.xapi) {
-        if (req.body.aad) {
-            var aad = req.body.aad;
-            Account
-                .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
-                .populate("AzureAd")
-                .exec(function (err, account) {
+function saveAzureAdEnabled(req, res) {
+    Account
+        .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+        .exec(function (err, account) {
+            if (err) res.status(500).json({ error: err });
+            else if (account.length == 1) {
+                if (account[0].azureAd) {
+                    AzureAd.update({ _id: account[0].azureAd }, req.body.azureAd, function (err, result) {
+                        if (err) res.status(500).json({ error: err });
+                        else res.status(200).json({ action: "save", status: 'done' });
+                    })
+                } else AzureAd(req.body.azureAd).save(function (err, result) {
                     if (err) res.status(500).json({ error: err });
-                    else if (account.length == 1) {
-                        account[0].azureAd = aad;
+                    else {
+                        account[0].azureAd = result;
                         account[0].save(function (err, result) {
-                            if (err) res.status(500).json({ error: "not able to save data" });
-                            else res.stauts(200).json({ action: "save", status: 'done' });
+                            if (err) res.status(500).json({ error: err });
+                            else res.status(200).json({ action: "save", status: 'done' });
                         })
                     }
-                    else res.status(500).json({ error: "not able to retrieve the account" });
                 });
-        } else res.status(500).send({ error: "missing aad" });
+            } else res.status(500).json({ error: "not able to retrieve the account" });
+        });
+}
+function saveAzureAdDisbled(req, res) {
+    Account
+        .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+        .exec(function (err, account) {
+            if (err) res.status(500).json({ error: err });
+            else if (account.length == 1) {
+                if (account[0].azureAd) AzureAd.findByIdAndRemove(account[0].azureAd, function (err) {
+                    if (err) res.status(500).json({ error: "not able to save data" });
+                    else {
+                        account[0].azureAd = null;
+                        account[0].save(function (err, result) {
+                            if (err) res.status(500).json({ error: "not able to save data" });
+                            else res.status(200).json({ action: "save", status: 'done' });
+                        })
+                    }
+                });
+                else res.status(200).json({ action: "save", status: 'done' });
+            }
+            else res.status(500).json({ error: "not able to retrieve the account" });
+        });
+}
+
+router.post("/aad/", function (req, res, next) {
+    if (req.session.xapi) {
+        if (req.body.azureAd) {
+            if (req.body.azureAd.enabled == true) saveAzureAdEnabled(req, res);
+            else if (req.body.azureAd.enabled == false) saveAzureAdDisbled(req, res);
+            else res.status(500).send({ error: "missing azureAd" });
+
+        } else res.status(500).send({ error: "missing azureAd" });
     } else res.status(403).send('Unknown session');
 })
 

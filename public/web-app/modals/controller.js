@@ -8,7 +8,7 @@ angular.module('Modals').controller('DialogController', function ($scope, $mdDia
         $mdDialog.hide();
     };
 });
-angular.module('Modals').controller('DialogConfirmController', function ($scope, $mdDialog, items) {
+angular.module('Modals').controller('DialogConfirmController', function ($scope, $mdDialog, items) {    
     $scope.action = items.action;
     $scope.cancel = function () {
         $mdDialog.cancel()

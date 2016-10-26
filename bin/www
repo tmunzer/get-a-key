@@ -6,7 +6,8 @@
 var app = require('../app');
 
 var enableHttps = require("../config.js").appServer.enableHttps;
-
+var httpsCertificate = require("../config.js").appServer.httpsCertificate;
+var httpsKey = require("../config.js").appServer.httpsKey;
 //===============HTTP SERVER=================
 
 var http = require('http');
@@ -25,8 +26,9 @@ if (enableHttps) {
   var fs = require('fs');
 
   var https_options = {
-    key: fs.readFileSync('../cert/server.key'),
-    cert: fs.readFileSync('../cert/server.pem')
+    cert: fs.readFileSync('../certs/' + httpsCertificate),
+    key: fs.readFileSync('../certs/' + httpsKey)
+
   };
 
   var httpsPort = normalizePort(process.env.PORT || '3443');

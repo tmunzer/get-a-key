@@ -1,4 +1,4 @@
-var api = require("./../../req");
+var api = require("../../req");
 
 
 module.exports.GET = function (xapi, folderId, callback) {

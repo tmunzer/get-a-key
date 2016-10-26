@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-var config = require("./../config.js");
+var config = require("../config.js");
 
-var Account = require("./../bin/models/account");
+var Account = require("../bin/models/account");
 
 function getAccount(req, res, next) {
     Account

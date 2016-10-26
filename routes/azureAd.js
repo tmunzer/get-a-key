@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
-var xapi = require('./../config.js').aerohiveXapi;
+var xapi = require('../config.js').aerohiveXapi;
 var AzureAdOAuth2Strategy = require('passport-azure-ad-oauth2').Strategy;
 
-//var azureOptions = require("./../config.js").azureAd;
+//var azureOptions = require("../config.js").azureAd;
 
-var Account = require("./../bin/models/account");
+var Account = require("../bin/models/account");
 
 
 passport.serializeUser(function (user, done) {

@@ -1,4 +1,4 @@
-var api = require("./../req");
+var api = require("../req");
 
 
 module.exports.getCredentials = function (xapi, credentialType, userGroup, memberOf, adUser, creator, userName, firstName, lastName, phone, email, page, pageSize, callback) {

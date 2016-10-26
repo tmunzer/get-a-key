@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var API = require("./../bin/aerohive/api/main");
+var API = require("../bin/aerohive/api/main");
 
-var serverHostname = require("./../config.js").serverHostname;
+var serverHostname = require("../config.js").appServer.vhost;
 
-var Account = require("./../bin/models/account");
-var AzureAd = require("./../bin/models/azureAd");
+var Account = require("../bin/models/account");
+var AzureAd = require("../bin/models/azureAd");
 /* GET users listing. */
 
 function getCredentials(req, callback) {

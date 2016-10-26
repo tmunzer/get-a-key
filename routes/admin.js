@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var OAuth = require("./../bin/aerohive/api/oauth");
-var devApp = require('./../config.js').aerohiveApp;
+var OAuth = require("../bin/aerohive/api/oauth");
+var devApp = require('../config.js').aerohiveApp;
 
-var Account = require('./../bin/models/account');
+var Account = require('../bin/models/account');
 /*================================================================
  ADMIN ACS OAUTH
  ================================================================*/

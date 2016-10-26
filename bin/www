@@ -1,32 +1,43 @@
 #!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
 
 var app = require('../app');
+
+var enableHttps = require("../config.js").appServer.enableHttps;
+
+//===============HTTP SERVER=================
+
 var http = require('http');
 
-/**
- * Get port from environment and store in Express.
- */
+var httpPort = normalizePort(process.env.PORT || '3080');
+var httpServer = http.createServer(app);
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+httpServer.listen(httpPort);
+httpServer.on('error', onError);
+httpServer.on('listening', onListening);
 
-/**
- * Create HTTP server.
- */
 
-var server = http.createServer(app);
+//===============HTTPS SERVER=================
+if (enableHttps) {
+  var https = require('https');
+  var fs = require('fs');
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  var https_options = {
+    key: fs.readFileSync('../cert/server.key'),
+    cert: fs.readFileSync('../cert/server.pem')
+  };
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+  var httpsPort = normalizePort(process.env.PORT || '3443');
+  var httpsServer = https.createServer(https_options, app);
+
+  httpsServer.listen(httpsPort);
+  httpsServer.on('error', onError);
+  httpsServer.on('listening', onListening);
+}
+
+
 
 /**
  * Normalize a port into a number, string, or false.
@@ -64,11 +75,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      console.log(bind + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      console.log(bind + ' is already in use');
       process.exit(1);
       break;
     default:
@@ -81,7 +92,7 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
+  var addr = this.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;

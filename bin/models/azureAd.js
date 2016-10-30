@@ -1,8 +1,6 @@
 var mongoose = require('mongoose');
 
 var AzureAdSchema = new mongoose.Schema({
-    userGroup: { type: Number, required: true },
-    concurSeesion: { type: Number },
     clientID: { type: String, required: true },
     clientSecret: { type: String, required: true },
     tenant: { type: String, required: false},

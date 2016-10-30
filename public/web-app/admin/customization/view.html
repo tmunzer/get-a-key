@@ -1,0 +1,58 @@
+<md-content layout-margin>
+	<div layout-gt-sm="row">
+		<fieldset layout-column flex-gt-sm='50'>
+			<legend>{{"custom.headerLogo" | translate}}</legend>
+			<md-input-container class="md-block flex-gt-sm">
+				<form>
+					<input type="file" ng-file-select-header="onFileSelect($headerLogoFile)" aria-label="headerLogo">
+				</form>
+				<b>Preview:</b><br />
+				<img ng-src="{{headerLogo}}" ng-show="headerLogo" /><br/>
+				<i ng-hide="headerLogo">No image choosed</i>
+			</md-input-container>
+		</fieldset>
+		<fieldset layout-column flex-gt-sm='50'>
+			<legend>{{"custom.loginLogo" | translate}}</legend>
+			<md-input-container class="md-block flex-gt-sm">
+				<form>
+					<input type="file" ng-file-select-login="onFileSelect($loginLogoFile)" aria-label="loginLogo">
+				</form>
+				<b>Preview:</b><br />
+				<img ng-src="{{loginLogo}}" ng-show="loginLogo" /><br/>
+				<i ng-hide="loginLogo">No image choosed</i>
+
+			</md-input-container>
+		</fieldset>
+	</div>
+	<fieldset>
+		<legend>{{"custom.color" | translate}}</legend>
+		<md-input-container>
+			<md-switch ng-model="color.enable" class="md-primary" aria-label="Color Enable">
+				{{ color.status | translate }}
+			</md-switch>
+		</md-input-container>
+	</fieldset>
+	<fieldset>
+		<legend>{{"custom.login" | translate}}</legend>
+		<md-input-container class="md-block">
+			<md-switch ng-model="login.enable" class="md-primary" aria-label="Login Enable">
+				{{ login.status | translate }}
+			</md-switch>
+		</md-input-container>
+		<md-input-container>
+			<label for "loginTitle" translate="{{custom.login.title}}"></label>
+			<input id="loginTitle" type="text" ng-model="login.title">
+		</md-input-container>
+	</fieldset>
+	<fieldset>
+		<legend>{{"custom.app" | translate}}</legend>
+		<md-input-container class="md-block">
+			<md-switch ng-model="app.enable" class="md-primary" aria-label="App Enable">
+				{{ app.status | translate }}
+			</md-switch>
+	</fieldset>
+	<md-content layout="column" layout-gt-sm="row">
+		<md-button class="md-primary md-raised" ng-disabled="isWorking || config.userGroupId == 0" ng-click="save()" translate="save"
+			aria-label="save"></md-button>
+	</md-content>
+</md-content>

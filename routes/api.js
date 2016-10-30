@@ -6,6 +6,7 @@ var serverHostname = require("../config.js").appServer.vhost;
 
 var Account = require("../bin/models/account");
 var AzureAd = require("../bin/models/azureAd");
+var Config = require("../bin/models/config");
 /* GET users listing. */
 
 function getCredentials(req, callback) {
@@ -121,6 +122,78 @@ router.post("/myKey", function (req, res, next) {
 })
 
 
+
+/**
+ * ADMIN API
+ */
+
+router.get("/admin/config", function (req, res, next) {
+    var concurrentSessions, userGroupId;
+    if (req.session.xapi) {
+        API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, userGroups) {
+            if (err) res.status(500).json({ error: err });
+            else
+                Account
+                    .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+                    .populate("config")
+                    .exec(function (err, account) {
+                        if (err) res.status(500).json({ error: err });
+                        else if (account.length == 0) res.status(200).json({});
+                        else if (account.length == 1) {
+                            console.log(account[0]);
+                            if (account[0].config) {
+                                console.log(account[0].config);
+                                concurrentSessions = account[0].config.concurrentSessions;
+                                userGroupId = account[0].config.userGroupId;
+                            }
+                            res.status(200).json({
+                                loginUrl: "https://" + serverHostname + "/login/" + account[0]._id + "/",
+                                concurrentSessions: concurrentSessions,
+                                userGroups: userGroups,
+                                userGroupId: userGroupId
+                            });
+                        } else res.status(500).json({ error: "not able to retrieve the account" });
+                    })
+        })
+    } else res.status(403).send('Unknown session');
+})
+
+function saveConfig(req, res) {
+    var newConfig = { userGroupId: req.body.userGroupId };
+    if (req.body.concurrentSessions) newConfig.concurrentSessions = req.body.concurrentSessions;
+    else newConfig.concurrentSessions = 0;
+
+    Account
+        .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+        .exec(function (err, account) {
+            if (err) res.status(500).json({ error: err });
+            else if (account.length == 1) {
+                if (account[0].config) {
+                    Config.update({ _id: account[0].config }, newConfig, function (err, savedConfig) {
+                        if (err) res.status(500).json({ error: err });
+                        else res.status(200).json({ action: "save", status: 'done' });
+                    })
+                } else Config(newConfig).save(function (err, savedConfig) {
+                    if (err) res.status(500).json({ error: err });
+                    else {
+                        account[0].config = savedConfig;
+                        account[0].save(function (err, savedAccount) {
+                            if (err) res.status(500).json({ error: err });
+                            else res.status(200).json({ action: "save", status: 'done' });
+                        })
+                    }
+                });
+            } else res.status(500).json({ error: "not able to retrieve the account" });
+        });
+}
+
+router.post("/admin/config", function (req, res, next) {
+    if (req.session.xapi) {
+        if (req.body.userGroupId) saveConfig(req, res);
+        else res.status(500).send({ error: "userGroupId value is missing." });
+    } else res.status(403).send('Unknown session');
+})
+
 router.get("/aad", function (req, res, next) {
     if (req.session.xapi) {
         Account
@@ -133,10 +206,9 @@ router.get("/aad", function (req, res, next) {
                 else if (account.length == 0) res.status(200).json({});
                 else if (account.length == 1)
                     res.status(200).json({
-                        login: "https://"+serverHostname+"/login/" + account[0]._id + "/",
-                        signin: "https://"+serverHostname+"/login/" + account[0]._id + "/",
-                        callback: "https://"+serverHostname+"/aad/" + account[0]._id + "/callback",
-                        logout: "https://"+serverHostname+"/login/" + account[0]._id + "/",
+                        signin: "https://" + serverHostname + "/login/" + account[0]._id + "/",
+                        callback: "https://" + serverHostname + "/aad/" + account[0]._id + "/callback",
+                        logout: "https://" + serverHostname + "/login/" + account[0]._id + "/",
                         azureAd: account[0].azureAd
 
                     });
@@ -145,7 +217,7 @@ router.get("/aad", function (req, res, next) {
     } else res.status(403).send('Unknown session');
 })
 
-function saveAzureAdEnabled(req, res) {
+function saveAzureAd(req, res) {
     Account
         .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
         .exec(function (err, account) {
@@ -160,6 +232,7 @@ function saveAzureAdEnabled(req, res) {
                     if (err) res.status(500).json({ error: err });
                     else {
                         account[0].azureAd = result;
+                        account[0].adfs = null;
                         account[0].save(function (err, result) {
                             if (err) res.status(500).json({ error: err });
                             else res.status(200).json({ action: "save", status: 'done' });
@@ -169,7 +242,7 @@ function saveAzureAdEnabled(req, res) {
             } else res.status(500).json({ error: "not able to retrieve the account" });
         });
 }
-function saveAzureAdDisbled(req, res) {
+function saveAdfs(req, res) {
     Account
         .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
         .exec(function (err, account) {
@@ -193,21 +266,10 @@ function saveAzureAdDisbled(req, res) {
 
 router.post("/aad/", function (req, res, next) {
     if (req.session.xapi) {
-        if (req.body.azureAd) {
-            if (req.body.azureAd.enabled == true) saveAzureAdEnabled(req, res);
-            else if (req.body.azureAd.enabled == false) saveAzureAdDisbled(req, res);
-            else res.status(500).send({ error: "missing azureAd" });
-
-        } else res.status(500).send({ error: "missing azureAd" });
+        if (req.body.azureAd) saveAzureAd(req, res);
+        else res.status(500).send({ error: "missing azureAd" });
     } else res.status(403).send('Unknown session');
 })
 
-router.get("/admin/userGroups", function (req, res, next) {
-    if (req.session.xapi) {
-        API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, result) {
-            if (err) res.status(500).json({ error: err });
-            else res.status(200).json(result);
-        })
-    } else res.status(403).send('Unknown session');
-})
+
 module.exports = router;

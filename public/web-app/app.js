@@ -1,5 +1,6 @@
 angular.module("Modals", []);
 angular.module("CustomFilters", []);
+
 var gak = angular.module("gak", [
     'Modals',
     'CustomFilters',

@@ -24,6 +24,7 @@ router.get('/oauth/reg', function (req, res) {
                         vpcUrl: data.data[owner].vpcUrl.replace("https://", ""),
                         vhmId: data.data[owner].vhmId,
                         expireAt: data.data[owner].expireAt,
+                        userGroupId: 0
                     }
                     numAccounts++;
                 }
@@ -84,12 +85,7 @@ router.get('/', function (req, res, next) {
             title: 'Get-a-key Parameters'
         });
     else {
-        res.render('error', {
-            title: 'Get-a-Key Error',
-            error: {
-                message: "No session found. Please log in..."
-            }
-        });
+        res.redirect("/login/");
     }
 });
 

@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var AzureAd = require('./azureAd');
+var Config = require('./config');
+var Customization = require('./customization');
 
 var AccountSchema = new mongoose.Schema({
     ownerId: {type: String, required: true},
@@ -8,6 +10,8 @@ var AccountSchema = new mongoose.Schema({
     vpcUrl: {type: String, required: true},
     vhmId: {type: String, required: true},
     expireAt: { type: String, required: true },
+    config: {type: mongoose.Schema.ObjectId, ref:"Config"},
+    customization: {type: mongoose.Schema.ObjectId, ref:"Customization"},
     azureAd: {type: mongoose.Schema.ObjectId, ref:"AzureAd"},
     created_at    : { type: Date },
     updated_at    : { type: Date }

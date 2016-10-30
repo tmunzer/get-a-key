@@ -1,0 +1,63 @@
+<md-content layout-margin>
+	<fieldset>
+		<legend> {{"authentication.method" | translate}} </legend>
+		<md-checkbox class='md-primary' ng-model="method.aad" aria-label="azureAd">
+			AzureAD
+		</md-checkbox>
+			<md-checkbox class='md-primary' ng-model="method.adfs" aria-label="ADFS" disabled="disabled">
+			ADFS
+		</md-checkbox>
+	</fieldset>
+
+	<fieldset ng-show="method.aad==true">
+		<legend> {{"authentication.azureAd.params" | translate}}</legend>
+		<md-input-container class="md-block flex-gt-sm md-input-focused">
+			<label for="azureAdSignin" translate="authentication.azureAd.signinURL"></label>
+			<span id="azureAdSignin" disabled="disabled">{{admin.azureAd.signin}}</span>
+		</md-input-container>
+		<md-input-container class="md-block flex-gt-sm md-input-focused">
+			<label for="azureAdCallback" translate="authentication.azureAd.callbackURL"></label>
+			<span id="azureAdCallback" disabled="disabled">{{admin.azureAd.callback}}</span>
+		</md-input-container>
+		<md-input-container class="md-block flex-gt-sm md-input-focused">
+			<label for="azureAdLogout" translate="authentication.azureAd.logoutURL"></label>
+			<span id="azureAdLogout" disabled="disabled">{{admin.azureAd.logout}}</span>
+		</md-input-container>
+		<md-input-container class="md-block flex-gt-sm">
+			<label for="clientID">
+				<span translate="authentication.azureAd.clientID"></span>
+				<span style="color: red">*</span>
+			</label>
+			<input id="clientID" type="text" ng-model="admin.azureAd.clientID"/>
+		</md-input-container>
+		<md-input-container class="md-block flex-gt-sm">
+			<label for="clientSecret">
+				<span translate="authentication.azureAd.clientSecret"></span>
+				<span style="color: red">*</span>
+			</label>
+			<input id="clientSecret" type="text" ng-model="admin.azureAd.clientSecret"/>
+		</md-input-container>
+		<md-input-container class="md-block flex-gt-sm">
+			<label for="tenant">
+				<span translate="authentication.azureAd.tenant"></span>
+				<span style="color: red">*</span>
+			</label>
+			<input id="tenant" type="text" ng-model="admin.azureAd.tenant"/>
+		</md-input-container>
+		<md-input-container class="md-block flex-gt-sm">
+			<label for="resource">
+				<span translate="authentication.azureAd.resource"></span>
+				<span style="color: red">*</span>
+			</label>
+			<input id="resource" type="text" ng-model="admin.azureAd.resource"/>
+		</md-input-container>
+	</fieldset>
+	<fieldset ng-show="method.adfs==true">
+		<legend> {{"authentication.adfs.params" | translate}}</legend>
+		Not yet available...
+	</fieldset>
+	<md-content layout="column" layout-gt-sm="row">
+		<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save"
+			aria-label="get"></md-button>
+	</md-content>
+</md-content>

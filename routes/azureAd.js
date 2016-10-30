@@ -21,12 +21,14 @@ function getAccount(req, res, next) {
     Account
         .findById(req.params.account_id)
         .populate("azureAd")
-        .exec(function (err, result) {
+        .exec(function (err, account) {
             if (err) res.status(500).json({ error: err });
+            else if (!account) res.status(500).json({ error: "unknown error" });
             else {
-                req.account = result;
+                console.log(account);
+                req.account = account;
                 passport.use(new AzureAdOAuth2Strategy(
-                    result.azureAd,
+                    account.azureAd,
                     function (accessToken, refresh_token, params, profile, done) {
                         // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
                         // you will need a jwt-package like https://github.com/auth0/node-jsonwebtoken to decode id_token and get waad profile
@@ -48,7 +50,6 @@ router.get('/:account_id/login', getAccount,
 router.get('/:account_id/callback', getAccount,
     passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
     function (req, res) {
-
         if (req.session.passport.user.email) req.session.email = req.session.passport.user.email;
         else req.session.email = req.session.passport.user.upn;
         res.redirect('/web-app/');

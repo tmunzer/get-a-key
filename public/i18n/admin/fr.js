@@ -20,10 +20,17 @@ var fr = {
             color: "Couleurs"
         },
         login: {
-            login: "Page de Login"
+            login: "Page de Login",
+            title: "Titre",
+            text: "Texte"
         },
         app: {
-            app: "Page de l'application"
+            app: "Page de l'application",
+            messages: "Messages",
+            iconSrc: "Cette application utilise des icones \"material design\" pré-définies. Vous pouvez trouver la liste complète sur ",
+            title: "Titre",
+            icon: "Icone",
+            text: "Texte"
         }
     },
     authentication: {

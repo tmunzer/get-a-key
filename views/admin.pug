@@ -58,7 +58,7 @@ html
                                     span(style="display: inline-flex; margin-right: 5px;")
                                         div.iti-flag.fr
                                     span Francais                                
-                    md-button(aria-label="logout" href="/logout/" style="margin: auto;")                        
+                    md-button(aria-label="logout" href="/admin/logout/" style="margin: auto;")                        
                         md-icon(class="material-icons" aria-label="menu") exit_to_app
                         span {{"logout" | translate}}
 
@@ -69,5 +69,7 @@ html
                     md-tab-label {{'config' | translate}}
                 md-tab(md-on-select="authentication()")
                     md-tab-label {{'authentication' | translate}}
+                md-tab(md-on-select="customization()")
+                    md-tab-label {{'custom' | translate}}
             div(ng-view)
     

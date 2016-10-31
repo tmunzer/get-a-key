@@ -76,6 +76,11 @@ router.get('/oauth/reg', function (req, res) {
     } else res.render('error', { error: { message: "Unkown error..." } });
 });
 
+router.get("/logout/", function (req, res) {
+    req.logout();
+    req.session.destroy();
+    res.redirect("/");
+})
 /*================================================================
  DASHBOARD
  ================================================================*/

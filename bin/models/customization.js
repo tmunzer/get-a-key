@@ -1,30 +1,45 @@
 var mongoose = require('mongoose');
 
 var CustomizationSchema = new mongoose.Schema({
-    logoTop: { data: Buffer, contentType: String },
-    logo: { data: Buffer, contentType: String },
-    color1: { type: Number, required: true },
-    color2: { type: Number, required: true },
-    color3: { type: Number, required: true },
-    color4: { type: Number, required: true },
-    messages: [ 
-        {
-            icon: { type: String, required: false },
-            text: { type: String, required: true}
+    logo: {
+        enable: { type: Boolean, required: true },
+        img: {type: String }
+    },
+    colors: {
+        enable: { type: Boolean, required: true },
+        color1: { type: Number },
+        color2: { type: Number },
+        color3: { type: Number },
+        color4: { type: Number }
+    },
+    login: {
+        enable: { type: Boolean, required: true },
+        text: { type: String },
+        text: { type: String }
+    },
+    app:
+    {
+        enable: { type: Boolean, required: true },
+        text: { type: String },
+        rows: {
+            index: {
+                icon: { type: String},
+                text: { type: String }
+            }
         }
-    ],
-    created_at    : { type: Date },
-    updated_at    : { type: Date }
+    },
+    created_at: { type: Date },
+    updated_at: { type: Date }
 });
 
 var Customization = mongoose.model('Customization', CustomizationSchema);
 
 
 // Pre save
-CustomizationSchema.pre('save', function(next) {
+CustomizationSchema.pre('save', function (next) {
     var now = new Date();
     this.updated_at = now;
-    if ( !this.created_at ) {
+    if (!this.created_at) {
         this.created_at = now;
     }
     next();

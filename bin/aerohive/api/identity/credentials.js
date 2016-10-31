@@ -16,8 +16,6 @@ module.exports.getCredentials = function (xapi, credentialType, userGroup, membe
     if (page && page!="") path += '&page=' + page;
     if (pageSize && pageSize!="") path += '&pageSize=' + pageSize;
     api.GET(xapi, path, function (err, result) {
-        console.log("Error:", err);
-        console.log("Result:", result);
         callback(err, result);        
     })
 };
@@ -29,8 +27,6 @@ module.exports.createCredential = function (xapi, memberOf, adUser, hmCredential
     for (var key in hmCredentialsRequestVo) {
         if (hmCredentialsRequestVo[key] === '') delete hmCredentialsRequestVo[key];
     }
-    console.log(xapi);
-    console.log("test");
     api.POST(xapi, path, hmCredentialsRequestVo, function (err, result) {
         if (err) {
             callback(err, null);

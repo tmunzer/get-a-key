@@ -9,9 +9,10 @@ function getAccount(req, res, next) {
     Account
         .findById(req.params.account_id)
         .populate("azureAd")
+        .populate("customization")
         .exec(function (err, result) {
             if (err) res.render('error', { error: { message: err } });
-            else {
+            else if (result) {
                 req.session.account = result;
                 req.session.xapi = {
                     vpcUrl: result.vpcUrl,
@@ -20,8 +21,9 @@ function getAccount(req, res, next) {
                 };
                 req.session.uurl = result._id;
                 req.session.groupId = result.azureAd.userGroup;
+                req.custom = result.customization;
                 next();
-            }
+            } else res.redirect("/login/");
         })
 }
 
@@ -32,7 +34,8 @@ router.get("/login/:account_id/", getAccount, function (req, res) {
     res.render("login", {
         title: 'Get a Key!',
         oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id=" + config.aerohiveApp.clientID + "&redirect_uri=" + config.aerohiveApp.redirectUrl,
-        method: method
+        method: method,
+        custom: req.custom
     });
 })
 
@@ -49,6 +52,5 @@ router.get("/logout/", function (req, res) {
     } else res.redirect("/");
     req.logout();
     req.session.destroy();
-    console.lgo(req.session);
 })
 module.exports = router;

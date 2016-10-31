@@ -1,58 +1,110 @@
-<md-content layout-margin>
-	<div layout-gt-sm="row">
-		<fieldset layout-column flex-gt-sm='50'>
-			<legend>{{"custom.headerLogo" | translate}}</legend>
+<div layout-margin>
+	<md-content md-whiteframe="7" layout="column">
+		<md-toolbar class="md-hue-2">
+			<div class="md-toolbar-tools">
+				<h2>{{"custom.logo" | translate}}</h2>
+				<span flex></span>
+				<md-input-container>
+					<md-switch ng-model="logo.enable" aria-label="Color Enable">
+						{{ logo.status | translate }}
+					</md-switch>
+				</md-input-container>
+			</div>
+		</md-toolbar>
+		<div layout-padding>
 			<md-input-container class="md-block flex-gt-sm">
 				<form>
-					<input type="file" ng-file-select-header="onFileSelect($headerLogoFile)" aria-label="headerLogo">
+					<input type="file" ng-file-select-logo="onFileSelect($logoFile)" aria-label="logo" ng-disabled="!logo.enable">
 				</form>
 				<b>Preview:</b><br />
-				<img ng-src="{{headerLogo}}" ng-show="headerLogo" /><br/>
-				<i ng-hide="headerLogo">No image choosed</i>
+                <img ng-src="{{logo.img}}">
+				<i ng-hide="logo.img">No image choosed</i>
 			</md-input-container>
-		</fieldset>
-		<fieldset layout-column flex-gt-sm='50'>
-			<legend>{{"custom.loginLogo" | translate}}</legend>
-			<md-input-container class="md-block flex-gt-sm">
-				<form>
-					<input type="file" ng-file-select-login="onFileSelect($loginLogoFile)" aria-label="loginLogo">
-				</form>
-				<b>Preview:</b><br />
-				<img ng-src="{{loginLogo}}" ng-show="loginLogo" /><br/>
-				<i ng-hide="loginLogo">No image choosed</i>
-
-			</md-input-container>
-		</fieldset>
-	</div>
-	<fieldset>
-		<legend>{{"custom.color" | translate}}</legend>
-		<md-input-container>
-			<md-switch ng-model="color.enable" class="md-primary" aria-label="Color Enable">
-				{{ color.status | translate }}
-			</md-switch>
-		</md-input-container>
-	</fieldset>
-	<fieldset>
-		<legend>{{"custom.login" | translate}}</legend>
-		<md-input-container class="md-block">
-			<md-switch ng-model="login.enable" class="md-primary" aria-label="Login Enable">
-				{{ login.status | translate }}
-			</md-switch>
-		</md-input-container>
-		<md-input-container>
-			<label for "loginTitle" translate="{{custom.login.title}}"></label>
-			<input id="loginTitle" type="text" ng-model="login.title">
-		</md-input-container>
-	</fieldset>
-	<fieldset>
-		<legend>{{"custom.app" | translate}}</legend>
-		<md-input-container class="md-block">
-			<md-switch ng-model="app.enable" class="md-primary" aria-label="App Enable">
-				{{ app.status | translate }}
-			</md-switch>
-	</fieldset>
-	<md-content layout="column" layout-gt-sm="row">
-		<md-button class="md-primary md-raised" ng-disabled="isWorking || config.userGroupId == 0" ng-click="save()" translate="save"
-			aria-label="save"></md-button>
+		</div>
 	</md-content>
-</md-content>
+
+
+	<md-content md-whiteframe="7" layout="column">
+		<md-toolbar class="md-hue-2">
+			<div class="md-toolbar-tools">
+				<h2>{{"custom.color" | translate}}</h2>
+				<span flex></span>
+				<md-input-container>
+					<md-switch ng-model="colors.enable" aria-label="Color Enable">
+						{{ color.status | translate }}
+					</md-switch>
+				</md-input-container>
+			</div>
+		</md-toolbar>
+
+		<div layout-padding>
+
+		</div>
+	</md-content>
+	<md-content md-whiteframe="7" layout="column">
+		<md-toolbar class="md-hue-2">
+			<div class="md-toolbar-tools">
+				<h2>{{"custom.login" | translate}}</h2>
+				<span flex></span>
+				<md-input-container>
+					<md-switch ng-model="login.enable" aria-label="Login Enable">
+						{{ login.status | translate }}
+					</md-switch>
+				</md-input-container>
+			</div>
+		</md-toolbar>
+		<div layout-padding>
+			<form name="loginForm">
+				<md-input-container class="md-block">
+					<label for="loginTitle" translate="custom.login.title"></label>
+					<input id="loginTitle" type="text" ng-model="login.title" md-maxlength="50" ng-disabled="!login.enable">
+				</md-input-container>
+				<md-input-container class="md-block">
+					<label for="loginText" translate="custom.login.text"></label>
+					<textarea id="loginText" ng-model="login.text" md-maxlength="300" rows="2" md-select-on-focus ng-disabled="!login.enable"></textarea>
+				</md-input-container>
+			</form>
+		</div>
+	</md-content>
+	<md-content md-whiteframe="5">
+		<md-toolbar class="md-hue-2">
+			<div class="md-toolbar-tools">
+				<h2>{{"custom.app" | translate}}</h2>
+				<span flex></span>
+				<md-input-container>
+					<md-switch ng-model="app.enable" aria-label="App Enable">
+						{{ app.status | translate }}
+					</md-switch>
+				</md-input-container>
+			</div>
+		</md-toolbar>
+		<div layout-padding>
+
+			<md-input-container class="md-block">
+				<label for="appTitle" translate="custom.app.title"></label>
+				<input id="appTitle" type="text" ng-model="app.title" ng-disabled="!app.enable">
+			</md-input-container>
+			<fieldset>
+				<div>
+					<span translate="custom.app.iconSrc"></span> <a target="_blank" href="https://material.io/icons/">https://material.io/icons/</a>
+				</div>
+				<legend translate="custom.app.messages"></legend>
+				<div ng-repeat="row in app.rows" layout="row">
+					<md-input-container class="md-block" flex="20">
+						<label for="icon-{{$index}}" translate="custom.app.icon"></label>
+						<input id="icon-{{$index}}" type="text" ng-model="row.icon">
+					</md-input-container>
+					<md-input-container class="md-block" flex="80">
+						<label for="text-{{$index}}" translate="custom.app.text"></label>
+						<input id="text-{{$index}}" ng-model="row.text">
+					</md-input-container>
+				</div>
+			</fieldset>
+		</div>
+
+	</md-content>
+	<md-content layout="column" layout-gt-sm="row">
+		<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save" aria-label="save"></md-button>
+	</md-content>
+	</md-content>
+</div>

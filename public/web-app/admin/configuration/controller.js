@@ -47,7 +47,7 @@ angular.module("Configuration").controller("ConfigurationCtrl", function ($scope
         request = ConfigurationService.save($scope.config.userGroupId, $scope.config.concurrentSessions);
         request.then(function (promise) {
             if (promise && promise.error) apiWarning(promise.error);
-            else console.log("fone");
+            else console.log("done");
         })
     }
 })

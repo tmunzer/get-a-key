@@ -29,7 +29,10 @@ html
             div.header
             md-toolbar.header.fixed(layout='row')
                 h1.logo.md-toolbar-tools
-                    img(src="/images/logo_w.png" alt="Aerohive")
+                    if custom && custom.logo && custom.logo.enable
+                        img(src=custom.logo.img class="ah-logo")
+                    else
+                        img(src="/images/logo_w.png" alt="Aerohive")
                 span(flex)
                 
                 div(style="display:flex; padding-right: 20px")
@@ -64,7 +67,10 @@ html
                         div.md-toolbar-tools
                             h2(translate="login.title")
                     md-content(layout="column" layout-padding)
-                        img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
+                        if custom && custom.logo && custom.logo.enable
+                            img(src=custom.logo.img alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")
+                        else
+                            img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
                         if method                                              
                             div(translate="login.instruction")
                             br                    

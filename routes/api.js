@@ -7,6 +7,7 @@ var serverHostname = require("../config.js").appServer.vhost;
 var Account = require("../bin/models/account");
 var AzureAd = require("../bin/models/azureAd");
 var Config = require("../bin/models/config");
+var Customization = require("../bin/models/customization");
 /* GET users listing. */
 
 function getCredentials(req, callback) {
@@ -72,7 +73,6 @@ function deliverCredential(req, account, callback) {
 };
 
 router.get("/myKey", function (req, res, next) {
-    console.log(req.session);
     if (req.session.hasOwnProperty('passport')) {
         createCredential(req, function (err, result) {
             if (err && err.code == "registration.service.item.already.exist") {
@@ -96,7 +96,6 @@ router.get("/myKey", function (req, res, next) {
 router.delete("/myKey", function (req, res, next) {
     if (req.session.xapi) {
         getCredentials(req, function (err, account) {
-            console.log(account);
             if (err) res.status(500).json({ action: "delete", error: err });
             else if (account) deleteCredential(req, account, function (err, result) {
                 if (err) res.status(500).json({ action: "delete", error: err });
@@ -140,9 +139,7 @@ router.get("/admin/config", function (req, res, next) {
                         if (err) res.status(500).json({ error: err });
                         else if (account.length == 0) res.status(200).json({});
                         else if (account.length == 1) {
-                            console.log(account[0]);
                             if (account[0].config) {
-                                console.log(account[0].config);
                                 concurrentSessions = account[0].config.concurrentSessions;
                                 userGroupId = account[0].config.userGroupId;
                             }
@@ -200,8 +197,6 @@ router.get("/aad", function (req, res, next) {
             .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
             .populate("azureAd")
             .exec(function (err, account) {
-                console.log(req.session.xapi);
-                console.log(account);
                 if (err) res.status(500).json({ error: err });
                 else if (account.length == 0) res.status(200).json({});
                 else if (account.length == 1)
@@ -271,5 +266,72 @@ router.post("/aad/", function (req, res, next) {
     } else res.status(403).send('Unknown session');
 })
 
+router.get("/admin/custom/", function (req, res, next) {
+    if (req.session.xapi) {
+        Account
+            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+            .populate("customization")
+            .exec(function (err, account) {
+                if (err) res.status(500).json({ error: err });
+                else if (account.length == 0) res.status(200).json({});
+                else if (account.length == 1)
+                    res.status(200).json(account[0].customization);
+                else res.status(500).json({ err: "not able to retrieve the account" });
+            })
+    } else res.status(403).send('Unknown session');
+})
+
+function saveCustomization(custom, req, cb) {
+    if (req.body.logo && req.body.logo.enable) custom.logo = req.body.logo;
+    else custom.logo.enable = false;
+
+    if (req.body.colors && req.body.colors.enable) {
+        custom.colors.enable = true;
+    }
+    else custom.colors.enable = false;
+
+    if (req.body.login && req.body.login.enable) {
+        custom.login.enable = true;
+    }
+    else custom.login.enable = false;
+
+    if (req.body.app && req.body.app.enable) {
+        custom.app.enable = true;
+
+    }
+    else custom.app.enable = false;
+
+    custom.save(function (err, result) {
+        if (err) cb(err);
+        else cb(err, result);
+    })
+}
+
+router.post("/admin/custom/", function (req, res, next) {
+    if (req.session.xapi) {
+        Account
+            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+            .populate("customization")
+            .exec(function (err, account) {
+                if (err) res.status(500).json({ error: err });
+                else if (account.length == 0) res.status(200).json({});
+                else if (account.length == 1) {
+                    var custom;
+                    if (account[0].customization) custom = account[0].customization;
+                    else custom = new Customization;
+                    saveCustomization(custom, req, function (err, result) {
+                        if (err) res.status(500).json({ error: err });
+                        else {
+                            account[0].customization = result;
+                            account[0].save(function (err, result) {
+                                if (err) res.status(500).json({ error: err });
+                                else res.status(200).json({ action: "save", status: 'done' });
+                            });
+                        }
+                    });
+                } else res.status(500).json({ err: "not able to retrieve the account" });
+            })
+    } else res.status(403).send('Unknown session');
+})
 
 module.exports = router;

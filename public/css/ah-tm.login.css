@@ -3,9 +3,8 @@ body {
 }
 
 .ah-logo {
-    margin-left: 21px;
-    margin-top: 19px;
-    width: 204px;
+max-height: 90%;
+max-width: 200px;
 }
 
 

@@ -91,7 +91,8 @@ gak
             .fallbackLanguage('en')
             .usePostCompiling(true)
             .useSanitizeValueStrategy("escapeParameters");
-
+    }).config(function ($compileProvider) {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|ftp|blob):|data:image\//);
     });
 
 gak.controller('AppCtrl', function ($scope, $translate, $location) {

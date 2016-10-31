@@ -25,7 +25,6 @@ function getAccount(req, res, next) {
             if (err) res.status(500).json({ error: err });
             else if (!account) res.status(500).json({ error: "unknown error" });
             else {
-                console.log(account);
                 req.account = account;
                 passport.use(new AzureAdOAuth2Strategy(
                     account.azureAd,

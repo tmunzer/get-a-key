@@ -21,10 +21,16 @@ var en = {
         },
         login: {
             login: "Login page",
-            title: "Titre "
+            title: "Title",
+            text: "Text"
         },
         app: {
-            app: "Application page"
+            app: "Application page",
+            messages: "Messages",
+            iconSrc: "This Application is using predifiened \"material design\" icons. You can find the entire list at ",
+            title: "Title",
+            icon: "Icon",
+            text: "Text"
         }
     },
     authentication: {

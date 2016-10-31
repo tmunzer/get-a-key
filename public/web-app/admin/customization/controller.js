@@ -1,5 +1,5 @@
 
-angular.module('Customization').controller('CustomizationCtrl', function ($scope, fileReader, CustomizationService) {
+angular.module('Customization').controller('CustomizationCtrl', function ($scope, $mdDialog, fileReader, CustomizationService) {
 
     var request;
 
@@ -29,6 +29,27 @@ angular.module('Customization').controller('CustomizationCtrl', function ($scope
         rows: { 0: { icon: "", text: "" } }
     }
 
+    function reqDone(data) {
+        $mdDialog.show({
+            controller: 'DialogController',
+            templateUrl: '/web-app/modals/modalDoneContent.html',
+            locals: {
+                items: data
+            }
+        })
+    }
+
+    function apiWarning(warning) {
+        $mdDialog.show({
+            controller: 'DialogController',
+            templateUrl: '/web-app/modals/modalWarningContent.html',
+            escapeToClose: false,
+            locals: {
+                items: warning.error
+            }
+        });
+    }
+
     $scope.$watch("logo.enable", function () {
         if ($scope.logo.enable) $scope.logo.status = "enabled";
         else $scope.logo.status = "disabled";
@@ -52,7 +73,7 @@ angular.module('Customization').controller('CustomizationCtrl', function ($scope
         fileReader.readAsDataUrl($scope.logoFile, $scope)
             .then(function (result) {
                 if (result) {
-                    $scope.logo.img = result;                
+                    $scope.logo.img = result;
                 }
             });
     };
@@ -81,12 +102,45 @@ angular.module('Customization').controller('CustomizationCtrl', function ($scope
     })
 })
 
-angular.module('Customization').directive("ngFileSelectLogo", function () {
+angular.module('Customization').directive("ngFileSelectLogo", function ($mdDialog) {
+
+    function logoSizeErrorContent(logoFile) {
+        var name = logoFile.name;
+        var size = logoFile.size;
+        var unitIndex = 0;
+        var units = ["B", "kB", "MB", "GB", "TB"];
+        while (size >= 1024) {
+            size = size / 1024;
+            unitIndex++;
+        }
+        size = size.toFixed(2);
+        var unit = units[unitIndex];
+        $mdDialog.show({
+            controller: 'DialogController',
+            templateUrl: '/web-app/modals/modalErrorContent.html',
+            escapeToClose: false,
+            locals: {
+                items: {
+                    logo: {
+                        name: name,
+                        size: size,
+                        unit: unit
+                    },
+                    type: "logoFileTooLarge"
+                }
+            }
+        });
+    }
+
     return {
         link: function ($scope, el) {
             el.bind("change", function (e) {
-                $scope.logoFile = (e.srcElement || e.target).files[0];
-                $scope.getLogo();
+                var tmpFile = (e.srcElement || e.target).files[0];
+                if (tmpFile.size >= 1048576) logoSizeErrorContent(tmpFile);                
+                else {
+                    $scope.logoFile = tmpFile;
+                    $scope.getLogo();
+                }
             })
         }
     }
@@ -109,7 +163,7 @@ angular.module('Customization').factory("CustomizationService", function ($http,
         var data = {
             logo: {
                 enable: logo.enable,
-                img: logo.img            
+                img: logo.img
             },
             colors: {
                 enable: colors.enable,

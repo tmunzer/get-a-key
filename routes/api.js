@@ -334,4 +334,31 @@ router.post("/admin/custom/", function (req, res, next) {
     } else res.status(403).send('Unknown session');
 })
 
+router.post("/admin/custom/logo", function (req, res, next) {
+    if (req.session.xapi) {
+        Account
+            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+            .populate("customization")
+            .exec(function (err, account) {
+                if (err) res.status(500).json({ error: err });
+                else if (account.length == 0) res.status(200).json({});
+                else if (account.length == 1) {
+                    var custom;
+                    if (account[0].customization) custom = account[0].customization;
+                    else custom = new Customization;
+                    saveLogo(custom, req, function (err, result) {
+                        if (err) res.status(500).json({ error: err });
+                        else {
+                            account[0].customization = result;
+                            account[0].save(function (err, result) {
+                                if (err) res.status(500).json({ error: err });
+                                else res.status(200).json({ action: "save", status: 'done' });
+                            });
+                        }
+                    });
+                } else res.status(500).json({ err: "not able to retrieve the account" });
+            })
+    } else res.status(403).send('Unknown session');
+})
+
 module.exports = router;

@@ -1,0 +1,20 @@
+<md-dialog aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate="modal.error.title"></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">            
+            <div ng-show="items.type == 'logoFileTooLarge'" 
+            translate="modal.error.logoFileTooLarge" 
+            translate-value-size={{items.logo.size}} 
+            translate-value-name={{items.logo.name}}
+            translate-value-unit={{items.logo.unit}}
+            ></div>                        
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="close()" class="md-raised md-primary" translate="modal.button.close" aria-label="close"></md-button>
+    </md-dialog-actions>
+</md-dialog>

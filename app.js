@@ -29,7 +29,8 @@ app.use(passport.session());
 
 
 //===============APP=================
-app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true , limit: '1mb'}));
+app.use(bodyParser.json({limit: '1mb'}));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
 

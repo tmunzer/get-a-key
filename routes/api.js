@@ -6,7 +6,7 @@ var serverHostname = require("../config.js").appServer.vhost;
 
 var Account = require("../bin/models/account");
 var AzureAd = require("../bin/models/azureAd");
-var Config = require("../bin/models/config");
+var Config = require("../bin/models/configuration");
 var Customization = require("../bin/models/customization");
 /* GET users listing. */
 

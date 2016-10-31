@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var AzureAd = require('./azureAd');
-var Config = require('./config');
+var Config = require('./configuration');
 var Customization = require('./customization');
 
 var AccountSchema = new mongoose.Schema({

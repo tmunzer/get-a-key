@@ -111,7 +111,7 @@ function getCustom(req, res, next) {
             })
     else next();
 }
-router.get("/preview/", function (req, res, next) {
+router.get("/preview/", getCustom, function (req, res, next) {
     res.render('web-app', {
         title: 'Get a Key!',
         custom: req.custom

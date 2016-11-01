@@ -59,7 +59,7 @@ function getColors(req, res, next) {
                     req.colors = defaultColors();
                     next();
                 }
-                else if (result && result.customization.colors) {
+                else if (result && result.customization.colors && result.customization.colors.enable) {
                     var delta;
                     if (result.customization.colors.contrastDefaultColor == "light") delta = 32;
                     else delta = -32;

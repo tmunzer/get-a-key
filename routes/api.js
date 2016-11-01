@@ -128,23 +128,23 @@ router.post("/myKey", function (req, res, next) {
 
 router.get("/admin/config", function (req, res, next) {
     var concurrentSessions, userGroupId;
+    console.log(req.session);
     if (req.session.xapi) {
         API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, userGroups) {
             if (err) res.status(500).json({ error: err });
             else
                 Account
-                    .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+                    .findById(req.session.account._id)
                     .populate("config")
                     .exec(function (err, account) {
                         if (err) res.status(500).json({ error: err });
-                        else if (account.length == 0) res.status(200).json({});
-                        else if (account.length == 1) {
-                            if (account[0].config) {
-                                concurrentSessions = account[0].config.concurrentSessions;
-                                userGroupId = account[0].config.userGroupId;
+                        else if (account) {
+                            if (account.config) {
+                                concurrentSessions = account.config.concurrentSessions;
+                                userGroupId = account.config.userGroupId;
                             }
                             res.status(200).json({
-                                loginUrl: "https://" + serverHostname + "/login/" + account[0]._id + "/",
+                                loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
                                 concurrentSessions: concurrentSessions,
                                 userGroups: userGroups,
                                 userGroupId: userGroupId
@@ -161,20 +161,20 @@ function saveConfig(req, res) {
     else newConfig.concurrentSessions = 0;
 
     Account
-        .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+        .findById(req.session._id)
         .exec(function (err, account) {
             if (err) res.status(500).json({ error: err });
-            else if (account.length == 1) {
-                if (account[0].config) {
-                    Config.update({ _id: account[0].config }, newConfig, function (err, savedConfig) {
+            else if (account) {
+                if (account.config) {
+                    Config.update({ _id: account.config }, newConfig, function (err, savedConfig) {
                         if (err) res.status(500).json({ error: err });
                         else res.status(200).json({ action: "save", status: 'done' });
                     })
                 } else Config(newConfig).save(function (err, savedConfig) {
                     if (err) res.status(500).json({ error: err });
                     else {
-                        account[0].config = savedConfig;
-                        account[0].save(function (err, savedAccount) {
+                        account.config = savedConfig;
+                        account.save(function (err, savedAccount) {
                             if (err) res.status(500).json({ error: err });
                             else res.status(200).json({ action: "save", status: 'done' });
                         })
@@ -268,14 +268,12 @@ router.post("/aad/", function (req, res, next) {
 
 router.get("/admin/custom/", function (req, res, next) {
     if (req.session.xapi) {
-        Account
-            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
-            .populate("customization")
-            .exec(function (err, account) {
+        Customization
+            .findById(req.session.account.customization)
+            .exec(function (err, custom) {
                 if (err) res.status(500).json({ error: err });
-                else if (account.length == 0) res.status(200).json({});
-                else if (account.length == 1)
-                    res.status(200).json(account[0].customization);
+                else if (custom)
+                    res.status(200).json(custom);
                 else res.status(500).json({ err: "not able to retrieve the account" });
             })
     } else res.status(403).send('Unknown session');
@@ -320,33 +318,6 @@ router.post("/admin/custom/", function (req, res, next) {
                     if (account[0].customization) custom = account[0].customization;
                     else custom = new Customization;
                     saveCustomization(custom, req, function (err, result) {
-                        if (err) res.status(500).json({ error: err });
-                        else {
-                            account[0].customization = result;
-                            account[0].save(function (err, result) {
-                                if (err) res.status(500).json({ error: err });
-                                else res.status(200).json({ action: "save", status: 'done' });
-                            });
-                        }
-                    });
-                } else res.status(500).json({ err: "not able to retrieve the account" });
-            })
-    } else res.status(403).send('Unknown session');
-})
-
-router.post("/admin/custom/logo", function (req, res, next) {
-    if (req.session.xapi) {
-        Account
-            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
-            .populate("customization")
-            .exec(function (err, account) {
-                if (err) res.status(500).json({ error: err });
-                else if (account.length == 0) res.status(200).json({});
-                else if (account.length == 1) {
-                    var custom;
-                    if (account[0].customization) custom = account[0].customization;
-                    else custom = new Customization;
-                    saveLogo(custom, req, function (err, result) {
                         if (err) res.status(500).json({ error: err });
                         else {
                             account[0].customization = result;

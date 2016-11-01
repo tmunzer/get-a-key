@@ -30,11 +30,14 @@ router.get('/oauth/reg', function (req, res) {
                 }
                 if (numAccounts == 1) {
                     Account.
-                        find({ ownerId: account.ownerId, vpcUrl: account.vpcUrl, vhmId: account.vhmId })
+                        findOne({ ownerId: account.ownerId, vpcUrl: account.vpcUrl, vhmId: account.vhmId })
                         .exec(function (err, accountInDb) {
                             if (err) res.render('error', { error: { message: err } });
-                            else if (accountInDb.length == 0) {
-                                Account(account).save(function (err, result) {
+                            else if (accountInDb) {
+                                accountInDb.accessToken = account.accessToken;
+                                accountInDb.refreshToken = account.refreshToken;
+                                accountInDb.expireAt = account.expireAt;
+                                accountInDb.save(function (err, account) {
                                     if (err) res.render('error', { error: { message: err } })
                                     else {
                                         req.session.xapi = {
@@ -45,28 +48,28 @@ router.get('/oauth/reg', function (req, res) {
                                             vhmId: account.vhmId,
                                             hmngType: "public"
                                         };
-                                        res.redirect('/admin/');
-                                    }
-                                })
-                            } else if (accountInDb.length == 1) {
-                                accountInDb[0].accessToken = account.accessToken;
-                                accountInDb[0].refreshToken = account.refreshToken;
-                                accountInDb[0].expireAt = account.expireAt;
-                                accountInDb[0].save(function (err, result) {
-                                    if (err) res.render('error', { error: { message: err } })
-                                    else {
-                                        req.session.xapi = {
-                                            rejectUnauthorized: true,
-                                            vpcUrl: account.vpcUrl,
-                                            ownerId: account.ownerId,
-                                            accessToken: account.accessToken,
-                                            vhmId: account.vhmId,
-                                            hmngType: "public"
-                                        };
+                                        req.session.account = account;
                                         res.redirect('/admin/');
                                     }
                                 })
                             }
+                            else {
+                                Account(account).save(function (err, account) {
+                                    if (err) res.render('error', { error: { message: err } })
+                                    else {
+                                        req.session.xapi = {
+                                            rejectUnauthorized: true,
+                                            vpcUrl: account.vpcUrl,
+                                            ownerId: account.ownerId,
+                                            accessToken: account.accessToken,
+                                            vhmId: account.vhmId,
+                                            hmngType: "public"
+                                        };
+                                        req.session.account = account;
+                                        res.redirect('/admin/');
+                                    }
+                                })
+                            } 
                         })
 
                 }

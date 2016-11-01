@@ -30,6 +30,13 @@ angular
             rows: { 0: { icon: "", text: "" } }
         }
 
+        // color picker options
+        $scope.colorPicker = {
+            openOnInput: true,
+            alphaChannel: false,
+            rgb: false,
+            hsl: false
+        };
 
         $scope.$watch("logo.enable", function () {
             if ($scope.logo.enable) $scope.status.logo = "enabled";

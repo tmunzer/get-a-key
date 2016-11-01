@@ -49,7 +49,16 @@
 				</md-select>
 			</md-input-container>
 			<div flex-gt-sm="20">
-				<div md-color-picker ng-model="colors.color" label="{{'custom.color.mainColor' | translate}}" ng-disabled="!colors.enable"></div>
+				<div md-color-picker 
+				ng-model="colors.color" 
+				label="{{'custom.color.mainColor' | translate}}" 
+				ng-disabled="!colors.enable"
+				open-on-input="true"
+				md-color-alpha-channel="false"
+				md-color-hex="true"
+				md-color-rgb="false" 
+				md-color-hsl="false" >
+				</div>
 			</div>
 		</div>
 	</md-content>

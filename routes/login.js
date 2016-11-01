@@ -4,27 +4,39 @@ var router = express.Router();
 var config = require("../config.js");
 
 var Account = require("../bin/models/account");
+var Customization = require("../bin/models/customization");
 
 function getAccount(req, res, next) {
     Account
         .findById(req.params.account_id)
         .populate("azureAd")
-        .populate("customization")
-        .exec(function (err, result) {
+        .populate("adfs")
+        .populate("config")
+        .exec(function (err, account) {
             if (err) res.render('error', { error: { message: err } });
-            else if (result) {
-                req.session.account = result;
+            else if (account) {
+                req.session.account = account;
                 req.session.xapi = {
-                    vpcUrl: result.vpcUrl,
-                    accessToken: result.accessToken,
-                    ownerId: result.ownerId
+                    vpcUrl: account.vpcUrl,
+                    accessToken: account.accessToken,
+                    ownerId: account.ownerId
                 };
-                req.session.uurl = result._id;
-                req.session.groupId = result.azureAd.userGroup;
-                req.custom = result.customization;
-                next();
+                req.session.uurl = account._id;
+                req.session.groupId = account.config.userGroupId;
+                getCustom(req, next);
             } else res.redirect("/login/");
         })
+}
+
+function getCustom(req, next) {
+    if (req.session.account.customization)
+        Customization
+            .findById(req.session.account.customization)
+            .exec(function (err, custom) {
+                if (!err) req.custom = custom;
+                next();
+            })
+    else next();
 }
 
 router.get("/login/:account_id/", getAccount, function (req, res) {

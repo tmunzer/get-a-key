@@ -58,6 +58,9 @@ app.get('/fail', function (req, res, next) {
   }, 1000);
 });
 
+//Customization
+var custom = require('./routes/custom');
+app.use('/custom/', custom);
 //Azure AD
 var azureAd = require('./routes/azureAd');
 app.use('/aad/', azureAd);

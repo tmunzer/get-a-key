@@ -4,8 +4,11 @@ html
         title= title
         meta(name="viewport" content="width=device-width, initial-scale=1")
         script(src="/bower_components/angular/angular.min.js")
+
         script(src="/i18n/admin/en.js")
         script(src="/i18n/admin/fr.js")
+
+        script(src="/custom/colors")
         script(src="/bower_components/angular-aria/angular-aria.js")
         script(src="/bower_components/angular-animate/angular-animate.min.js")
         script(src="/bower_components/angular-material/angular-material.js")
@@ -13,6 +16,8 @@ html
         script(src="/bower_components/angular-route/angular-route.min.js")
         script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
         script(src="/bower_components/angular-translate/angular-translate.min.js")
+        script(src="/bower_components/tinyColor/dist/tinycolor-min.js")
+        script(src="/bower_components/md-color-picker/dist/mdColorPicker.min.js")
         script(src="/web-app/ng-sanitize.js")
         script(src="/web-app/admin/admin.js")
         script(src="/web-app/admin/upload.js")                 
@@ -21,6 +26,7 @@ html
         script(src="/web-app/admin/customization/controller.js")
         script(src="/web-app/filters.js")
         script(src="/web-app/modals/controller.js")
+        link(rel="stylesheet" href="/bower_components/md-color-picker/dist/mdColorPicker.min.css")
         link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
         link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
         link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
@@ -65,11 +71,11 @@ html
             
         div(id="main")
             md-tabs(md-dynamic-height md-border-bottom)
-                md-tab(md-on-select="config()")
+                md-tab(md-on-select="select('configuration')" md-active="active('configuration')")
                     md-tab-label {{'config' | translate}}
-                md-tab(md-on-select="authentication()")
+                md-tab(md-on-select="select('authentication')" md-active="active('authentication')")
                     md-tab-label {{'authentication' | translate}}
-                md-tab(md-on-select="customization()")
+                md-tab(md-on-select="select('customization')" md-active="active('customization')")
                     md-tab-label {{'custom' | translate}}
             div(ng-view)
     

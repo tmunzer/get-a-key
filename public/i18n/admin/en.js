@@ -17,7 +17,10 @@ var en = {
         headerLogo: "Header Logo",
         loginLogo: "Login Logo",
         color: {
-            color: "Colors"
+            color: "Colors",
+            theme: "Theme",
+            mainColor: "Main Color",
+            secondColor: "Secondary Color"
         },
         login: {
             login: "Login page",

@@ -21,10 +21,6 @@
     position: fixed;
     top: 0;
     z-index: 75;
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1e88ef+0,1e88ef+25,0060c7+100 */
-    background: #0093d1; /* Old browsers */
-   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e88ef', endColorstr='#0060c7', GradientType=1); /* IE6-9 fallback on horizontal gradient */
-
 }
 
 .header .md-button:hover {

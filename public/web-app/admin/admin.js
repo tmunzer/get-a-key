@@ -11,6 +11,7 @@ var gak = angular.module("gak", [
     'ngSanitize',
     'ngMaterial',
     'ngMessages',
+    'mdColorPicker',
     'pascalprecht.translate',
     'Authentication',
     'Configuration',
@@ -40,23 +41,7 @@ gak
             });
     })
     .config(function ($mdThemingProvider) {
-        $mdThemingProvider.definePalette('ahBlue', {
-            '50': 'eaf1f4',
-            '100': 'daf4ff',
-            '200': 'bedaf6',
-            '300': '0093d1',
-            '400': '0093d1',
-            '500': '0093d1',
-            '600': '0093d1',
-            '700': '0093d1',
-            '800': '0093d1',
-            '900': '0093d1',
-            'A100': '0093d1',
-            'A200': '0093d1',
-            'A400': '0093d1',
-            'A700': '0093d1',
-            'contrastDefaultColor': 'light'
-        })
+        $mdThemingProvider.definePalette('ahBlue', colors)
             .theme('default')
             .primaryPalette("ahBlue", {
                 'default': '600'
@@ -95,6 +80,8 @@ gak
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|ftp|blob):|data:image\//);
     });
 
+
+
 gak.controller('AppCtrl', function ($scope, $translate, $location) {
     $scope.translate = function (langKey) {
         $translate.use(langKey);
@@ -105,16 +92,24 @@ gak.controller('AppCtrl', function ($scope, $translate, $location) {
         $mdOpenMenu(ev);
     };
 
-
-    $scope.config = function () {
-        $location.path('/config');
-    };
-    $scope.authentication = function () {
-        $location.path('/authentication');
-    };
-    $scope.customization = function () {
-        $location.path('/customization');
+    $scope.active = function (tab) {
+        if ($location.path() == '/' + tab) return true;
+        else return false;
+    }
+    $scope.select = function (tab) {
+        $location.path('/'+tab);
     };
 
+    var colors = { '50': '000000', '100': '0000FF', '200': '00FF00', '300': '444444', '400': '444444', '500': '444444', '600': '444444', '700': '444444', '800': '444444', '900': '444444', 'A100': '444444', 'A200': '444444', 'A400': '444444', 'A700': '444444', 'contrastDefaultColor': 'light' };
+    gak.config(function ($mdThemingProvider) {
+        $mdThemingProvider.definePalette('ahBlue', colors)
+            .theme('default')
+            .primaryPalette("ahBlue", {
+                'default': '50'
+            })
+            .accentPalette('ahBlue', {
+                'default': '100' // by default use shade 400 from the pink palette for primary intentions
+            });
+    });
 });
 

@@ -4,23 +4,7 @@ var login = angular.module('login', [
 
 login
     .config(function ($mdThemingProvider) {
-        $mdThemingProvider.definePalette('ahBlue', {
-            '50': 'eaf1f4',
-            '100': 'daf4ff',
-            '200': 'bedaf6',
-            '300': '0093d1',
-            '400': '0093d1',
-            '500': '0093d1',
-            '600': '0093d1',
-            '700': '0093d1',
-            '800': '0093d1',
-            '900': '0093d1',
-            'A100': '0093d1',
-            'A200': '0093d1',
-            'A400': '0093d1',
-            'A700': '0093d1',
-            'contrastDefaultColor': 'light'
-        })
+        $mdThemingProvider.definePalette('ahBlue', colors)
             .theme('default')
             .primaryPalette("ahBlue", {
                 'default': '600'

@@ -18,6 +18,7 @@
     "material-design-icons": "^2.2.3",
     "angular-translate-loader-url": "^2.11.0",
     "angular-translate-loader-static-files": "^2.11.0",
-    "components-font-awesome": "^4.6.3"
+    "components-font-awesome": "^4.6.3",
+    "md-color-picker": "^0.2.6"
   }
 }

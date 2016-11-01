@@ -4,8 +4,11 @@ html
         title= title
         meta(name="viewport" content="width=device-width, initial-scale=1")
         script(src="/bower_components/angular/angular.min.js")
+
         script(src="/i18n/web-app/en.js")
         script(src="/i18n/web-app/fr.js")
+        script(src="/custom/colors")
+
         script(src="/bower_components/angular-aria/angular-aria.js")
         script(src="/bower_components/angular-animate/angular-animate.min.js")
         script(src="/bower_components/angular-material/angular-material.js")
@@ -37,7 +40,10 @@ html
             div.header
             md-toolbar.header.fixed(layout='row')
                 h1.logo.md-toolbar-tools
-                    img(src="/images/logo_w.png" alt="Aerohive")
+                    if custom && custom.logo && custom.logo.enable
+                        img(src=custom.logo.img class="ah-logo")
+                    else
+                        img(src="/images/logo_w.png" alt="Aerohive")
                 span(flex)
                 div(style="display:flex; padding-right: 20px")
                     md-menu(style="margin: auto;")

@@ -17,7 +17,7 @@
 					<input type="file" ng-file-select-logo="onFileSelect($logoFile)" aria-label="logo" ng-disabled="!logo.enable">
 				</form>
 				<b>Preview:</b><br />
-                <img ng-src="{{logo.img}}">
+				<img ng-src="{{logo.img}}">
 				<i ng-hide="logo.img">No image choosed</i>
 			</md-input-container>
 		</div>
@@ -36,9 +36,18 @@
 				</md-input-container>
 			</div>
 		</md-toolbar>
-
 		<div layout-padding>
-
+		<md-input-container>
+			<label for="theme" translate="custom.color.theme"></label>
+			<md-select ng-model="color.theme" ng-selected="color.theme">
+				<md-option ng-value="light">Light</md-option>
+				<md-option ng-value="dark">Dark</md-option>
+			</md-select>
+		</md-input-container>
+		<div layout-gt-sm="row">
+		<div md-color-picker ng-model="color.main" label="{{'custom.color.mainColor' | translate}}"></div>
+		<div md-color-picker ng-model="color.second" label="{{'custom.color.secondColor' | translate}}"></div>
+		</div>
 		</div>
 	</md-content>
 	<md-content md-whiteframe="7" layout="column">

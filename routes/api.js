@@ -161,7 +161,7 @@ function saveConfig(req, res) {
     else newConfig.concurrentSessions = 0;
 
     Account
-        .findById(req.session._id)
+        .findById(req.session.account._id)
         .exec(function (err, account) {
             if (err) res.status(500).json({ error: err });
             else if (account) {
@@ -194,17 +194,16 @@ router.post("/admin/config", function (req, res, next) {
 router.get("/aad", function (req, res, next) {
     if (req.session.xapi) {
         Account
-            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+            .findById(req.session.account._id)
             .populate("azureAd")
             .exec(function (err, account) {
                 if (err) res.status(500).json({ error: err });
-                else if (account.length == 0) res.status(200).json({});
-                else if (account.length == 1)
+                else if (account)
                     res.status(200).json({
-                        signin: "https://" + serverHostname + "/login/" + account[0]._id + "/",
-                        callback: "https://" + serverHostname + "/aad/" + account[0]._id + "/callback",
-                        logout: "https://" + serverHostname + "/login/" + account[0]._id + "/",
-                        azureAd: account[0].azureAd
+                        signin: "https://" + serverHostname + "/login/" + account._id + "/",
+                        callback: "https://" + serverHostname + "/aad/" + account._id + "/callback",
+                        logout: "https://" + serverHostname + "/login/" + account._id + "/",
+                        azureAd: account.azureAd
 
                     });
                 else res.status(500).json({ err: "not able to retrieve the account" });

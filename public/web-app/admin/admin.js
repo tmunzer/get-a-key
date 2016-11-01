@@ -1,8 +1,10 @@
+
+angular.module("Modals", []);
 angular.module("Authentication", []);
 angular.module("Configuration", []);
 angular.module("Customization", []);
-angular.module("Modals", []);
 angular.module("CustomFilters", []);
+
 var gak = angular.module("gak", [
     'Modals',
     'CustomFilters',
@@ -100,15 +102,5 @@ gak.controller('AppCtrl', function ($scope, $translate, $location) {
         $location.path('/'+tab);
     };
 
-    gak.config(function ($mdThemingProvider) {
-        $mdThemingProvider.definePalette('ahBlue', colors)
-            .theme('default')
-            .primaryPalette("ahBlue", {
-                'default': '50'
-            })
-            .accentPalette('ahBlue', {
-                'default': '100' // by default use shade 400 from the pink palette for primary intentions
-            });
-    });
 });
 

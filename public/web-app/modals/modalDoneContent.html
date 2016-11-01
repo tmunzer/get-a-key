@@ -12,7 +12,8 @@
             <div ng-show="items.action == 'create'" style="padding-top: 10px; text-align: center;"><span translate="modal.done.message_yourKey"></span> <b>{{items.result.password}}</b></div>
 
             <div ng-show="items.action == 'deliver'" translate="modal.done.message_delivered" translate-value-email={{items.email}}></div>
-            <div ng-show="items.action == 'delete'" translate="modal.done.message_deleted" translate-value-email={{items.email}}></div>                        
+            <div ng-show="items.action == 'delete'" translate="modal.done.message_deleted" translate-value-email={{items.email}}></div>   
+            <div ng-show="items.action == 'save'" translate="modal.done.save"></div>                     
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">

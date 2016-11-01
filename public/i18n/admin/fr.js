@@ -89,26 +89,15 @@ var fr = {
     },
 
     modal: {
-        confirm: {
-            title: "Demande de confirmation",
-            message_delete: "Êtes vous sûr de vouloir supprimer votre clé?"
-        },
-        notFound: {
-            title: "Aucune clé trouvée",
-            message_notFound: "Aucune clé trouvée pour l'utilisateur {{user}}.",
+        done: {
+            title: "Sauvegarde effectuée",
+            configuration: "Nouvelle configuration sauvegardée.",
+            authentication: "Nouveaux paramètres d'authentification sauvegardés.",
+            customization: "Personnalisation sauvegardée."
         },
         error: {
             title: "Erreur!",
             logoFileTooLarge: "Le ficher \"{{name}}\" (Taille: {{size}}{{unit}}) est trop gros. Veuillez sélectionner un fichier de moins de 1Mo."
-        },
-        done: {
-            title: "Terminé!",
-            message_created: "Une nouvelle clé a été générée. Elle a été envoyée à {{email}}.",
-            message_oldKey: "Votre clé a été supprimée. Tous vos équipements vont être déconnectés du réseau et devrons être reconfigurés.",
-            message_yourKey: "Votre clé personnelle: ",
-            message_wifiNetwork: "Réseau Wi-Fi: ",
-            message_delivered: "Votre clé a été envoyé à {{email}}",
-            message_deleted: "Votre clé a été supprimée. Tous vos équipements vont être déconnectés du réseau."
         },
         warning: {
             title: "Quelque chose s'est mal passé...",
@@ -119,7 +108,7 @@ var fr = {
         },
         button: {
             close: 'Fermer',
-            back: 'Retour',            
+            back: 'Retour',
             cancel: "Annuler",
             yes: "Oui"
         },

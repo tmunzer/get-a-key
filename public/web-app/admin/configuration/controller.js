@@ -1,103 +1,110 @@
-angular.module("Configuration").controller("ConfigurationCtrl", function ($scope, ConfigurationService) {
-    var initialized = false;
-    var request;
-    $scope.isWorking = false;
-    $scope.config = {
-        userGroupId: 0,
-        concurrentSessions: 0
-    };
-    $scope.userGroups = [];
-    $scope.loginUrl = "https://";
+angular
+    .module("Configuration")
+    .controller("ConfigurationCtrl", function ($scope, $mdDialog, ConfigurationService) {
+        var initialized = false;
+        var request;
+        $scope.isWorking = false;
+        $scope.config = {
+            userGroupId: 0,
+            concurrentSessions: 0
+        };
+        $scope.userGroups = [];
+        $scope.loginUrl = "https://";
 
-    function apiWarning(warning) {
-        isWorking = false;
-        $mdDialog.show({
-            controller: 'DialogController',
-            templateUrl: '/web-app/modals/modalWarningContent.html',
-            escapeToClose: false,
-            locals: {
-                items: warning.error
-            }
-        });
-    }
-    function reqDone(data) {
-        $mdDialog.show({
-            controller: 'DialogConfirmController',
-            templateUrl: '/web-app/modals/modalConfirmContent.html',
-            locals: {
-                action: "save"
-            }
-        })
-    }
-
-    isWorking = true;
-    request = ConfigurationService.get();
-    request.then(function (promise) {
-        if (promise && promise.error) apiWarning(promise.error);
-        else {
-            $scope.userGroups = promise.data.userGroups.userGroups;
-            $scope.loginUrl = promise.data.loginUrl;
-            $scope.config.userGroupId = promise.data.userGroupId;
-            $scope.config.concurrentSessions = promise.data.concurrentSessions;
+        function apiWarning(warning) {
             isWorking = false;
+            $mdDialog.show({
+                controller: LocalModal,
+                templateUrl: '/web-app/modals/modalWarningContent.html',
+                escapeToClose: false,
+                locals: {
+                    items: warning.error
+                }
+            });
         }
-    });
+        function reqDone() {
+            $mdDialog.show({
+                controller: LocalModal,
+                templateUrl: '/web-app/modals/modalAdminDoneContent.html',
+                locals: {
+                    items: "modal.save.configuration"
+                }
+            })
+        }
+        function LocalModal($scope, $mdDialog, items) {
+            $scope.items = items;
+            $scope.close = function () {
+                $mdDialog.hide();
+            };
+        }
 
-    $scope.save = function () {
-        request = ConfigurationService.save($scope.config.userGroupId, $scope.config.concurrentSessions);
+
+        request = ConfigurationService.get();
         request.then(function (promise) {
             if (promise && promise.error) apiWarning(promise.error);
-            else console.log("done");
-        })
-    }
-})
-
-angular.module('Configuration').factory("ConfigurationService", function ($http, $q, $rootScope) {
-
-    function get() {
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/admin/config/",
-            method: "GET",
-            timeout: canceller.promise
+            else {
+                $scope.userGroups = promise.data.userGroups.userGroups;
+                $scope.loginUrl = promise.data.loginUrl;
+                $scope.config.userGroupId = promise.data.userGroupId;
+                $scope.config.concurrentSessions = promise.data.concurrentSessions;
+                isWorking = false;
+            }
         });
-        return httpReq(request);
-    }
 
-    function save(userGroupId, concurrentSessions) {
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/admin/config",
-            method: "POST",
-            data: ({ userGroupId: userGroupId, concurrentSessions: concurrentSessions }),
-            timeout: canceller.promise
-        });
-        return httpReq(request);
-    }
+        $scope.save = function () {
+            request = ConfigurationService.save($scope.config.userGroupId, $scope.config.concurrentSessions);
+            request.then(function (promise) {
+                if (promise && promise.error) apiWarning(promise.error);
+                else reqDone();
+            })
+        }
+    })
+    .factory("ConfigurationService", function ($http, $q, $rootScope) {
 
-    function httpReq(request) {
-        var promise = request.then(
-            function (response) {
-                return response;
-            },
-            function (response) {
-                return { error: response.data };
+        function get() {
+            var canceller = $q.defer();
+            var request = $http({
+                url: "/api/admin/config/",
+                method: "GET",
+                timeout: canceller.promise
+            });
+            return httpReq(request);
+        }
+
+        function save(userGroupId, concurrentSessions) {
+            var canceller = $q.defer();
+            var request = $http({
+                url: "/api/admin/config",
+                method: "POST",
+                data: ({ userGroupId: userGroupId, concurrentSessions: concurrentSessions }),
+                timeout: canceller.promise
+            });
+            return httpReq(request);
+        }
+
+        function httpReq(request) {
+            var promise = request.then(
+                function (response) {
+                    return response;
+                },
+                function (response) {
+                    return { error: response.data };
+                });
+
+            promise.abort = function () {
+                canceller.resolve();
+            };
+            promise.finally(function () {
+                console.info("Cleaning up object references.");
+                promise.abort = angular.noop;
+                canceller = request = promise = null;
             });
 
-        promise.abort = function () {
-            canceller.resolve();
-        };
-        promise.finally(function () {
-            console.info("Cleaning up object references.");
-            promise.abort = angular.noop;
-            canceller = request = promise = null;
-        });
+            return promise;
+        }
 
-        return promise;
-    }
-
-    return {
-        get: get,
-        save: save
-    }
-})
+        return {
+            get: get,
+            save: save
+        }
+    })

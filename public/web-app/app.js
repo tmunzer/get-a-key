@@ -64,7 +64,7 @@ gak
 
 
 gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $translate, MyKeyService) {
-    $scope.color = colors['200'].hex;
+
     $scope.translate = function (langKey) {
         $translate.use(langKey);
     }

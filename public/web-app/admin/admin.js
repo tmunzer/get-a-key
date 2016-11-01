@@ -100,7 +100,6 @@ gak.controller('AppCtrl', function ($scope, $translate, $location) {
         $location.path('/'+tab);
     };
 
-    var colors = { '50': '000000', '100': '0000FF', '200': '00FF00', '300': '444444', '400': '444444', '500': '444444', '600': '444444', '700': '444444', '800': '444444', '900': '444444', 'A100': '444444', 'A200': '444444', 'A400': '444444', 'A700': '444444', 'contrastDefaultColor': 'light' };
     gak.config(function ($mdThemingProvider) {
         $mdThemingProvider.definePalette('ahBlue', colors)
             .theme('default')

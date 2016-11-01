@@ -6,19 +6,23 @@
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="logo.enable" aria-label="Color Enable">
-						{{ logo.status | translate }}
+						{{ status.logo | translate }}
 					</md-switch>
 				</md-input-container>
 			</div>
 		</md-toolbar>
 		<div layout-padding>
-			<md-input-container class="md-block flex-gt-sm">
+			<md-input-container class="md-block" layout="column" layout-gt-sm="row">
+				<div flex-gt-sm="50">
 				<form>
 					<input type="file" ng-file-select-logo="onFileSelect($logoFile)" aria-label="logo" ng-disabled="!logo.enable">
 				</form>
-				<b>Preview:</b><br />
-				<img ng-src="{{logo.img}}">
-				<i ng-hide="logo.img">No image choosed</i>
+				</div>
+				<div flex-gt-sm="50">
+					<b>Preview:</b><br />
+					<img ng-src="{{logo.img}}">
+					<i ng-hide="logo.img">No image choosed</i>
+				</div>
 			</md-input-container>
 		</div>
 	</md-content>
@@ -31,23 +35,22 @@
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="colors.enable" aria-label="Color Enable">
-						{{ color.status | translate }}
+						{{ status.colors | translate }}
 					</md-switch>
 				</md-input-container>
 			</div>
 		</md-toolbar>
-		<div layout-padding>
-		<md-input-container>
-			<label for="theme" translate="custom.color.theme"></label>
-			<md-select ng-model="color.theme" ng-selected="color.theme">
-				<md-option ng-value="light">Light</md-option>
-				<md-option ng-value="dark">Dark</md-option>
-			</md-select>
-		</md-input-container>
-		<div layout-gt-sm="row">
-		<div md-color-picker ng-model="color.main" label="{{'custom.color.mainColor' | translate}}"></div>
-		<div md-color-picker ng-model="color.second" label="{{'custom.color.secondColor' | translate}}"></div>
-		</div>
+		<div layout-padding layout-gt-sm="row">
+			<md-input-container flex-gt-sm="20">
+				<label for="theme" translate="custom.color.theme"></label>
+				<md-select ng-model="colors.contrastDefaultColor" ng-disabled="!colors.enable">
+					<md-option value="light">{{ "custom.color.light" | translate }}</md-option>
+					<md-option value="dark">{{ "custom.color.dark" | translate}}</md-option>
+				</md-select>
+			</md-input-container>
+			<div flex-gt-sm="20">
+				<div md-color-picker ng-model="colors.color" label="{{'custom.color.mainColor' | translate}}" ng-disabled="!colors.enable"></div>
+			</div>
 		</div>
 	</md-content>
 	<md-content md-whiteframe="7" layout="column">
@@ -57,7 +60,7 @@
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="login.enable" aria-label="Login Enable">
-						{{ login.status | translate }}
+						{{ status.login | translate }}
 					</md-switch>
 				</md-input-container>
 			</div>
@@ -82,7 +85,7 @@
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="app.enable" aria-label="App Enable">
-						{{ app.status | translate }}
+						{{ status.app | translate }}
 					</md-switch>
 				</md-input-container>
 			</div>
@@ -114,6 +117,7 @@
 	</md-content>
 	<md-content layout="column" layout-gt-sm="row">
 		<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save" aria-label="save"></md-button>
+		<md-button target=_blank href="/admin/preview" class="md-primary" ng-disabled="isWorking || !isValid()" translate="custom.preview" aria-label="preview"></md-button>
 	</md-content>
 	</md-content>
 </div>

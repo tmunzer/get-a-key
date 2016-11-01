@@ -16,11 +16,13 @@ var en = {
         logo: "Logo",
         headerLogo: "Header Logo",
         loginLogo: "Login Logo",
+        preview: "Preview",
         color: {
             color: "Colors",
             theme: "Theme",
             mainColor: "Main Color",
-            secondColor: "Secondary Color"
+            light: "Light",
+            dark: "Dark"
         },
         login: {
             login: "Login page",

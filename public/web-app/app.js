@@ -64,6 +64,7 @@ gak
 
 
 gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $translate, MyKeyService) {
+    $scope.color = colors['200'].hex;
     $scope.translate = function (langKey) {
         $translate.use(langKey);
     }
@@ -93,7 +94,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
         })
     }
 
-    function reqDone(data) {                
+    function reqDone(data) {
         $mdDialog.show({
             controller: 'DialogController',
             templateUrl: 'modals/modalDoneContent.html',

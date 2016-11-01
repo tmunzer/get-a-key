@@ -3,28 +3,28 @@ angular.module('Customization').controller('CustomizationCtrl', function ($scope
 
     var request;
 
+    $scope.status = {
+        logo: "disabled",
+        colors: "disabled",
+        login: "disabled",
+        app: "disabled"
+    };
     $scope.logo = {
         enable: false,
-        status: "disabled",
         img: null
     };
-    $scope.color = {
-        enable: false,
-        status: "disabled"
-    }
     $scope.colors = {
         enable: false,
-        status: "disabled"
+        color: "#000000",
+        contrastDefaultColor: "light"
     }
     $scope.login = {
         enable: false,
-        status: "disabled",
         title: "",
         text: "",
     }
     $scope.app = {
         enable: false,
-        status: "disabled",
         title: "",
         rows: { 0: { icon: "", text: "" } }
     }
@@ -51,21 +51,21 @@ angular.module('Customization').controller('CustomizationCtrl', function ($scope
     }
 
     $scope.$watch("logo.enable", function () {
-        if ($scope.logo.enable) $scope.logo.status = "enabled";
-        else $scope.logo.status = "disabled";
+        if ($scope.logo.enable) $scope.status.logo = "enabled";
+        else $scope.status.logo = "disabled";
     })
-    $scope.$watch("color.enable", function () {
-        if ($scope.color.enable) $scope.color.status = "enabled";
-        else $scope.color.status = "disabled";
+    $scope.$watch("colors.enable", function () {
+        if ($scope.colors.enable) $scope.status.colors = "enabled";
+        else $scope.status.colors = "disabled";
     })
     $scope.$watch("login.enable", function () {
-        if ($scope.login.enable) $scope.login.status = "enabled";
-        else $scope.login.status = "disabled";
+        if ($scope.login.enable) $scope.status.login = "enabled";
+        else $scope.status.login = "disabled";
     })
 
     $scope.$watch("app.enable", function () {
-        if ($scope.app.enable) $scope.app.status = "enabled";
-        else $scope.app.status = "disabled";
+        if ($scope.app.enable) $scope.status.app = "enabled";
+        else $scope.status.app = "disabled";
     })
 
 
@@ -98,6 +98,8 @@ angular.module('Customization').controller('CustomizationCtrl', function ($scope
         if (promise && promise.error) apiWarning(promise.error);
         else {
             $scope.logo = promise.data.logo;
+            $scope.colors = promise.data.colors;
+            if ($scope.colors.color.indexOf("#" < 0)) $scope.colors.color = "#" + $scope.colors.color;
         }
     })
 })
@@ -161,14 +163,8 @@ angular.module('Customization').factory("CustomizationService", function ($http,
 
     function save(logo, colors, login, app) {
         var data = {
-            logo: {
-                enable: logo.enable,
-                img: logo.img
-            },
-            colors: {
-                enable: colors.enable,
-                colors: colors.colors
-            },
+            logo: logo,
+            colors: colors,
             login: {
                 enable: login.enable,
                 title: login.title,

@@ -16,11 +16,13 @@ var fr = {
         logo: "Logo",
         headerLogo: "Header Logo",
         loginLogo: "Login Logo",
+        preview: "Prévisualisation",
         color: {
             color: "Couleurs",
             theme: "Thème",
             mainColor: "Coleur Principale",
-            secondColor: "Couleur Secondaire"
+            light: "Clair",
+            dark: "Sombre"
         },
         login: {
             login: "Page de Login",

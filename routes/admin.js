@@ -4,6 +4,8 @@ var OAuth = require("../bin/aerohive/api/oauth");
 var devApp = require('../config.js').aerohiveApp;
 
 var Account = require('../bin/models/account');
+var Customization = require("../bin/models/customization");
+
 /*================================================================
  ADMIN ACS OAUTH
  ================================================================*/
@@ -69,7 +71,7 @@ router.get('/oauth/reg', function (req, res) {
                                         res.redirect('/admin/');
                                     }
                                 })
-                            } 
+                            }
                         })
 
                 }
@@ -97,6 +99,24 @@ router.get('/', function (req, res, next) {
     }
 });
 
+function getCustom(req, res, next) {
+    if (!req.session.xapi && !req.session.passport) {
+        res.redirect('/login/');
+    } else if (req.session.account.customization)
+        Customization
+            .findById(req.session.account.customization)
+            .exec(function (err, custom) {
+                if (!err) req.custom = custom;
+                next();
+            })
+    else next();
+}
+router.get("/preview/", function (req, res, next) {
+    res.render('web-app', {
+        title: 'Get a Key!',
+        custom: req.custom
+    });
+})
 
 router.get('/logout/', function (req, res, next) {
     console.log("User " + req.session.passport.user.upn + " is now logged out.");

@@ -7,10 +7,8 @@ var CustomizationSchema = new mongoose.Schema({
     },
     colors: {
         enable: { type: Boolean, required: true },
-        color1: { type: Number },
-        color2: { type: Number },
-        color3: { type: Number },
-        color4: { type: Number }
+        color: { type: String },
+        contrastDefaultColor: { type: String }
     },
     login: {
         enable: { type: Boolean, required: true },

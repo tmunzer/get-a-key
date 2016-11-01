@@ -284,7 +284,8 @@ function saveCustomization(custom, req, cb) {
     else custom.logo.enable = false;
 
     if (req.body.colors && req.body.colors.enable) {
-        custom.colors.enable = true;
+        if (req.body.colors.color.indexOf("#") == 0) req.body.colors.color = req.body.colors.color.substr(1);
+        custom.colors = req.body.colors;
     }
     else custom.colors.enable = false;
 

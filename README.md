@@ -1,6 +1,6 @@
 # get-a-key
 single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS (soon) to authenticate users.
-
+![Get-a-Key](get-a-key.png)
 ## Install
 This Reference APP is built over NodeJS. To use is, you will have to
 * Install NodeJS LTS: https://nodejs.org/en/download/

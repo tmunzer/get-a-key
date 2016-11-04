@@ -273,7 +273,7 @@ router.get("/admin/custom/", function (req, res, next) {
                 if (err) res.status(500).json({ error: err });
                 else if (custom)
                     res.status(200).json(custom);
-                else res.status(500).json({ err: "not able to retrieve the account" });
+                else res.status(200).json();
             })
     } else res.status(403).send('Unknown session');
 })

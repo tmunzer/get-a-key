@@ -4,29 +4,17 @@ html
         title= title
         meta(name="viewport" content="width=device-width, initial-scale=1")
 
-        script(src="/i18n/login/en.js")
-        script(src="/i18n/login/fr.js")
-
-        script(src="/custom/colors")
-
         link(rel='stylesheet' href='/css/ah-tm.tags.css')
         link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
         link(rel='stylesheet' href='/css/ah-tm.login.css')
         link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
 
-        script(src="/bower_components/angular/angular.min.js")
-        script(src="/bower_components/angular-aria/angular-aria.js")
-        script(src="/bower_components/angular-animate/angular-animate.min.js")
-        script(src="/bower_components/angular-material/angular-material.js")
-        script(src="/bower_components/angular-messages/angular-messages.js")
-        script(src="/bower_components/angular-route/angular-route.min.js")
-        script(src="/bower_components/angular-messages/angular-messages.js")
-        script(src="/bower_components/angular-translate/angular-translate.min.js")
-        script(src="/web-app/ng-sanitize.js")
-        script(src="/web-app/login.js")
+
 
 
     body(ng-app="login" ng-controller="LoginCtrl").icons-docs
+        div(id="loading")
+                        
         header.md-page-header
             div.header
             md-toolbar.header.fixed(layout='row')
@@ -81,3 +69,32 @@ html
                             div Something went wrong. It seems that something is misconfigured...
 
 
+    script(type="text/javascript").
+        function fadeIn(element){    
+            setTimeout(function(){
+                var i = 1;
+                var f = 0.05;
+                element.style.opacity = parseFloat(element.style.opacity) - (f * i * i);
+                i++;
+                if (element.style.opacity > 0 && i < 50) fadeIn(element)
+                else element.parentNode.removeChild(element);;
+                }, 20);
+        }
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var element = document.getElementById("loading"); 
+            element.style.opacity = 1.0;                
+            fadeIn(element);
+        });
+    script(src="/i18n/login/en.js")
+    script(src="/i18n/login/fr.js")
+    script(src="/custom/colors")
+    script(src="/bower_components/angular/angular.min.js")
+    script(src="/bower_components/angular-aria/angular-aria.js")
+    script(src="/bower_components/angular-animate/angular-animate.min.js")
+    script(src="/bower_components/angular-material/angular-material.js")
+    script(src="/bower_components/angular-messages/angular-messages.js")
+    script(src="/bower_components/angular-route/angular-route.min.js")
+    script(src="/bower_components/angular-messages/angular-messages.js")
+    script(src="/bower_components/angular-translate/angular-translate.min.js")
+    script(src="/web-app/ng-sanitize.js")
+    script(src="/web-app/login.js")

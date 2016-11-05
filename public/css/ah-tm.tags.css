@@ -28,7 +28,8 @@ a.link, a.link:visited {
     opacity: 1;
     position:fixed;
     z-index:9999;
-    background:url("/images/ring.gif") no-repeat center center white
+    background:url("/images/ring.gif") no-repeat center center white;
+    background-size: 50px;
 }   
 /*============================================== /
 / ================== ARTCILE ==================== /

@@ -128,7 +128,6 @@ router.post("/myKey", function (req, res, next) {
 
 router.get("/admin/config", function (req, res, next) {
     var userGroupId;
-    console.log(req.session);
     if (req.session.xapi) {
         API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, userGroups) {
             if (err) res.status(500).json({ error: err });
@@ -302,20 +301,19 @@ function saveCustomization(custom, req, cb) {
 router.post("/admin/custom/", function (req, res, next) {
     if (req.session.xapi) {
         Account
-            .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+            .findById(req.session.account._id)
             .populate("customization")
             .exec(function (err, account) {
                 if (err) res.status(500).json({ error: err });
-                else if (account.length == 0) res.status(200).json({});
-                else if (account.length == 1) {
+                else if (account) {
                     var custom;
-                    if (account[0].customization) custom = account[0].customization;
+                    if (account.customization) custom = account.customization;
                     else custom = new Customization;
                     saveCustomization(custom, req, function (err, result) {
                         if (err) res.status(500).json({ error: err });
                         else {
-                            account[0].customization = result;
-                            account[0].save(function (err, result) {
+                            account.customization = result;
+                            account.save(function (err, result) {
                                 if (err) res.status(500).json({ error: err });
                                 else res.status(200).json({ action: "save", status: 'done' });
                             });

@@ -12,7 +12,8 @@ angular
         };
         $scope.logo = {
             enable: false,
-            img: null
+            header: null,
+            login: null
         };
         $scope.colors = {
             enable: false,
@@ -27,7 +28,7 @@ angular
         $scope.app = {
             enable: false,
             title: "",
-            rows: [{index: 0, icon: "", text: "" } ]
+            rows: [{ index: 0, icon: "", text: "" }]
         }
 
         // color picker options
@@ -88,11 +89,19 @@ angular
         }
 
 
-        $scope.getLogo = function () {
+        $scope.getLogoHeader = function () {
             fileReader.readAsDataUrl($scope.logoFile, $scope)
                 .then(function (result) {
                     if (result) {
-                        $scope.logo.img = result;
+                        $scope.logo.header = result;
+                    }
+                });
+        };
+        $scope.getLogoLogin = function () {
+            fileReader.readAsDataUrl($scope.logoFile, $scope)
+                .then(function (result) {
+                    if (result) {
+                        $scope.logo.login = result;
                     }
                 });
         };
@@ -102,14 +111,14 @@ angular
         }
         $scope.removeRow = function (index) {
             $scope.app.rows.splice(index, 1);
-            for (var i = 0; i < $scope.app.rows.length; i++){
+            for (var i = 0; i < $scope.app.rows.length; i++) {
                 $scope.app.rows[i].index = i;
             }
         }
 
         $scope.isValid = function () {
 
-            if ($scope.logo.enable && !$scope.logo.img) return false;
+            if ($scope.logo.enable && (!$scope.logo.header || !$scope.logo.login)) return false;
             else if ($scope.login.enable && !$scope.loginForm.$valid) return false;
             else if ($scope.app.enable && !$scope.appForm.$valid) return false;
             else return true;
@@ -134,7 +143,7 @@ angular
                 if ($scope.colors.color.indexOf("#" < 0)) $scope.colors.color = "#" + $scope.colors.color;
                 $scope.login = promise.data.login;
                 $scope.app = promise.data.app;
-                if ($scope.app.rows.length == 0) $scope.app.rows = [{index: 0, icon: "", text: "" } ]
+                if ($scope.app.rows.length == 0) $scope.app.rows = [{ index: 0, icon: "", text: "" }]
             }
         })
     })
@@ -173,10 +182,12 @@ angular
             link: function ($scope, el) {
                 el.bind("change", function (e) {
                     var tmpFile = (e.srcElement || e.target).files[0];
+                    var logo = (e.srcElement || e.target).name;
                     if (tmpFile.size >= 1048576) logoSizeErrorContent(tmpFile);
                     else {
                         $scope.logoFile = tmpFile;
-                        $scope.getLogo();
+                        if (logo == "header") $scope.getLogoHeader();
+                        else if (logo == "login") $scope.getLogoLogin();                        
                     }
                 })
             }

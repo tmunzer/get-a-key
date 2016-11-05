@@ -12,7 +12,11 @@ var fr = {
     },
     custom: {
         custom: "Personnalisation",
-        logo: "Logo",
+        logo: {
+            logo: "Logos",
+            header: "Logo d'entête",
+            login: "Logo de la page de Login"
+            },
         headerLogo: "Header Logo",
         loginLogo: "Login Logo",
         preview: "Prévisualisation",

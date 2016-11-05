@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var CustomizationSchema = new mongoose.Schema({
     logo: {
         enable: { type: Boolean, required: true },
-        img: { type: String }
+        header: { type: String },
+        login: { type: String }
     },
     colors: {
         enable: { type: Boolean, required: true },

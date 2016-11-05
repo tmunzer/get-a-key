@@ -27,7 +27,7 @@ angular
         $scope.app = {
             enable: false,
             title: "",
-            rows: { 0: { icon: "", text: "" } }
+            rows: [{index: 0, icon: "", text: "" } ]
         }
 
         // color picker options
@@ -53,6 +53,10 @@ angular
         $scope.$watch("app.enable", function () {
             if ($scope.app.enable) $scope.status.app = "enabled";
             else $scope.status.app = "disabled";
+        })
+        $scope.$watch("colors.contrastDefaultColor", function () {
+            if ($scope.colors.contrastDefaultColor == "light") $scope.textColor = "white";
+            else $scope.textColor = "black";
         })
 
         function apiWarning(warning) {
@@ -93,14 +97,26 @@ angular
                 });
         };
 
+        $scope.addRow = function () {
+            $scope.app.rows.push({ index: $scope.app.rows.length, icon: "", text: "" });
+        }
+        $scope.removeRow = function (index) {
+            $scope.app.rows.splice(index, 1);
+            for (var i = 0; i < $scope.app.rows.length; i++){
+                $scope.app.rows[i].index = i;
+            }
+        }
+
         $scope.isValid = function () {
+
             if ($scope.logo.enable && !$scope.logo.img) return false;
             else if ($scope.login.enable && !$scope.loginForm.$valid) return false;
-
+            else if ($scope.app.enable && !$scope.appForm.$valid) return false;
             else return true;
         }
 
         $scope.save = function () {
+            console.log($scope.app);
             $scope.isWorking = true;
             request = CustomizationService.save($scope.logo, $scope.colors, $scope.login, $scope.app);
             request.then(function (promise) {
@@ -116,6 +132,9 @@ angular
                 $scope.logo = promise.data.logo;
                 $scope.colors = promise.data.colors;
                 if ($scope.colors.color.indexOf("#" < 0)) $scope.colors.color = "#" + $scope.colors.color;
+                $scope.login = promise.data.login;
+                $scope.app = promise.data.app;
+                if ($scope.app.rows.length == 0) $scope.app.rows = [{index: 0, icon: "", text: "" } ]
             }
         })
     })
@@ -184,11 +203,7 @@ angular
                     title: login.title,
                     text: login.text
                 },
-                app: {
-                    enable: login.enable,
-                    title: login.title,
-                    rows: login.rows
-                }
+                app: app
             }
             var canceller = $q.defer();
             var request = $http({

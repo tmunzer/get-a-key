@@ -30,17 +30,18 @@ html
                         md-button(aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
                             md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"language" | translate}}
                             md-icon(class="material-icons" aria-label="language") language
-                        md-menu-content
-                            md-menu-item
-                                md-button(ng-click="translate('en')")
-                                    span(style="display: inline-flex; margin-right: 5px;")
-                                        div.iti-flag.gb
-                                    span English
-                            md-menu-item
-                                md-button(ng-click="translate('fr')")
-                                    span(style="display: inline-flex; margin-right: 5px;")
-                                        div.iti-flag.fr
-                                    span Francais                                
+                        if ! custom || ! custom.login || ! custom.login.enable
+                            md-menu-content
+                                md-menu-item
+                                    md-button(ng-click="translate('en')")
+                                        span(style="display: inline-flex; margin-right: 5px;")
+                                            div.iti-flag.gb
+                                        span English
+                                md-menu-item
+                                    md-button(ng-click="translate('fr')")
+                                        span(style="display: inline-flex; margin-right: 5px;")
+                                            div.iti-flag.fr
+                                        span Francais                                
         div.page-footer
             span © 2016 Aerohive Networks. All Rights Reserved.
 
@@ -55,14 +56,20 @@ html
                 div.inside(md-whiteframe="5" style="width: 100%" )
                     md-toolbar
                         div.md-toolbar-tools
-                            h2(translate="login.title")
+                            if custom && custom.login && custom.login.enable
+                                h2=custom.login.title
+                            else
+                               h2(translate="login.title")
                     md-content(layout="column" layout-padding)
                         if custom && custom.logo && custom.logo.enable
                             img(src=custom.logo.img alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")
                         else
                             img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
-                        if method                                              
-                            div(translate="login.instruction")
+                        if method                        
+                            if custom && custom.login && custom.login.enable
+                                div=custom.login.text
+                            else                          
+                                div(translate="login.instruction")
                             br                    
                             md-button.md-raised.md-primary(href=method translate="login.connect" aria-label="connect" style="margin: auto; width: 90%; max-width: 450px; margin-bottom: 10px;")
                         else 

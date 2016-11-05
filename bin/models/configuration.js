@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 
 var ConfigSchema = new mongoose.Schema({
     userGroupId: { type: Number, required: true },
-    concurrentSessions: { type: Number },
     created_at    : { type: Date },
     updated_at    : { type: Date }
 });

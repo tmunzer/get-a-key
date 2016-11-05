@@ -28,21 +28,22 @@ html
                         img(src="/images/logo_w.png" alt="Aerohive")
                 span(flex)
                 div(style="display:flex; padding-right: 20px")
-                    md-menu(style="margin: auto;")
-                        md-button(aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
-                            md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"language" | translate}}
-                            md-icon(class="material-icons" aria-label="language") language
-                        md-menu-content
-                            md-menu-item
-                                md-button(ng-click="translate('en')")
-                                    span(style="display: inline-flex; margin-right: 5px;")
-                                        div.iti-flag.gb
-                                    span English
-                            md-menu-item
-                                md-button(ng-click="translate('fr')")
-                                    span(style="display: inline-flex; margin-right: 5px;")
-                                        div.iti-flag.fr
-                                    span Francais                                
+                    if ! custom || ! custom.app || ! custom.app.enable
+                        md-menu(style="margin: auto;")
+                            md-button(aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                                md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"language" | translate}}
+                                md-icon(class="material-icons" aria-label="language") language
+                            md-menu-content
+                                md-menu-item
+                                    md-button(ng-click="translate('en')")
+                                        span(style="display: inline-flex; margin-right: 5px;")
+                                            div.iti-flag.gb
+                                        span English
+                                md-menu-item
+                                    md-button(ng-click="translate('fr')")
+                                        span(style="display: inline-flex; margin-right: 5px;")
+                                            div.iti-flag.fr
+                                        span Francais                                
                     md-button(aria-label="logout" href="/logout/" style="margin: auto;")                        
                         md-icon(class="material-icons" aria-label="menu") exit_to_app
                         span {{"logout" | translate}}
@@ -52,44 +53,58 @@ html
             md-content.panel(md-whiteframe="7" layout="column")
                 md-toolbar.md-hue-2
                     div.md-toolbar-tools 
-                        h2(translate="title")
+                        if custom && custom.app && custom.app.enable
+                            h2=custom.app.title
+                        else
+                            h2(translate="title")
                 div(ng-hide="isWorking" style="background-color: #{{color}}; height: 5px; width: 100%")
                 md-progress-linear(ng-show="isWorking" md-mode="indeterminate" class="md-accent")
                 md-content(style="padding: 0 40px 10px 40px" )                
                     md-list.flex
                         md-subheader.md-no-sticky 
-                            h2(translate="header")
+                            if custom && custom.app && custom.app.enable
+                                h2=custom.app.text
+                            else
+                                h2(translate="header")
                         md-divider
-                        md-list-item 
-                            i.material-icons.md-avatar-icon(style="min-width: 25px;") business
-                            div.md-list-item-text(layout="column")                        
-                                span(translate="one")
-                        md-divider
-                        md-list-item       
-                            i.material-icons.md-avatar-icon(style="min-width: 25px;") fingerprint
-                            div.md-list-item-text(layout="column")
-                                span(translate="two")
-                        md-divider
-                        md-list-item       
-                            i.material-icons.md-avatar-icon(style="min-width: 25px;")  block
-                            div.md-list-item-text(layout="column")
-                                span(translate="three")
-                        md-divider
-                        md-list-item     
-                            i.material-icons.md-avatar-icon(style="min-width: 25px;")  recent_actors  
-                            div.md-list-item-text(layout="column")
-                                span(translate="four")
-                        md-divider
-                        md-list-item       
-                            i.material-icons.md-avatar-icon(style="min-width: 25px;")  vpn_key
-                            div.md-list-item-text(layout="column")
-                                span(translate="five")
-                        md-divider
-                        md-list-item       
-                            i.material-icons.md-avatar-icon(style="min-width: 25px;")  cloud_done
-                            div.md-list-item-text(layout="column")
-                                span(translate="six")
-                        md-divider
+                        if custom && custom.app && custom.app.enable
+                            for row in custom.app.rows
+                                md-list-item 
+                                    i.material-icons.md-avatar-icon(style="min-width: 25px;")=row.icon
+                                    div.md-list-item-text(layout="column")                        
+                                        span=row.text
+                                md-divider
+                        else
+                            md-list-item 
+                                i.material-icons.md-avatar-icon(style="min-width: 25px;") business
+                                div.md-list-item-text(layout="column")                        
+                                    span(translate="one")
+                            md-divider
+                            md-list-item       
+                                i.material-icons.md-avatar-icon(style="min-width: 25px;") fingerprint
+                                div.md-list-item-text(layout="column")
+                                    span(translate="two")
+                            md-divider
+                            md-list-item       
+                                i.material-icons.md-avatar-icon(style="min-width: 25px;")  block
+                                div.md-list-item-text(layout="column")
+                                    span(translate="three")
+                            md-divider
+                            md-list-item     
+                                i.material-icons.md-avatar-icon(style="min-width: 25px;")  recent_actors  
+                                div.md-list-item-text(layout="column")
+                                    span(translate="four")
+                            md-divider
+                            md-list-item       
+                                i.material-icons.md-avatar-icon(style="min-width: 25px;")  vpn_key
+                                div.md-list-item-text(layout="column")
+                                    span(translate="five")
+                            md-divider
+                            md-list-item       
+                                i.material-icons.md-avatar-icon(style="min-width: 25px;")  cloud_done
+                                div.md-list-item-text(layout="column")
+                                    span(translate="six")
+                            md-divider
                     br                
                     md-content(layout="column" layout-gt-sm="row")
                         md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getMyKey()" translate="get" aria-label="get") 

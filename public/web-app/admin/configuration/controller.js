@@ -5,8 +5,7 @@ angular
         var request;
         $scope.isWorking = false;
         $scope.config = {
-            userGroupId: 0,
-            concurrentSessions: 0
+            userGroupId: 0
         };
         $scope.userGroups = [];
         $scope.loginUrl = "https://";
@@ -46,13 +45,12 @@ angular
                 $scope.userGroups = promise.data.userGroups.userGroups;
                 $scope.loginUrl = promise.data.loginUrl;
                 $scope.config.userGroupId = promise.data.userGroupId;
-                $scope.config.concurrentSessions = promise.data.concurrentSessions;
                 isWorking = false;
             }
         });
 
         $scope.save = function () {
-            request = ConfigurationService.save($scope.config.userGroupId, $scope.config.concurrentSessions);
+            request = ConfigurationService.save($scope.config.userGroupId);
             request.then(function (promise) {
                 if (promise && promise.error) apiWarning(promise.error);
                 else reqDone();
@@ -71,12 +69,12 @@ angular
             return httpReq(request);
         }
 
-        function save(userGroupId, concurrentSessions) {
+        function save(userGroupId) {
             var canceller = $q.defer();
             var request = $http({
                 url: "/api/admin/config",
                 method: "POST",
-                data: ({ userGroupId: userGroupId, concurrentSessions: concurrentSessions }),
+                data: ({ userGroupId: userGroupId}),
                 timeout: canceller.promise
             });
             return httpReq(request);

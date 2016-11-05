@@ -9,7 +9,6 @@ var en = {
         loginUrl: "LoginURL (to configure the CWP):",
         userAccount: "User Account",
         userGroup: "User Group",
-        concurrentSessions: "Maximum number of concurent sessions configured in the SSID (0=disabled)"
     },
     custom: {
         custom: "Customization",

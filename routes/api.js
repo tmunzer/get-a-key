@@ -127,7 +127,7 @@ router.post("/myKey", function (req, res, next) {
  */
 
 router.get("/admin/config", function (req, res, next) {
-    var concurrentSessions, userGroupId;
+    var userGroupId;
     console.log(req.session);
     if (req.session.xapi) {
         API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, userGroups) {
@@ -140,12 +140,10 @@ router.get("/admin/config", function (req, res, next) {
                         if (err) res.status(500).json({ error: err });
                         else if (account) {
                             if (account.config) {
-                                concurrentSessions = account.config.concurrentSessions;
                                 userGroupId = account.config.userGroupId;
                             }
                             res.status(200).json({
                                 loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
-                                concurrentSessions: concurrentSessions,
                                 userGroups: userGroups,
                                 userGroupId: userGroupId
                             });
@@ -157,8 +155,6 @@ router.get("/admin/config", function (req, res, next) {
 
 function saveConfig(req, res) {
     var newConfig = { userGroupId: req.body.userGroupId };
-    if (req.body.concurrentSessions) newConfig.concurrentSessions = req.body.concurrentSessions;
-    else newConfig.concurrentSessions = 0;
 
     Account
         .findById(req.session.account._id)
@@ -279,24 +275,22 @@ router.get("/admin/custom/", function (req, res, next) {
 })
 
 function saveCustomization(custom, req, cb) {
-    if (req.body.logo && req.body.logo.enable) custom.logo = req.body.logo;
+    if (req.body.logo) custom.logo = req.body.logo;
     else custom.logo.enable = false;
 
-    if (req.body.colors && req.body.colors.enable) {
+    if (req.body.colors) {
         if (req.body.colors.color.indexOf("#") == 0) req.body.colors.color = req.body.colors.color.substr(1);
         custom.colors = req.body.colors;
     }
     else custom.colors.enable = false;
 
-    if (req.body.login && req.body.login.enable) {
-        custom.login.enable = true;
-    }
+    if (req.body.login) custom.login = req.body.login;        
     else custom.login.enable = false;
 
-    if (req.body.app && req.body.app.enable) {
-        custom.app.enable = true;
+    if (req.body.app) custom.app = req.body.app;        
+    else custom.app.enable = false;
 
-    }
+    if (req.body.app) custom.app = req.body.app;
     else custom.app.enable = false;
 
     custom.save(function (err, result) {

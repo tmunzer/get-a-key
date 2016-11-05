@@ -13,14 +13,7 @@
 			<md-select ng-model="config.userGroupId" ng-selected="config.userGroupId">
 				<md-option ng-repeat='userGroup in userGroups' value="{{userGroup.id}}">{{userGroup.name}}</md-option>
 			</md-select>
-		</md-input-container>
-		<md-input-container class="md-block flex-gt-sm">
-			<label for="concurrentSessions">
-				<span translate="config.concurrentSessions"></span>
-			</label>
-			<input id="concurrentSessions" type="number" ng-model="config.concurrentSessions">
-		</md-input-container>
-		
+		</md-input-container>		
 	</fieldset>
 	<md-content layout="column" layout-gt-sm="row">
 		<md-button class="md-primary md-raised" ng-disabled="isWorking || config.userGroupId == 0" ng-click="save()" translate="save"

@@ -9,7 +9,6 @@ var fr = {
         loginUrl: "LoginURL (Pour configurer le portail captif):",
         userAccount: "Comptes",
         userGroup: "Groupe Utilisateurs",
-        concurrentSessions: "Nombre de sessions simultanées configuré dans le SSID (0=désactivé)"
     },
     custom: {
         custom: "Personnalisation",

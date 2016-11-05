@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var CustomizationSchema = new mongoose.Schema({
     logo: {
         enable: { type: Boolean, required: true },
-        img: {type: String }
+        img: { type: String }
     },
     colors: {
         enable: { type: Boolean, required: true },
@@ -12,19 +12,22 @@ var CustomizationSchema = new mongoose.Schema({
     },
     login: {
         enable: { type: Boolean, required: true },
-        text: { type: String },
+        title: { type: String },
         text: { type: String }
     },
     app:
     {
         enable: { type: Boolean, required: true },
+        title: { type: String },
         text: { type: String },
-        rows: {
-            index: {
-                icon: { type: String},
+        rows: [
+            {
+                index: { type: String },
+                icon: { type: String },
                 text: { type: String }
             }
-        }
+        ]
+
     },
     created_at: { type: Date },
     updated_at: { type: Date }

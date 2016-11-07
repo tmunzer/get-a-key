@@ -117,7 +117,11 @@ router.get("/preview/", getCustom, function (req, res, next) {
         custom: req.custom
     });
 })
-
+router.get('/help/', function (req, res, next) {
+    res.render('help', {
+        title: 'Get-a-Key Help'
+    });
+});
 router.get('/logout/', function (req, res, next) {
     console.log("User " + req.session.passport.user.upn + " is now logged out.");
     req.logout();

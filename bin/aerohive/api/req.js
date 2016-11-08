@@ -1,5 +1,5 @@
 var https = require('https');
-var apiConf = require("../../../config.js").aerohiveApp;
+var apiConf = require("../../../config.js").devAccount;
 
 
 module.exports.GET = function (xapi, path, callback) {

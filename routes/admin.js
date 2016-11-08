@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var OAuth = require("../bin/aerohive/api/oauth");
-var devApp = require('../config.js').aerohiveApp;
+var devApp = require('../config.js').devAccount;
 
 var Account = require('../bin/models/account');
 var Customization = require("../bin/models/customization");

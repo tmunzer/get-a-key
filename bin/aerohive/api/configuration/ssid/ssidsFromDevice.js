@@ -15,7 +15,7 @@ module.exports.GET = function (xapi, deviceId, callback) {
 };
 
 module.exports.PUT = function (xapi, deviceId, changes, callback) {
-    var path = "/beta/configuration/devices/" + deviceId + "/ssids?ownerId=" + xapi.ownerID;
+    var path = "/beta/configuration/devices/" + deviceId + "/ssids?ownerId=" + xapi.ownerId;
     api.PUT(xapi, path, changes, function (err, result) {
         if (err) {
             callback(err, null);

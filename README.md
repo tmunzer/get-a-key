@@ -1,6 +1,6 @@
 # Get-a-Key
 single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS (soon) to authenticate users.
-![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/master/get-a-key.png)
+![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/master/get-a-key.png?raw=true)
 
 # Get-a-Key v1.0
 * full user interface customization

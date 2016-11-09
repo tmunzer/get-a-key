@@ -17,7 +17,7 @@ passport.deserializeUser(function (user, done) {
 });
 
 
-function getAccount(req, res, next) {
+function getAzureAdAccount(req, res, next) {
     Account
         .findById(req.params.account_id)
         .populate("azureAd")
@@ -32,6 +32,7 @@ function getAccount(req, res, next) {
                         // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
                         // you will need a jwt-package like https://github.com/auth0/node-jsonwebtoken to decode id_token and get waad profile
                         var waadProfile = jwt.decode(params.id_token);
+                        console.log(waadProfile);
                         done(null, waadProfile);
                     }
                 ));
@@ -41,12 +42,12 @@ function getAccount(req, res, next) {
 }
 /* GET login page. */
 
-router.get('/:account_id/login', getAccount,
+router.get('/:account_id/login', getAzureAdAccount,
     passport.authenticate('azure_ad_oauth2', { failureRedirect: '/', failureFlash: true })
 );
 
 /* Handle Login POST */
-router.get('/:account_id/callback', getAccount,
+router.get('/:account_id/callback', getAzureAdAccount,
     passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
     function (req, res) {
         if (req.session.passport.user.email) req.session.email = req.session.passport.user.email;

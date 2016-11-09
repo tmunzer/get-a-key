@@ -73,6 +73,7 @@ function deliverCredential(req, account, callback) {
 };
 
 router.get("/myKey", function (req, res, next) {
+    console.log(req.session);
     if (req.session.passport) {
         createCredential(req, function (err, result) {
             if (err && err.code == "registration.service.item.already.exist") {

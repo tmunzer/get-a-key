@@ -10,13 +10,13 @@ var Customization = require("../bin/models/customization");
  ADMIN ACS OAUTH
  ================================================================*/
 router.get('/oauth/reg', function (req, res) {
-    if (req.query.hasOwnProperty('error')) {
+    if (req.query.error) {
         res.render('error', { error: { message: req.query.error } });
-    } else if (req.query.hasOwnProperty("authCode")) {
+    } else if (req.query.authCode) {
         var authCode = req.query.authCode;
         OAuth.getPermanentToken(authCode, devApp.redirectUrl, devApp.clientSecret, devApp.clientID, function (data) {
-            if (data.hasOwnProperty("error")) res.render('error', { error: data.error })
-            else if (data.hasOwnProperty("data")) {
+            if (data.error) res.render('error', { error: data.error })
+            else if (data.data) {
                 var numAccounts = 0;
                 for (var owner in data.data) {
                     var account = {
@@ -90,7 +90,7 @@ router.get("/logout/", function (req, res) {
  DASHBOARD
  ================================================================*/
 router.get('/', function (req, res, next) {
-    if (req.session.hasOwnProperty("xapi"))
+    if (req.session.xapi)
         res.render('admin', {
             title: 'Get-a-key Parameters'
         });

@@ -85,7 +85,6 @@ function httpRequest(options, callback, body){
     result.request = {};
     result.result = {};
 
-    console.info(options);
     result.request.options = options;
     var req = https.request(options, function (res) {
         result.result.status = res.statusCode;
@@ -109,7 +108,6 @@ function httpRequest(options, callback, body){
                     break;
                 default:
                     var error = {};
-                    console.error(result);
                     if (result.error.hasOwnProperty('status')) error.status = result.error.status;
                     else error.status = result.result.status;
                     if (result.error.hasOwnProperty('message')) error.message = result.error.message;

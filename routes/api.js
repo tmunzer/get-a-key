@@ -188,7 +188,6 @@ router.post("/admin/config", function (req, res, next) {
 
 router.get("/aad", function (req, res, next) {
     if (req.session.xapi) {
-        console.log(req.session)
         Account
             .findById(req.session.account._id)
             .populate("azureAd")
@@ -200,7 +199,6 @@ router.get("/aad", function (req, res, next) {
                         callback: "https://" + serverHostname + "/aad/" + account._id + "/callback",
                         logout: "https://" + serverHostname + "/login/" + account._id + "/",
                         azureAd: account.azureAd
-
                     });
                 else res.status(500).json({ err: "not able to retrieve the account" });
             })

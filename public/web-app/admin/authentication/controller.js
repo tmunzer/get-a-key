@@ -7,10 +7,10 @@ angular
         $scope.isWorking = false;
         $scope.admin = {
             azureAd: {
-                clientId: "", 
+                clientId: "",
                 clientSecret: "",
                 tenant: "",
-                resource:""
+                resource: ""
             },
             adfs: {}
         };
@@ -72,14 +72,20 @@ angular
             $scope.isWorking = false;
             if (promise && promise.error) apiWarning(promise.error);
             else {
+                $scope.method.aad = true;
+                $scope.method.adfs = false;
                 if (promise.data.azureAd) {
                     $scope.admin.azureAd = promise.data.azureAd;
-                    $scope.method.aad = true;
-                    $scope.method.adfs = false;
-                } else if (promise.data.adfs) {
-                    $scope.admin.adfs = promise.data.adfs;
-                    $scope.method.aad = false;
-                    $scope.method.adfs = true;
+                } else {
+                    $scope.admin = {
+                        azureAd: {
+                            clientId: "",
+                            clientSecret: "",
+                            tenant: "",
+                            resource: ""
+                        },
+                        adfs: {}
+                    };
                 }
                 $scope.admin.azureAd.signin = promise.data.signin;
                 $scope.admin.azureAd.callback = promise.data.callback;

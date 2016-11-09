@@ -188,6 +188,7 @@ router.post("/admin/config", function (req, res, next) {
 
 router.get("/aad", function (req, res, next) {
     if (req.session.xapi) {
+        console.log(req.session)
         Account
             .findById(req.session.account._id)
             .populate("azureAd")

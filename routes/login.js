@@ -51,6 +51,11 @@ router.get("/login/:account_id/", getAccount, function (req, res) {
     });
 })
 
+router.get("/login/:account_id/callback", function (req, res) {
+    res.render('error', { error: { message: "It seems the callback URL is misconfigured on your AzureAD or ADFS. Please be sure to use the callback url from the configuration interface." } });
+    })
+})
+
 router.get("/login", function (req, res) {
     res.render("login", {
         title: 'Get a Key!',

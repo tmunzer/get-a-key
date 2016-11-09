@@ -65,7 +65,7 @@ router.get("/login", function (req, res) {
 })
 router.get("/logout/", function (req, res) {
     if (req.session.account.azureAd) {
-        res.redirect("https://login.windows.net/" + req.session.account.azureAd.tenant + "/oauth2/logout?post_logout_redirect_uri=https://" + serverHostname + "/login/" + account._id + "/");
+        res.redirect("https://login.windows.net/" + req.session.account.azureAd.tenant + "/oauth2/logout?post_logout_redirect_uri=https://" + serverHostname + "/login/" + req.session.account._id + "/");
     } else res.redirect("/");
     req.logout();
     req.session.destroy();

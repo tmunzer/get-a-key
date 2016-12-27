@@ -1,2 +1,7 @@
 cd /app/bin
-PORT=51360 node ./www
+if [ "$1"]
+then
+    PORT=$1 node ./www
+else
+    PORT=51360 node ./www
+fi

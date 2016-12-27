@@ -1,5 +1,5 @@
 cd /app/bin
-if [ "$1"]
+if [ "$1" ]
 then
     PORT=$1 node ./www
 else

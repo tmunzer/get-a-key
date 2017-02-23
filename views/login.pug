@@ -61,10 +61,11 @@ html
                             else
                                h2(translate="login.title")
                     md-content(layout="column" layout-padding)
-                        if custom && custom.logo && custom.logo.enable
-                            img(src=custom.logo.login alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")
-                        else
-                            img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
+                        div.ah-logo(style="margin: auto; width: 100%; text-align: center;")
+                            if custom && custom.logo && custom.logo.enable
+                                img(src=custom.logo.login alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")
+                            else
+                                img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
                         if method                        
                             if custom && custom.login && custom.login.enable
                                 div=custom.login.text

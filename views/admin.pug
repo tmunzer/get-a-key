@@ -62,15 +62,15 @@ html
 
 
         script(type="text/javascript").
-            function fadeIn(element){    
+            function fadeIn(element){  
+                var i = 1;
+                var f = 0.5;  
                 setTimeout(function(){
-                    var i = 1;
-                    var f = 0.05;
                     element.style.opacity = parseFloat(element.style.opacity) - (f * i * i);
                     i++;
-                    if (element.style.opacity > 0 && i < 50) fadeIn(element)
-                    else element.parentNode.removeChild(element);;
-                    }, 20);
+                    if (element.style.opacity < 0 || i > 50) element.parentNode.removeChild(element);
+                    else fadeIn(element);
+                    }, 40);
             }
             document.addEventListener("DOMContentLoaded", function(event) {
                 var element = document.getElementById("loading"); 
@@ -90,11 +90,11 @@ html
         script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
         script(src="/bower_components/angular-translate/angular-translate.min.js")
         
-        script(src="/bower_components/tinycolor/dist/tinycolor-min.js")
+        script(src="/web-app/admin/customization/tinycolor.js")
         script(src="/web-app/admin/customization/mdColorPicker.min.js")
         link(rel="stylesheet" href="/web-app/admin/customization/mdColorPicker.min.css")
 
-        script(src="/web-app/ng-sanitize.js")
+        script(src="/bower_components/angular-sanitize/angular-sanitize.min.js")
         script(src="/web-app/admin/admin.js")
         script(src="/web-app/admin/upload.js")              
         script(src="/web-app/admin/authentication/controller.js")

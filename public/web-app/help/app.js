@@ -30,7 +30,7 @@ gak
 
 
 gak.controller("AppCtrl", function ($scope) {
-    console.log('yrdy');
+    console.log('help');
 });
 
 

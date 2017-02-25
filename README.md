@@ -12,7 +12,7 @@ single page app to get a PPSK from HMNG service. This App can use AzureAD or ADF
 * Just download [get-a-key.sh](https://github.com/tmunzer/get-a-key/releases/download/1.0/get-a-key.sh) on a Linux / MacOs computer with Docker installed.
 * Run the `get-a-key.sh`script
  - Some initial configuration (persistant folders, Aerohive Cloud Service) will be asked
- - Select `5) Deploy and Start Application` to download Docker Images and start Docker Containers
+ - Select `1) Deploy and Start Application` to download Docker Images and start Docker Containers
 
 ## Standalone Installation
 This Reference APP is built over NodeJS. To use is, you will have to

@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-var config = require("../config.js");
+var devAccount = require("../config.js").devAccount;
 
+var serverHostname = require("../config.js").appServer.vhost;
 var Account = require("../bin/models/account");
 var Customization = require("../bin/models/customization");
 
@@ -45,22 +46,26 @@ router.get("/login/:account_id/", getAccount, function (req, res) {
     else if (req.session.account.adfs) method = "/adfs/" + req.params.account_id + "/login";
     res.render("login", {
         title: 'Get a Key!',
-        oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id=" + config.aerohiveApp.clientID + "&redirect_uri=" + config.aerohiveApp.redirectUrl,
+        oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id=" + devAccount.clientID + "&redirect_uri=" + devAccount.redirectUrl,
         method: method,
         custom: req.custom
     });
 })
 
+router.get("/login/:account_id/callback", function (req, res) {
+    res.render('error', { error: { message: "It seems the callback URL is misconfigured on your AzureAD or ADFS. Please be sure to use the callback url from the configuration interface." } });
+})
+
 router.get("/login", function (req, res) {
     res.render("login", {
         title: 'Get a Key!',
-        oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id=" + config.aerohiveApp.clientID + "&redirect_uri=" + config.aerohiveApp.redirectUrl,
+        oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id=" + devAccount.clientID + "&redirect_uri=" + devAccount.redirectUrl,
         method: null
     });
 })
 router.get("/logout/", function (req, res) {
     if (req.session.account.azureAd) {
-        res.redirect("https://login.windows.net/" + req.session.account.azureAd.tenant + "/oauth2/logout?post_logout_redirect_uri=" + req.session.account.azureAd.logoutURL);
+        res.redirect("https://login.windows.net/" + req.session.account.azureAd.tenant + "/oauth2/logout?post_logout_redirect_uri=https://" + serverHostname + "/login/" + req.session.account._id + "/");
     } else res.redirect("/");
     req.logout();
     req.session.destroy();

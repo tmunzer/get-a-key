@@ -73,7 +73,7 @@ function deliverCredential(req, account, callback) {
 };
 
 router.get("/myKey", function (req, res, next) {
-    if (req.session.hasOwnProperty('passport')) {
+    if (req.session.passport) {
         createCredential(req, function (err, result) {
             if (err && err.code == "registration.service.item.already.exist") {
                 getCredentials(req, function (err, account) {
@@ -199,7 +199,6 @@ router.get("/aad", function (req, res, next) {
                         callback: "https://" + serverHostname + "/aad/" + account._id + "/callback",
                         logout: "https://" + serverHostname + "/login/" + account._id + "/",
                         azureAd: account.azureAd
-
                     });
                 else res.status(500).json({ err: "not able to retrieve the account" });
             })

@@ -111,15 +111,15 @@ html
                         md-button.md-primary.md-raised(ng-disabled="isWorking" translate="send" ng-click="deliver()" aria-label="send") 
                         md-button.md-primary(ng-disabled="isWorking" translate="revoke" ng-click="revoke()" aria-label="revoke") 
         script(type="text/javascript").
-            function fadeIn(element){    
+            function fadeIn(element){  
+                var i = 1;
+                var f = 0.5;  
                 setTimeout(function(){
-                    var i = 1;
-                    var f = 0.05;
                     element.style.opacity = parseFloat(element.style.opacity) - (f * i * i);
                     i++;
-                    if (element.style.opacity > 0 && i < 50) fadeIn(element)
-                    else element.parentNode.removeChild(element);;
-                    }, 20);
+                    if (element.style.opacity < 0 || i > 50) element.parentNode.removeChild(element);
+                    else fadeIn(element);
+                    }, 40);
             }
             document.addEventListener("DOMContentLoaded", function(event) {
                 var element = document.getElementById("loading"); 
@@ -141,7 +141,7 @@ html
         script(src="/bower_components/angular-route/angular-route.min.js")
         script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
         script(src="/bower_components/angular-translate/angular-translate.min.js")
-        script(src="/web-app/ng-sanitize.js")    
+        script(src="/bower_components/angular-sanitize/angular-sanitize.min.js")
         script(src="/web-app/app.js")
         script(src="/web-app/filters.js")
         script(src="/web-app/modals/controller.js")

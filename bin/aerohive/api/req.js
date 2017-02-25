@@ -1,10 +1,10 @@
 var https = require('https');
-var apiConf = require("../../../config.js").aerohiveApp;
+var devAccount = require("../../../config.js").devAccount;
 
 
 module.exports.GET = function (xapi, path, callback) {
     var rejectUnauthorized = true;
-    if (xapi.hasOwnProperty('rejectUnauthorized')) rejectUnauthorized = xapi.rejectUnauthorized;
+    if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
 
     var options = {
         rejectUnauthorized: rejectUnauthorized,
@@ -13,9 +13,9 @@ module.exports.GET = function (xapi, path, callback) {
         path: path,
         method: "GET",
         headers: {
-            'X-AH-API-CLIENT-SECRET': apiConf.clientSecret,
-            'X-AH-API-CLIENT-ID': apiConf.clientID,
-            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
+            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken
         }
     };
@@ -24,7 +24,7 @@ module.exports.GET = function (xapi, path, callback) {
 
 module.exports.POST = function (xapi, path, data, callback) {
     var rejectUnauthorized = true;
-    if (xapi.hasOwnProperty('rejectUnauthorized')) rejectUnauthorized = xapi.rejectUnauthorized;
+    if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
     var options = {
         rejectUnauthorized: rejectUnauthorized,
         host: xapi.vpcUrl,
@@ -32,9 +32,9 @@ module.exports.POST = function (xapi, path, data, callback) {
         path: path,
         method: "POST",
         headers: {
-            'X-AH-API-CLIENT-SECRET': apiConf.clientSecret,
-            'X-AH-API-CLIENT-ID': apiConf.clientID,
-            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
+            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken,
             'Content-Type': 'application/json'
         }
@@ -44,7 +44,7 @@ module.exports.POST = function (xapi, path, data, callback) {
 };
 module.exports.PUT = function (xapi, path, callback) {
     var rejectUnauthorized = true;
-    if (xapi.hasOwnProperty('rejectUnauthorized')) rejectUnauthorized = xapi.rejectUnauthorized;
+    if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
     var options = {
         rejectUnauthorized: rejectUnauthorized,
         host: xapi.vpcUrl,
@@ -52,9 +52,9 @@ module.exports.PUT = function (xapi, path, callback) {
         path: path,
         method: "PUT",
         headers: {
-            'X-AH-API-CLIENT-SECRET': apiConf.clientSecret,
-            'X-AH-API-CLIENT-ID': apiConf.clientID,
-            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
+            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken,
             'Content-Type': 'application/json'
         }
@@ -63,7 +63,7 @@ module.exports.PUT = function (xapi, path, callback) {
 };
 module.exports.DELETE = function (xapi, path, callback) {
     var rejectUnauthorized = true;
-    if (xapi.hasOwnProperty('rejectUnauthorized')) rejectUnauthorized = xapi.rejectUnauthorized;
+    if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
     var options = {
         rejectUnauthorized: rejectUnauthorized,
         host: xapi.vpcUrl,
@@ -71,9 +71,9 @@ module.exports.DELETE = function (xapi, path, callback) {
         path: path,
         method: "DELETE",
         headers: {
-            'X-AH-API-CLIENT-SECRET': apiConf.clientSecret,
-            'X-AH-API-CLIENT-ID': apiConf.clientID,
-            'X-AH-API-CLIENT-REDIRECT-URI': apiConf.redirectUrl,
+            'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
+            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken
         }
     };
@@ -85,7 +85,6 @@ function httpRequest(options, callback, body){
     result.request = {};
     result.result = {};
 
-    console.info(options);
     result.request.options = options;
     var req = https.request(options, function (res) {
         result.result.status = res.statusCode;
@@ -109,12 +108,11 @@ function httpRequest(options, callback, body){
                     break;
                 default:
                     var error = {};
-                    console.error(result);
-                    if (result.error.hasOwnProperty('status')) error.status = result.error.status;
+                    if (result.error.status) error.status = result.error.status;
                     else error.status = result.result.status;
-                    if (result.error.hasOwnProperty('message')) error.message = result.error.message;
+                    if (result.error.message) error.message = result.error.message;
                     else error.message = result.error;
-                    if (result.error.hasOwnProperty('code')) error.code = result.error.code;
+                    if (result.error.code) error.code = result.error.code;
                     else error.code = "";
                     callback(error, result.data);
                     break;

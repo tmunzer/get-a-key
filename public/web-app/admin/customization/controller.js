@@ -125,7 +125,6 @@ angular
         }
 
         $scope.save = function () {
-            console.log($scope.app);
             $scope.isWorking = true;
             request = CustomizationService.save($scope.logo, $scope.colors, $scope.login, $scope.app);
             request.then(function (promise) {

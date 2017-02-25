@@ -27,7 +27,7 @@ module.exports.appServer = {
 ******************************************************************************/
 // the Aerohive ACS parameters have to match your app configuration on your
 // developper portal account (https://developper.aerohive.com)
-module.exports.aerohiveApp = {
+module.exports.devAccount = {
     // redirectUrl HAS TO be HTTPS
     // please be sure to append "/admin/oauth/reg" to the end of the redirectUrl
     redirectUrl: "https://localhost/admin/oauth/reg",

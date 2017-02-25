@@ -61,10 +61,11 @@ html
                             else
                                h2(translate="login.title")
                     md-content(layout="column" layout-padding)
-                        if custom && custom.logo && custom.logo.enable
-                            img(src=custom.logo.login alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")
-                        else
-                            img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
+                        div.ah-logo(style="margin: auto; width: 100%; text-align: center;")
+                            if custom && custom.logo && custom.logo.enable
+                                img(src=custom.logo.login alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")
+                            else
+                                img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
                         if method                        
                             if custom && custom.login && custom.login.enable
                                 div=custom.login.text
@@ -77,15 +78,15 @@ html
 
 
     script(type="text/javascript").
-        function fadeIn(element){    
+        function fadeIn(element){  
+            var i = 1;
+            var f = 0.5;  
             setTimeout(function(){
-                var i = 1;
-                var f = 0.05;
                 element.style.opacity = parseFloat(element.style.opacity) - (f * i * i);
                 i++;
-                if (element.style.opacity > 0 && i < 50) fadeIn(element)
-                else element.parentNode.removeChild(element);;
-                }, 20);
+                if (element.style.opacity < 0 || i > 50) element.parentNode.removeChild(element);
+                else fadeIn(element);
+                }, 40);
         }
         document.addEventListener("DOMContentLoaded", function(event) {
             var element = document.getElementById("loading"); 
@@ -103,5 +104,5 @@ html
     script(src="/bower_components/angular-route/angular-route.min.js")
     script(src="/bower_components/angular-messages/angular-messages.js")
     script(src="/bower_components/angular-translate/angular-translate.min.js")
-    script(src="/web-app/ng-sanitize.js")
+    script(src="/bower_components/angular-sanitize/angular-sanitize.min.js")
     script(src="/web-app/login.js")

@@ -57,7 +57,7 @@ router.get('/:account_id/callback', getAzureAdAccount,
 
 /* Handle Logout */
 router.get('/:account_id/logout/', function (req, res) {
-    console.log("User " + req.session.passport.user.upn + " is now logged out.");
+    console.log("\x1b[32minfo\x1b[0m:","User " + req.session.passport.user.upn + " is now logged out.");
     req.logout();
     req.session.destroy();
     res.redirect('/login/:account_id/');

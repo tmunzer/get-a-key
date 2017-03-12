@@ -2,34 +2,49 @@
 single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS (soon) to authenticate users.
 ![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/master/get-a-key.png?raw=true)
 
-# Get-a-Key v1.0
+# Get-a-Key v1
 * full user interface customization
 * full configuration interface
 * AzureAD integration
 * Docker version (deployement script available below) with NGINX and Let's Encrypt
 
-## Docker Deployment
-* Just download [get-a-key.sh](https://github.com/tmunzer/get-a-key/releases/download/1.0/get-a-key.sh) on a Linux / MacOs computer with Docker installed.
-* Run the `get-a-key.sh`script
- - Some initial configuration (persistant folders, Aerohive Cloud Service) will be asked
- - Select `1) Deploy and Start Application` to download Docker Images and start Docker Containers
+## Install
+This Reference Application can be used as a standalone Application, or it can be deployed as a Docker Image.
 
-## Standalone Installation
-This Reference APP is built over NodeJS. To use is, you will have to
-* Install NodeJS LTS: https://nodejs.org/en/download/
-* Clone this repo
-* Configure the API paramerts, in the `/config.js` file. You will find an example in `/config_example`, and you will have to alreday have an account on the Aerohive Developper Portal https://developer.aerohive.com/
-* install node modules (`npm install`from the project folder)
-* install bower dependencies (`bower install`from the project folder)
-* Start the APP with from `/bin/www`.
+### Standalone Application
+This Reference APP is built over NodeJS. 
 
-## Standalone Requirements
-* This App is using mongoDB to store the configuration and customization. You will have to configure the mongoDB location in the `/config.js`file.
-* This App has to be reachable through HTTPS to use OAuth (required to configure the App and to use AzureAD OAuth for users authentication). 
+#### Deploy the Application
+* Install NodeJS LTS: https://nodejs.org/en/download/.
+* Clone this repo.
+* Configure the API paramerts, in the `src/config.js` file. You will find an example in `src/config_example.js`. To be able to use this application, you will need an account on the [Aerohive Developper Portal](https://developer.aerohive.com/).
+* Install npm packages (`npm install` from the project folder).
+* Install bower packages (`bower install` from the project folder).
+* Go to `src/bin` folder into the project.
+* Start the APP with `www`. You can also use `src/bin/monitor.js` to monitor the NodeJS server and restart it if something went wrong.
 
-## What will come next
-* ADFS integration
+#### Manage HTTPS at the application level
+If you want to use OAuth authentication, the application will need to use HTTPS. To do so, you can use a reverse Proxy (NGINX, Apache, ...) and manage the certificates at the reverse proxy level, or you can start the application with `www_with_https`. In this case:
+* Create a `cert` folder into the `src` project folder.
+* Place you certificate and certificate key in this new folder, with the names `server.pem` and `server.key`.
+* Start the APP with `www_with_https`. 
 
+### Docker Image
+You can easily deploy this application with [Docker](https://www.docker.com/). The image is publicly available on Docker Hub at https://hub.docker.com/r/tmunzer/get-a-key/.
+In this case, you can choose to manually deploy the image and create the container, or you can use the automation script (for Linux).
+
+#### Automation Script
+The Automation script will allow you to easily 
+* Configure your application (ACS parameters)
+* Manage HTTPS certificates with self-signed certificates or with let's encrypt image (the script will automatically download and deploy the let's encrypt container if needed)
+* Download and Deploy dependencies, like NGINX and MongoDB container
+* Download, Deploy, Update the application container
+To use this script, just download it [here](https://github.com/tmunzer/get-a-key/releases/download/1.2/get-a-key.sh), and run it in a terminal.
+
+#### Manual deployment
+If you are manually deploying this container, you will need to a reverse proxy to manage HTTPS.
+
+`   docker create -v  <path_to_config.js>/config.js:/app/config.js:ro --link <mongoDB_container_name>:mongo --name="<container_name>" tmunzer/get-a-key`
 
 
 

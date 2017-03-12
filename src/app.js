@@ -1,12 +1,15 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan')
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 
 var app = express();
+app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
+  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0 }
+}));
 
 //===============MONGODB=================
 var mongoose = require('mongoose');
@@ -15,10 +18,10 @@ global.db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-    // Create your schemas and models here.
+  // Create your schemas and models here.
 });
 
-mongoose.connect('mongodb://'+ mongoConfig.host +'/' + mongoConfig.base);
+mongoose.connect('mongodb://' + mongoConfig.host + '/' + mongoConfig.base);
 
 
 
@@ -29,9 +32,18 @@ app.use(passport.session());
 
 
 //===============APP=================
-app.use(bodyParser.urlencoded({ extended: true , limit: '1mb'}));
-app.use(bodyParser.json({limit: '1mb'}));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
+app.use(bodyParser.json({ limit: '1mb' }));
+app.use(require('express-session')(
+  {
+    secret: 'T9QrskYinhvSyt6NUrEcCaQdgez3',
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 30 * 60 * 1000 // 30 minutes
+    }
+  }
+));
 
 
 // view engine setup
@@ -40,12 +52,11 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components',  express.static('../bower_components'));
+app.use('/bower_components', express.static('../bower_components'));
 
 
 //===============ROUTES=================
@@ -84,7 +95,7 @@ app.get("*", function (req, res) {
   res.redirect("/web-app/");
 })
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -95,7 +106,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -106,7 +117,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

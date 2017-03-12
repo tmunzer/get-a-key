@@ -98,8 +98,8 @@ function httpRequest(options, callback, body){
         });
         res.on('end', function () {
             if (data != '') {
-                if (data.length > 400) console.info("\x1b[34mREQUEST DATA\x1b[0m:", data.substr(0, 400) + '...');
-                else console.info("\x1b[34mREQUEST DATA\x1b[0m:", data);  
+                if (data.length > 400) console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data.substr(0, 400) + '...');
+                else console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data);  
                 var dataJSON = JSON.parse(data);
                 result.data = dataJSON.data;
                 result.error = dataJSON.error;
@@ -116,7 +116,7 @@ function httpRequest(options, callback, body){
                     else error.message = result.error;
                     if (result.error.code) error.code = result.error.code;
                     else error.code = "";
-                    console.error("\x1b[31mREQUEST ERROR\x1b[0m:", JSON.stringify(error));
+                    console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(error));
                     callback(error, result.data);
                     break;
 

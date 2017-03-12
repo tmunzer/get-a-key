@@ -1,5 +1,10 @@
 # Get-a-Key
-single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS (soon) to authenticate users.
+This application provides a single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS (soon) to authenticate users.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
 ![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/master/get-a-key.png?raw=true)
 
 # Get-a-Key v1
@@ -17,7 +22,7 @@ This Reference APP is built over NodeJS.
 #### Deploy the Application
 * Install NodeJS LTS: https://nodejs.org/en/download/.
 * Clone this repo.
-* Configure the API paramerts, in the `src/config.js` file. You will find an example in `src/config_example.js`. To be able to use this application, you will need an account on the [Aerohive Developper Portal](https://developer.aerohive.com/).
+* Configure the API parameters, in the `src/config.js` file. You will find an example in `src/config_example.js`. To be able to use this application, you will need an account on the [Aerohive Developper Portal](https://developer.aerohive.com/).
 * Install npm packages (`npm install` from the project folder).
 * Install bower packages (`bower install` from the project folder).
 * Go to `src/bin` folder into the project.

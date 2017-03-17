@@ -118,9 +118,9 @@ angular
 
         $scope.isValid = function () {
 
-            if ($scope.logo.enable && (!$scope.logo.header || !$scope.logo.login)) return false;
-            else if ($scope.login.enable && !$scope.loginForm.$valid) return false;
-            else if ($scope.app.enable && !$scope.appForm.$valid) return false;
+            if ($scope.logo && $scope.logo.enable && (!$scope.logo.header || !$scope.logo.login)) return false;
+            else if ($scope.login && $scope.login.enable && !$scope.loginForm.$valid) return false;
+            else if ($scope.app && $scope.app.enable && !$scope.appForm.$valid) return false;
             else return true;
         }
 
@@ -137,11 +137,11 @@ angular
         request.then(function (promise) {
             if (promise && promise.error) apiWarning(promise.error);
             else {
-                $scope.logo = promise.data.logo;
-                $scope.colors = promise.data.colors;
+                if (promise.data.logo) $scope.logo = promise.data.logo;
+                if (promise.data.colors) $scope.colors = promise.data.colors;
                 if ($scope.colors.color.indexOf("#" < 0)) $scope.colors.color = "#" + $scope.colors.color;
-                $scope.login = promise.data.login;
-                $scope.app = promise.data.app;
+                if (promise.data.login) $scope.login = promise.data.login;
+                if (promise.data.app) $scope.app = promise.data.app;
                 if ($scope.app.rows.length == 0) $scope.app.rows = [{ index: 0, icon: "", text: "" }]
             }
         })

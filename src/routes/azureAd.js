@@ -18,7 +18,9 @@ passport.deserializeUser(function (user, done) {
 
 
 function getAzureAdAccount(req, res, next) {
-    Account
+    if (req.query.error) console.error("\x1b[31mERROR\x1b[0m:", "AzureAD error: " + req.query.error);
+    if (req.query.error_description) console.error("\x1b[31mERROR\x1b[0m:", "AzureAD message: " + req.query.error_description.replace(/\+/g, " "));
+    else Account
         .findById(req.params.account_id)
         .populate("azureAd")
         .exec(function (err, account) {

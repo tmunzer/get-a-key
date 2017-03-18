@@ -8,7 +8,6 @@ var AzureAdOAuth2Strategy = require('passport-azure-ad-oauth2').Strategy;
 
 var Account = require("../bin/models/account");
 
-
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
@@ -22,10 +21,8 @@ function getAzureAdAccount(req, res, next) {
         console.error("\x1b[31mERROR\x1b[0m:", "AzureAD error: " + req.query.error);
         if (req.query.error_description) console.error("\x1b[31mERROR\x1b[0m:", "AzureAD message: " + req.query.error_description.replace(/\+/g, " "));
         res.render('error', {
-            error: {
-                status: req.query.error,
-                message: req.query.error_description.replace(/\+/g, " ")
-            }
+            status: req.query.error,
+            message: req.query.error_description.replace(/\+/g, " ")
         });
     } else Account
         .findById(req.params.account_id)

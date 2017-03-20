@@ -20,7 +20,7 @@ global.db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-  // Create your schemas and models here.
+  console.info("\x1b[32minfo\x1b[0m:", "Connected to mongoDB on mongoConfig.host server");
 });
 
 mongoose.connect('mongodb://' + mongoConfig.host + '/' + mongoConfig.base);

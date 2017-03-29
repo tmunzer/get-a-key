@@ -10,11 +10,12 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 
 var app = express();
 app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
-  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0 }
+  skip: function (req, res) { return res.statusCode < 400 && req.originalUrl != "/" }
 }));
 
 //===============MONGODB=================
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 var mongoConfig = require('./config').mongoConfig;
 global.db = mongoose.connection;
 
@@ -26,32 +27,32 @@ db.once('open', function () {
 mongoose.connect('mongodb://' + mongoConfig.host + '/' + mongoConfig.base);
 
 
-
-//===============PASSPORT=================
-global.passport = require('passport');
-app.use(passport.initialize());
-app.use(passport.session());
-
-
 //===============APP=================
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
 app.use(bodyParser.json({ limit: '1mb' }));
 app.use(session(
   {
     secret: 'T9QrskYinhvSyt6NUrEcCaQdgez3',
-    resave: true,
+    resave: false,
     store: new MongoDBStore({
       uri: 'mongodb://' + mongoConfig.host + '/express-session',
       collection: 'get-a-key'
     }),
+    rolling: true,
     saveUninitialized: true,
     cookie: {
       maxAge: 30 * 60 * 1000 // 30 minutes
-    }
+    },
+    unset: "destroy"
   }
 ));
 
+//===============PASSPORT=================
+global.passport = require('passport');
+app.use(passport.initialize());
+app.use(passport.session());
 
+//================ROUTES=================
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -66,15 +67,6 @@ app.use('/bower_components', express.static('../bower_components'));
 
 
 //===============ROUTES=================
-app.get('/fail', function (req, res, next) {
-  setTimeout(function () {
-    var nu = null;
-    nu.access();
-
-    res.send('Hello World');
-  }, 1000);
-});
-
 //Customization
 var custom = require('./routes/custom');
 app.use('/custom/', custom);
@@ -102,7 +94,7 @@ app.get("*", function (req, res) {
 })
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -117,22 +109,23 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
-      error: err
+      stack: err
+    });
+    console.log(err);
+  });
+} else {
+  // production error handler
+  // no stacktraces leaked to user
+  app.use(function (err, req, res, next) {
+    if (err.status == 404) err.message = "The requested url " + req.originalUrl + " was not found on this server.";
+    res.status(err.status || 500);
+    res.render('error', {
+      status: err.status,
+      message: err.message,
+      stack: {}
     });
   });
 }
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-  if (err.status == 404) err.message = "The requested url "+req.originalUrl+" was not found on this server.";
-  res.status(err.status || 500);
-  res.render('error', {
-    status: err.status,
-    message: err.message,
-    error: {}
-  });
-});
-
 
 
 module.exports = app;

@@ -66,8 +66,10 @@ router.get('/oauth/reg', function (req, res) {
                                             vhmId: account.vhmId,
                                             hmngType: "public"
                                         };
-                                        req.session.account = account;
-                                        res.redirect('/admin/');
+                                        req.session.account = JSON.parse(JSON.stringify(account));
+                                        req.session.save(function (err) {
+                                            res.redirect('/admin/');
+                                        })
                                     }
                                 })
                             }
@@ -87,8 +89,10 @@ router.get('/oauth/reg', function (req, res) {
                                             vhmId: account.vhmId,
                                             hmngType: "public"
                                         };
-                                        req.session.account = account;
-                                        res.redirect('/admin/');
+                                        req.session.account = JSON.parse(JSON.stringify(account));
+                                        req.session.save(function (err) {
+                                            res.redirect('/admin/');
+                                        })
                                     }
                                 })
                             }
@@ -112,11 +116,12 @@ router.get("/logout/", function (req, res) {
     req.logout();
     req.session.destroy();
     res.redirect("/");
-})
+});
 /*================================================================
  DASHBOARD
  ================================================================*/
 router.get('/', function (req, res, next) {
+    console.log(req.session);
     if (req.session.xapi)
         res.render('admin', {
             title: 'Get-a-key Parameters'

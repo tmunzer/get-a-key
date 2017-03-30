@@ -16,7 +16,7 @@ function getAccount(req, res, next) {
         .exec(function (err, account) {
             if (err) res.render('error', { error: { message: err } });
             else if (account) {
-                req.session.account = account;
+                req.session.account = JSON.parse(JSON.stringify(account));
                 req.session.xapi = {
                     vpcUrl: account.vpcUrl,
                     accessToken: account.accessToken,
@@ -24,7 +24,9 @@ function getAccount(req, res, next) {
                 };
                 req.session.uurl = account._id;
                 req.session.groupId = account.config.userGroupId;
-                getCustom(req, next);
+                req.session.save(function (err) {
+                    getCustom(req, next);
+                })
             } else res.redirect("/login/");
         })
 }
@@ -35,7 +37,9 @@ function getCustom(req, next) {
             .findById(req.session.account.customization)
             .exec(function (err, custom) {
                 if (!err) req.custom = custom;
-                next();
+                req.session.save(function (err) {
+                    next();
+                })
             })
     else next();
 }

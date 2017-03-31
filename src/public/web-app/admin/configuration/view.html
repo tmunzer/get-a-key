@@ -1,22 +1,28 @@
 <md-content layout-margin>
-	<fieldset>
-		<legend>{{"config.userAccount" | translate}}</legend>
-		<md-input-container class="md-block flex-gt-sm md-input-focused">
-			<label for="LoginUrl" translate="config.loginUrl"></label>
-			<span id="LoginUrl">{{ loginUrl }}</span>
-		</md-input-container>
-		<md-input-container class="md-block flex-gt-sm">
-			<label>
+	<md-content md-whiteframe="5">
+		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
+			<div class="md-toolbar-tools">
+				<span translate="config.userAccount"></span>
+			</div>
+		</md-toolbar>
+		<md-content layout-padding>
+			<md-input-container class="md-block flex-gt-sm md-input-focused">
+				<label for="LoginUrl" translate="config.loginUrl"></label>
+				<span id="LoginUrl">{{ loginUrl }}</span>
+			</md-input-container>
+			<md-input-container class="md-block flex-gt-sm">
+				<label>
 				<span translate="config.userGroup"></span>
 				<span style="color: red">*</span>
 			</label>
-			<md-select ng-model="config.userGroupId" ng-selected="config.userGroupId">
-				<md-option ng-repeat='userGroup in userGroups' value="{{userGroup.id}}">{{userGroup.name}}</md-option>
-			</md-select>
-		</md-input-container>		
-	</fieldset>
+				<md-select ng-model="config.userGroupId" ng-selected="config.userGroupId">
+					<md-option ng-repeat='userGroup in userGroups' value="{{userGroup.id}}">{{userGroup.name}}</md-option>
+				</md-select>
+			</md-input-container>
+		</md-content>
+	</md-content>
 	<md-content layout="column" layout-gt-sm="row">
 		<md-button class="md-primary md-raised" ng-disabled="isWorking || config.userGroupId == 0" ng-click="save()" translate="save"
-			aria-label="save"></md-button>
+		 aria-label="save"></md-button>
 	</md-content>
 </md-content>

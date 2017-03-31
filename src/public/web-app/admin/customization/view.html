@@ -1,8 +1,8 @@
 <div layout-margin>
 	<md-content md-whiteframe="7" layout="column">
-		<md-toolbar class="md-hue-2">
+		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
 			<div class="md-toolbar-tools">
-				<h2>{{"custom.logo" | translate}}</h2>
+				<span>{{"custom.logo" | translate}}</span>
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="logo.enable" aria-label="Color Enable">
@@ -39,9 +39,9 @@
 
 
 	<md-content md-whiteframe="7" layout="column">
-		<md-toolbar class="md-hue-2">
+		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
 			<div class="md-toolbar-tools">
-				<h2>{{"custom.color" | translate}}</h2>
+				<span>{{"custom.color" | translate}}</span>
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="colors.enable" aria-label="Color Enable">
@@ -60,15 +60,17 @@
 			</md-input-container>
 			<div flex-gt-sm="20">
 				<div md-color-picker ng-model="colors.color" label="{{'custom.color.mainColor' | translate}}" ng-disabled="!colors.enable"
-					open-on-input="true" md-color-alpha-channel="false" md-color-hex="true" md-color-rgb="false" md-color-hsl="false">
+				 open-on-input="true" md-color-alpha-channel="false" md-color-hex="true" md-color-rgb="false" md-color-hsl="false">
 				</div>
 			</div>
 		</div>
 	</md-content>
+
+
 	<md-content md-whiteframe="7" layout="column">
-		<md-toolbar class="md-hue-2">
+		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
 			<div class="md-toolbar-tools">
-				<h2>{{"custom.login" | translate}}</h2>
+				<span>{{"custom.login" | translate}}</span>
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="login.enable" aria-label="Login Enable">
@@ -90,10 +92,12 @@
 			</form>
 		</div>
 	</md-content>
+
+
 	<md-content md-whiteframe="5">
-		<md-toolbar class="md-hue-2">
+		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
 			<div class="md-toolbar-tools">
-				<h2>{{"custom.app" | translate}}</h2>
+				<span>{{"custom.app" | translate}}</span>
 				<span flex></span>
 				<md-input-container>
 					<md-switch ng-model="app.enable" aria-label="App Enable">
@@ -161,7 +165,7 @@
 	<md-content layout="column" layout-gt-sm="row">
 		<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save" aria-label="save"></md-button>
 		<md-button target=_blank href="/admin/preview" class="md-primary" ng-disabled="isWorking || !isValid()" translate="custom.preview"
-			aria-label="preview"></md-button>
+		 aria-label="preview"></md-button>
 	</md-content>
 	</md-content>
 </div>

@@ -26,6 +26,11 @@
 			<label for="azureAdLogout" translate="authentication.azureAd.logoutURL"></label>
 			<span id="azureAdLogout" disabled="disabled">{{admin.azureAd.logout}}</span>
 		</md-input-container>
+		<md-input-container>
+			<md-checkbox class='md-primary' ng-model="authentication.azureAd.allowExternalUsers" aria-label="allowExternalUsers">
+            	Allow External Users to get a key: {{authentication.azureAd.allowExternalUsers || false}}
+          </md-checkbox>
+		</md-input-container>
 		<md-input-container class="md-block flex-gt-sm">
 			<label for="clientID">
 				<span translate="authentication.azureAd.clientID"></span>

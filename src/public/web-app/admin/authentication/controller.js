@@ -10,7 +10,8 @@ angular
                 clientId: "",
                 clientSecret: "",
                 tenant: "",
-                resource: ""
+                resource: "",
+                allowExternalUsers: false
             },
             adfs: {}
         };
@@ -82,7 +83,8 @@ angular
                             clientId: "",
                             clientSecret: "",
                             tenant: "",
-                            resource: ""
+                            resource: "",
+                            allowExternalUsers: false
                         },
                         adfs: {}
                     };
@@ -114,8 +116,8 @@ angular
             }
         }
     })
-    .factory("AzureAdService", function ($http, $q, $rootScope) {
 
+    .factory("AzureAdService", function ($http, $q, $rootScope) {
         function get(azureAdConfig) {
             var canceller = $q.defer();
             var request = $http({

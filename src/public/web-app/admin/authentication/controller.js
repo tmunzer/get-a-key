@@ -1,9 +1,10 @@
 angular
     .module('Authentication')
-    .controller("AuthenticationCtrl", function ($scope, $mdDialog, AzureAdService) {
+    .controller("AuthenticationCtrl", function ($scope, $mdDialog, $mdConstant, AzureAdService) {
+        $scope.customKeys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.TAB];
 
-        var initialized = false;
-        var request;
+        const initialized = false;
+        let request;
         $scope.isWorking = false;
         $scope.admin = {
             azureAd: {
@@ -11,7 +12,9 @@ angular
                 clientSecret: "",
                 tenant: "",
                 resource: "",
-                allowExternalUsers: false
+                allowExternalUsers: false,
+                userGroupsFilter: false,
+                userGroups: []
             },
             adfs: {}
         };
@@ -77,6 +80,8 @@ angular
                 $scope.method.adfs = false;
                 if (promise.data.azureAd) {
                     $scope.admin.azureAd = promise.data.azureAd;
+                    if (!$scope.admin.azureAd.userGroupsFilter) $scope.admin.azureAd.userGroupsFilter = false;
+                    if (!$scope.admin.azureAd.userGroups) $scope.admin.azureAd.userGroups = [];
                 } else {
                     $scope.admin = {
                         azureAd: {
@@ -84,7 +89,9 @@ angular
                             clientSecret: "",
                             tenant: "",
                             resource: "",
-                            allowExternalUsers: false
+                            allowExternalUsers: false,
+                            userGroupsFilter: false,
+                            userGroups: []
                         },
                         adfs: {}
                     };
@@ -119,8 +126,8 @@ angular
 
     .factory("AzureAdService", function ($http, $q, $rootScope) {
         function get(azureAdConfig) {
-            var canceller = $q.defer();
-            var request = $http({
+            const canceller = $q.defer();
+            const request = $http({
                 url: "/api/aad/",
                 method: "GET",
                 data: { azureAd: azureAdConfig },
@@ -130,8 +137,8 @@ angular
         }
 
         function post(azureAdConfig) {
-            var canceller = $q.defer();
-            var request = $http({
+            const canceller = $q.defer();
+            const request = $http({
                 url: "/api/aad/",
                 method: "POST",
                 data: { azureAd: azureAdConfig },
@@ -141,7 +148,7 @@ angular
         }
 
         function httpReq(request) {
-            var promise = request.then(
+            let promise = request.then(
                 function (response) {
                     return response;
                 },

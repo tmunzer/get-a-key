@@ -6,6 +6,8 @@ var AzureAdSchema = new mongoose.Schema({
     tenant: { type: String, required: false },
     resource: { type: String, required: false },
     allowExternalUsers: { type: Boolean, default: false },
+    userGroupsFilter: {type: Boolean, default: false},
+    userGroups: [{type: String}],
     created_at: { type: Date },
     updated_at: { type: Date }
 });

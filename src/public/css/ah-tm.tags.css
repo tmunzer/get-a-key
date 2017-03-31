@@ -124,3 +124,8 @@ md-input-container.search-tool {
     margin: 50px;
   }
 }
+
+.chips_disabled md-chip {
+    color: #aaaaaa; 
+    background-color: #eeeeee;
+}

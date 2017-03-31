@@ -54,6 +54,8 @@ var en = {
             signinURL: "Signin URL:",
             callbackURL: "Callback URL:",
             logoutURL: "logoutURL:",
+            external: "Allow External Users to get a key",
+            groupsFilter: "Only authorize users belonging to the following user groups"
         },
         adfs: {
             adfs: "AD Federation Service",

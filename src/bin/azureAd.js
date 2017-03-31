@@ -22,10 +22,25 @@ function getUserDetails(organization, oid, access_token, callback) {
             'Authorization': "Bearer " + access_token
         }
     };
+    req(options, callback);
+}
+function getUserGroups(organization, oid, access_token, callback) {
+    const path = "/" + organization + "/users/" + oid + "/memberOf?api-version=1.6";
+    const options = {
+        host: "graph.windows.net",
+        port: 443,
+        path: path,
+        method: "GET",
+        headers: {
+            'Authorization': "Bearer " + access_token
+        }
+    };
+    req(options, callback);
+}
+function req(options, callback) {
     let result = {};
     result.request = {};
     result.result = {};
-
     result.request.options = options;
     const req = https.request(options, function (res) {
         result.result.status = res.statusCode;
@@ -74,21 +89,44 @@ function getUserDetails(organization, oid, access_token, callback) {
     req.end();
 }
 
-function checkIfExternalUser(organization, oid, access_token, callback) {
-    getUserDetails(organization, oid, access_token, function (err, user) {
+
+function checkUserAccount(azureAccount, oid, params, callback) {
+    getUserDetails(azureAccount.tenant, oid, params.access_token, function (err, user) {
+        console.log(user);
         if (err) console.log(err);
-        else {
-            callback(user.userType == "Guest", user.mail);
-        }
-    })
+        else if (!azureAccount.allowExternalUsers && user.userType != "Member")
+            callback("external", user.mail);
+        else if (azureAccount.userGroupsFilter && params.scope.indexOf("Directory.AccessAsUser.All") < 0)
+            callback("permissions", user.mail);
+        else if (azureAccount.userGroupsFilter)
+            getUserGroups(azureAccount.tenant, oid, params.access_token, function (err, memberOf) {
+                let isMemberOf = false;
+                const userGroups = [];
+                azureAccount.userGroups.forEach(function(group){
+                    userGroups.push(group.toLowerCase());
+                })
+                memberOf.value.forEach(function (group) {
+                    if (group.objectType == "Group" && userGroups.indexOf(group.displayName.toLowerCase()) > -1) isMemberOf = true;
+                })
+                if (isMemberOf) callback(null, user.mail);
+                else callback("memberOf", user.mail);
+            });
+        else callback(null, user.mail);
+    });
 }
 function renderError(error, user, req, res) {
-    if (error == "external") {
-        console.error("\x1b[31mERROR\x1b[0m:", "User " + user + " is not allowed to access to this network because the account is an external account");
-        res.status(401).render("error_azureAd", {
-            user: user
-        });
-    }
+    let message;
+    if (error == "external")
+        message = "User " + user + " is not allowed to access to this network because the account is an external account";
+    else if (error == "memberOf")
+        message = "User " + user + " does not belong to the required user groups";
+    else if (error == "permissions")
+        message = "Unable to retrieve memberOf information for user " + user + ". Please check the application permission in your Azure portal.";
+    console.error("\x1b[31mERROR\x1b[0m:", message);
+    res.status(401).render("error_azureAd", {
+        exeption: error,
+        user: user
+    });
 }
 
 module.exports = function (req, res, next) {
@@ -117,9 +155,8 @@ module.exports = function (req, res, next) {
                         console.log(params);
                         console.log(profile);
                         console.log(waadProfile);
-                        if (account.azureAd.allowExternalUsers) done(null, waadProfile);
-                        else checkIfExternalUser(account.azureAd.tenant, waadProfile.oid, params.access_token, function (isExternal, email) {
-                            if (isExternal) renderError("external", email, req, res);
+                        checkUserAccount(account.azureAd, waadProfile.oid, params, function (error, email) {
+                            if (error) renderError(error, email, req, res);
                             else done(null, waadProfile);
                         })
                     }

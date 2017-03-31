@@ -9,6 +9,7 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 
 
 var app = express();
+app.disable('x-powered-by');
 app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
   skip: function (req, res) { return res.statusCode < 400 && req.originalUrl != "/" }
 }));

@@ -34,7 +34,7 @@ html
                 div.inside(md-whiteframe="5" style="width: 100%" )
                     md-toolbar
                         div.md-toolbar-tools
-                            h2(translate="error.unauthorized" style="text-transform: uppercase;")
+                            h2(translate="error.title" style="text-transform: uppercase;")
                     md-content(layout="column" layout-padding)
                         div.ah-logo(style="margin: auto; width: 100%; text-align: center;")
                             if custom && custom.logo && custom.logo.enable
@@ -42,7 +42,17 @@ html
                             else
                                 img(src="/images/logo.png" alt="Aerohive" class="ah-logo" style="text-align:center; margin: auto;")  
                         
-                        div(translate="error.external" translate-value-user=user style="font-weight: bold;color: red;text-align: center;")
+                        div(style="text-align: center;")
+                            span(translate="error.unauthorized" style="color:#e60000; font-size: 36px;")
+                        br
+                        div(layout="row")
+                            md-icon(class="material-icons" aria-label="language" style="color: #e60000;font-size: 36px;margin: 0 20px 0 0;") error_outline
+                            if exeption == "external"
+                                span(translate="error.external" translate-value-user=user)
+                            else if exeption == "memberOf"
+                                span(translate="error.memberOf" translate-value-user=user)
+                            else if exeption == "permissions"
+                                span(translate="error.permissions")
                         br                    
                         md-button.md-raised.md-primary(href="/logout" translate="error.logout" aria-label="logout" style="margin: auto; width: 90%; max-width: 450px; margin-bottom: 10px;")
                         

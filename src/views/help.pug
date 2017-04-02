@@ -34,47 +34,129 @@ html
                             h2 AzureAD Configuration Help
                     md-content(layout="column" layout-padding)
                         h3 Get all the information to configure your AzureAD API
-                        span You will find here the information needed to configure the AzureAD APIs (signIn URL, callback URL and logout URL).
+                        div 
+                            span You will find here the information needed to configure the AzureAD APIs (
+                            b="signIn URL"
+                            span , 
+                            b=" callback URL "
+                            span and 
+                            b=" logout URL"
+                            span ).
                         img(src="/web-app/help/azureAD/params.png" style="width: 50%;margin: auto;")
                         h3 Connect to you 
                             a(href="https://portal.azure.com/" target=_blank) AzureAD portal
-                        span On your Azure Portal, click on "App Registration" (if it's not available, click on "More Services" to find it).
+                        div 
+                            span On your Azure Portal, click on 
+                            b=" App Registration "
+                            span (if it's not available, click on 
+                            b=" More Services "
+                            span to find it).
                         img(src="/web-app/help/azureAD/azure1.png" style="width: 50%;margin: auto;")
                         h3 Create a new App
-                        span Click on "Add" and: 
+                        div 
+                            span Click on 
+                            b=" Add " 
+                            span and: 
                         ul(style="list-style-type: circle")
-                            li fill a name for the App
-                            li Select the "Web App / API" type
-                            li put the "SignIn URL" from the Settings Page in the Sign-on URL field
+                            li Fill a name for the App
+                            li 
+                                spanSelect the 
+                                b=" Web App / API "
+                                span type
+                            li 
+                                span Put the 
+                                b=" SignIn URL "
+                                span from the Settings Page in the Sign-on URL field
                         img(src="/web-app/help/azureAD/azure2.png" style="width: 50%;margin: auto;")
                         h3 Logout URL
                         span The Logout URL is the URL where to send back the user after the logout.
-                        span Put here the "logout URL" from the "Settings page".
+                        div
+                            span Put here the 
+                            b=" logout URL "
+                            span from the 
+                            b=" Settings page"
+                            span .
                         img(src="/web-app/help/azureAD/azure3.png" style="width: 50%;margin: auto;")
                         h3 Callback URL
-                        span Once the App is created, you will be able to configure the Callback URL with the "Callback URL" from the settings page.
+                        div
+                            span Once the App is created, you will be able to configure the Callback URL with the 
+                            b=" Callback URL "
+                            span from the settings page.
                         span The Callback URL is the URL where Azure is sending the authorization token, to validate the user authentication against the App.
                         br
-                        span Remove the pre-configured callback URL, add yours, and click "Save"
+                        div
+                            span Remove the pre-configured callback URL, add yours, and click 
+                            b=" Save"
+                            span .
                         img(src="/web-app/help/azureAD/azure4.png" style="width: 50%;margin: auto;")
+                        h3 Permissions
+                        span This App requiring some basic permissions to be able to work properly.
+                        span To configure them
+                        ul(style="list-style-type: circle")
+                            li 
+                                span Click on 
+                                b=" Required Permissions "
+                                span and then on 
+                                b=" Windows Azure Active Directory "
+                                span to edit the permissions.
+                            li 
+                                span Check the
+                                b=" Sign in and read user profile "
+                                span and 
+                                b=" Access the directory as the signed-in user "
+                                span permissions
+                            li 
+                                span Click
+                                b=" Save"
+                            li 
+                                span Click 
+                                b=" Grant Permissions"
+                        img(src="/web-app/help/azureAD/permissions.png" style="width: 50%;margin: auto;")
                         h3 App Key
-                        span You now have to generate a unique key for this App. Under the "Keys" section, create a new key by
+                        div 
+                            span You now have to generate a unique key for this App. Under the 
+                            b=" Keys "
+                            span section, create a new key by
                         ul
                             li putting a new name
                             li setting the key validity
                             li clicking Save
                         img(src="/web-app/help/azureAD/azure5.png" style="width: 50%;margin: auto;")
-                        span The Key value in only displayed once you click "Save", and you will not be able to retrieve it after that.
-                        span Copy the Key and paste it into the "Application Key" field on the "Settings page".
+                        div 
+                            span The Key value in only displayed once you click 
+                            b=" Save "
+                            span , and you will not be able to retrieve it after that.
+                        div 
+                            span Copy the Key and paste it into the 
+                            b=" Application Key "
+                            span field on the
+                            b=" Settings page"
+                            span .
                         h3 Retrieve the lasts parameters
                         span The easiest way to find the lasts parameters (Application ID, Tenant and Resource) is to display the app Manifest.
-                        span To do so, you can click on the "Manifest" button.
+                        div 
+                            span To do so, you can click on the 
+                            b=" Manifest "
+                            span button.
                         img(src="/web-app/help/azureAD/azure6.png" style="width: 50%;margin: auto;")
                         span You will find here:
                         ul 
-                            li The "Application Id" value, which is name "AppId"
-                            li The "Tenant" value, which is the FQDN of the "identifierUris"
-                            li The "Resource" value, which is the "resourceAppId" value (at the bottom of the page) 
+                            li 
+                                span The
+                                b=" Application Id "
+                                span value, which is name 
+                                b=" AppId"
+                            li 
+                                span The
+                                b=" Tenant "
+                                span value, which is the FQDN of the 
+                                b=" identifierUris"
+                            li 
+                                span The
+                                b=" Resource "
+                                span value, which is the
+                                b=" resourceAppId "
+                                span value (at the bottom of the page) 
                     
                         
 

@@ -1,24 +1,40 @@
 const https = require('https');
 const qs = require("querystring");
 
-module.exports.getPermanentToken = function (authCode, redirectUrl, clientSecret, clientId, callback) {
+/**
+ * HTTP GET Request
+ * @param {String} authCode - Code sent by ACS during OAuth process
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ *  */
+module.exports.getPermanentToken = function (authCode, devAccount, callback) {
     const options = {
         host: 'cloud.aerohive.com',
         port: 443,
-        path: '/services/acct/thirdparty/accesstoken?authCode=' + authCode + '&redirectUri=' + redirectUrl,
+        path: '/services/acct/thirdparty/accesstoken?authCode='+authCode+'&redirectUri='+devAccount.redirectUrl,
         method: 'POST',
         headers: {
-            'X-AH-API-CLIENT-SECRET': clientSecret,
-            'X-AH-API-CLIENT-ID': clientId,
-            'X-AH-API-CLIENT-REDIRECT-URI': redirectUrl,
-            "cache-control": "no-cache",
+            'X-AH-API-CLIENT-SECRET' : devAccount.clientSecret,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
+            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl
         }
     };
 
     req(options, "\n", callback);
 };
 
-module.exports.refreshToken = function (accessToken, refreshToken, clientSecret, clientId, callback) {
+/**
+ * HTTP GET Request
+ * @param {String} accessToken - HMNG API access_token to refresh
+ * @param {String} refreshToken - HMNG API refresh code 
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ *  */
+module.exports.refreshToken = function (refreshToken, devAccount, callback) {
     const options = {
         host: 'cloud.aerohive.com',
         port: 443,
@@ -32,8 +48,8 @@ module.exports.refreshToken = function (accessToken, refreshToken, clientSecret,
     const body = {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-        client_secret: clientSecret,
-        client_id: clientId
+        client_secret: devAccount.clientSecret,
+        client_id: devAccount.clientId
     };
 
     req(options, qs.stringify(body), callback);

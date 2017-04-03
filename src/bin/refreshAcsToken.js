@@ -1,7 +1,7 @@
 const CronJob = require("cron").CronJob;
 const Account = require('./models/account');
 const OAuth = require('./aerohive/api/oauth');
-const devAccount = require("..//config.js").devAccount;
+const devAccount = require("../config.js").devAccount;
 
 function refreshOldToken() {
     console.info("\x1b[32minfo\x1b[0m:", "Starting process to automatically refresh Access Tokens");
@@ -18,7 +18,7 @@ function refreshOldToken() {
             // for every selected accounts, try to refresh the token
             else accounts.forEach(function (account) {
                 console.info("\x1b[32minfo\x1b[0m:", "Refreshing token for ownerId " + account.ownerId);
-                OAuth.refreshToken(account.accessToken, account.refreshToken, devAccount.clientSecret, devAccount.clientID, function (data) {
+                OAuth.refreshToken(account.refreshToken, devAccount, function (data) {
                     // if refresh succeed, update the account data
                     if (data.access_token && data.expires_in && data.refresh_token) {
                         account.accessToken = data.access_token;

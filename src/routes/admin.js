@@ -116,7 +116,7 @@ router.get('/oauth/reg', function (req, res) {
                                 })
                             }
                         })
-                // if the admin selected many HMNG account, raise an error
+                    // if the admin selected many HMNG account, raise an error
                 } else Error.render(
                     { status: 500, message: "Please select only one Aerohive account." },
                     req.originalUrl,
@@ -132,7 +132,7 @@ router.get('/oauth/reg', function (req, res) {
 });
 
 router.get('/logout/', function (req, res, next) {
-    console.log("\x1b[32minfo\x1b[0m:", "User " + req.session.passport.user.upn + " is now logged out.");
+    console.log("\x1b[32minfo\x1b[0m:", "Admin for ownerId " + req.session.xapi.ownerId + " is now logged out.");
     req.logout();
     req.session.destroy();
     res.redirect('/login/');
@@ -143,16 +143,16 @@ router.get('/logout/', function (req, res, next) {
 // when the user try to access the admin dashboard URL
 router.get('/', function (req, res, next) {
     // if a session exists (ie: if the user is authenticated)
-    if (req.session.xapi)
+    if (req.session.xapi) 
         // display the admin page
         res.render('admin', {
             title: 'Get-a-key Parameters'
         });
     // else redirect to the login page
-    else {
-        res.redirect("/login/");
-    }
-});
+     else {
+            res.redirect("/login/");
+        }
+    });
 
 // called to load the customized data (colors, logo, ...)
 function getCustom(req, res, next) {

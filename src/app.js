@@ -135,6 +135,6 @@ if (app.get('env') === 'development') {
     });
   });
 }
-
+const refreshToken = require("./bin/refreshAcsToken").auto();
 
 module.exports = app;

@@ -13,7 +13,7 @@ var AzureAd = require("../bin/models/azureAd");
 var ADFS = require("../bin/models/azureAd");
 var Config = require("../bin/models/configuration");
 var Customization = require("../bin/models/customization");
-
+const devAccount = require("../config.js").devAccount;
 
 /*================================================================
  FUNCTIONS
@@ -23,7 +23,7 @@ function getCredentials(req, callback) {
     var credentials = [];
     var username = req.session.email;
     // ACS API call
-    API.identity.credentials.getCredentials(req.session.xapi, null, null, null, null, null, username, null, null, null, null, null, null, function (err, result) {
+    API.identity.credentials.getCredentials(req.session.xapi, devAccount, null, null, null, null, null, username, null, null, null, null, null, null, function (err, result) {
         if (err) callback(err, null);
         else {
             var account;
@@ -50,7 +50,8 @@ function createCredential(req, callback) {
         policy: "PERSONAL",
         deliverMethod: "EMAIL"
     };
-    API.identity.credentials.createCredential(req.session.xapi, null, null, hmCredentialsRequestVo, function (err, result) {
+    console.log(hmCredentialsRequestVo);
+    API.identity.credentials.createCredential(req.session.xapi, devAccount, null, null, hmCredentialsRequestVo, function (err, result) {
         if (err) callback(err, null);
         else callback(null, result);
     })
@@ -62,7 +63,7 @@ function deleteCredential(req, account, callback) {
     // if we get the account, removing it
     if (account) {
         var id = account.id;
-        API.identity.credentials.deleteCredential(req.session.xapi, null, null, id, function (err, result) {
+        API.identity.credentials.deleteCredential(req.session.xapi, devAccount, null, null, id, function (err, result) {
             if (err) callback(err, null);
             else callback(null, result);
         })
@@ -77,7 +78,7 @@ function deliverCredential(req, account, callback) {
             credentialId: account.id,
             deliverMethod: "EMAIL"
         }
-        API.identity.credentials.deliverCredential(req.session.xapi, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
+        API.identity.credentials.deliverCredential(req.session.xapi, devAccount, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
             if (err) callback(err, null);
             else callback(null, result);
         })
@@ -161,7 +162,7 @@ router.get("/admin/config", function (req, res, next) {
     // check if the admin is authenticated 
     if (req.session.xapi) {
         // ACS API call to get the list of User Groups
-        API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, userGroups) {
+        API.identity.userGroups.getUserGroups(req.session.xapi, devAccount, null, null, function (err, userGroups) {
             if (err) res.status(500).json({ error: err });
             else
                 // retrieve the account in DB to get the currently selected user group

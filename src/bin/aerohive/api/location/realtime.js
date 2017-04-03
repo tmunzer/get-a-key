@@ -10,12 +10,12 @@ var api = require("./../req");
  * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
- * @param {String} memberOf - employee group of which credential is a member
- * @param {String} adUser - active directory user
+ * @param {Array} apMacs - A comma seperated list of AP Mac Addresses.
  *  */
-module.exports.getUserGroups = function (xapi, devAccount, memberOf, adUser, callback) {
-    var path = "/xapi/v1/identity/userGroups?ownerId=" + xapi.ownerId;
-    if (memberOf) path += '&memberOf=' + memberOf;
-    if (adUser) path += '&adUser=' + adUser;
+module.exports.clients = function (xapi, devAccount, apMacs, callback) {
+
+    var path = '/xapi/v1/location/clients?ownerId=' + xapi.ownerId + "&apMacs=" + apMacs;
+
+    // send the API request
     api.GET(xapi, devAccount, path,  callback);
 };

@@ -6,7 +6,7 @@ ADMIN:
 var express = require('express');
 var router = express.Router();
 var OAuth = require("../bin/aerohive/api/oauth");
-var devApp = require('../config.js').devAccount;
+var devAccount = require('../config.js').devAccount;
 var Account = require('../bin/models/account');
 var Customization = require("../bin/models/customization");
 var Error = require('../routes/error');
@@ -26,7 +26,7 @@ router.get('/oauth/reg', function (req, res) {
     // otherwise retrieve the authorization code and try to get the access token
     else if (req.query.authCode) {
         var authCode = req.query.authCode;
-        OAuth.getPermanentToken(authCode, devApp.redirectUrl, devApp.clientSecret, devApp.clientID, function (data) {
+        OAuth.getPermanentToken(authCode, devAccount, function (data) {
             // if ACS send an error message when trying to get the access token, display it
             if (data.error) Error.render(
                 { status: 401, message: "OAuth process error. The authorization didn't validated the authorization code: " + req.query.error },

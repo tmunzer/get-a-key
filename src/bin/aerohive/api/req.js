@@ -1,8 +1,18 @@
 const https = require('https');
-const devAccount = require("../../../config.js").devAccount;
 
-
-module.exports.GET = function (xapi, path, callback) {
+/**
+ * HTTP GET Request
+ * @param {Object} xapi - API credentials
+ * @param {String} xapi.vpcUrl - ACS server to request
+ * @param {String} xapi.ownerId - ACS ownerId
+ * @param {String} xapi.accessToken - ACS accessToken
+ * @param {String} path - path to request the ACS endpoint
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ *  */
+module.exports.GET = function (xapi, devAccount, path, callback) {
     let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
 
@@ -21,8 +31,20 @@ module.exports.GET = function (xapi, path, callback) {
     };
     httpRequest(options, callback);
 };
-
-module.exports.POST = function (xapi, path, data, callback) {
+/**
+ * HTTP POST Request
+ * @param {Object} xapi - API credentials
+ * @param {String} xapi.vpcUrl - ACS server to request
+ * @param {String} xapi.ownerId - ACS ownerId
+ * @param {String} xapi.accessToken - ACS accessToken
+ * @param {String} path - path to request the ACS endpoint
+ * @param {Object} data - data to include to the POST Request
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ *  */
+module.exports.POST = function (xapi, devAccount, path, data, callback) {
     let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
     const options = {
@@ -42,7 +64,19 @@ module.exports.POST = function (xapi, path, data, callback) {
     const body = JSON.stringify(data);
     httpRequest(options, callback, body);
 };
-module.exports.PUT = function (xapi, path, callback) {
+/**
+ * HTTP PUT Request
+ * @param {Object} xapi - API credentials
+ * @param {String} xapi.vpcUrl - ACS server to request
+ * @param {String} xapi.ownerId - ACS ownerId
+ * @param {String} xapi.accessToken - ACS accessToken
+ * @param {String} path - path to request the ACS endpoint
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ *  */
+module.exports.PUT = function (xapi, devAccount, path, callback) {
     let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
     const options = {
@@ -61,7 +95,19 @@ module.exports.PUT = function (xapi, path, callback) {
     };
     httpRequest(options, callback);
 };
-module.exports.DELETE = function (xapi, path, callback) {
+/**
+ * HTTP DELETE Request
+ * @param {Object} xapi - API credentials
+ * @param {String} xapi.vpcUrl - ACS server to request
+ * @param {String} xapi.ownerId - ACS ownerId
+ * @param {String} xapi.accessToken - ACS accessToken
+ * @param {String} path - path to request the ACS endpoint
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ *  */
+module.exports.DELETE = function (xapi, devAccount, path, callback) {
     let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
     const options = {

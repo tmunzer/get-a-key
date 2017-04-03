@@ -41,7 +41,7 @@ app.use(bodyParser.json({ limit: '1mb' }));
 app.use(session(
   {
     secret: 'T9QrskYinhvSyt6NUrEcCaQdgez3',
-    resave: false,
+    resave: true,
     store: new MongoDBStore({
       uri: 'mongodb://' + mongoConfig.host + '/express-session',
       collection: 'get-a-key'

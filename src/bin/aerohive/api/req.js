@@ -1,12 +1,12 @@
-var https = require('https');
-var devAccount = require("../../../config.js").devAccount;
+const https = require('https');
+const devAccount = require("../../../config.js").devAccount;
 
 
 module.exports.GET = function (xapi, path, callback) {
-    var rejectUnauthorized = true;
+    let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
 
-    var options = {
+    const options = {
         rejectUnauthorized: rejectUnauthorized,
         host: xapi.vpcUrl,
         port: 443,
@@ -23,9 +23,9 @@ module.exports.GET = function (xapi, path, callback) {
 };
 
 module.exports.POST = function (xapi, path, data, callback) {
-    var rejectUnauthorized = true;
+    let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
-    var options = {
+    const options = {
         rejectUnauthorized: rejectUnauthorized,
         host: xapi.vpcUrl,
         port: 443,
@@ -39,13 +39,13 @@ module.exports.POST = function (xapi, path, data, callback) {
             'Content-Type': 'application/json'
         }
     };
-    var body = JSON.stringify(data);
+    const body = JSON.stringify(data);
     httpRequest(options, callback, body);
 };
 module.exports.PUT = function (xapi, path, callback) {
-    var rejectUnauthorized = true;
+    let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
-    var options = {
+    const options = {
         rejectUnauthorized: rejectUnauthorized,
         host: xapi.vpcUrl,
         port: 443,
@@ -62,9 +62,9 @@ module.exports.PUT = function (xapi, path, callback) {
     httpRequest(options, callback);
 };
 module.exports.DELETE = function (xapi, path, callback) {
-    var rejectUnauthorized = true;
+    let rejectUnauthorized = true;
     if (xapi.rejectUnauthorized) rejectUnauthorized = xapi.rejectUnauthorized;
-    var options = {
+    const options = {
         rejectUnauthorized: rejectUnauthorized,
         host: xapi.vpcUrl,
         port: 443,
@@ -81,18 +81,18 @@ module.exports.DELETE = function (xapi, path, callback) {
 };
 
 function httpRequest(options, callback, body){
-    var result = {};
+    let result = {};
     result.request = {};
     result.result = {};
 
     result.request.options = options;
-    var req = https.request(options, function (res) {
+    const req = https.request(options, function (res) {
         result.result.status = res.statusCode;
         console.info('\x1b[34mREQUEST QUERY\x1b[0m:', options.path);
         console.info('\x1b[34mREQUEST STATUS\x1b[0m:',result.result.status);
         result.result.headers = JSON.stringify(res.headers);
         res.setEncoding('utf8');
-        var data = '';
+        let data = '';
         res.on('data', function (chunk) {
             data += chunk;
         });
@@ -100,7 +100,7 @@ function httpRequest(options, callback, body){
             if (data != '') {
                 if (data.length > 400) console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data.substr(0, 400) + '...');
                 else console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data);  
-                var dataJSON = JSON.parse(data);
+                const dataJSON = JSON.parse(data);
                 result.data = dataJSON.data;
                 result.error = dataJSON.error;
             }
@@ -109,7 +109,7 @@ function httpRequest(options, callback, body){
                     callback(null, result.data);
                     break;
                 default:
-                    var error = {};
+                    let error = {};
                     if (result.error.status) error.status = result.error.status;
                     else error.status = result.result.status;
                     if (result.error.message) error.message = result.error.message;

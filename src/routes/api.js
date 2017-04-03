@@ -50,7 +50,6 @@ function createCredential(req, callback) {
         policy: "PERSONAL",
         deliverMethod: "EMAIL"
     };
-    console.log(hmCredentialsRequestVo);
     API.identity.credentials.createCredential(req.session.xapi, devAccount, null, null, hmCredentialsRequestVo, function (err, result) {
         if (err) callback(err, null);
         else callback(null, result);

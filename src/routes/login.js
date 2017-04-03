@@ -16,6 +16,7 @@ function getAccount(req, res, next) {
     // retrieve the account in the DB based on the req params 
     Account
         .findById(req.params.account_id)
+        .populate("config")
         .exec(function (err, account) {
             if (err) res.render('error', { error: { message: err } });
             else if (account) {

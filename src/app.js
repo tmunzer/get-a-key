@@ -9,14 +9,18 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 
 
 var app = express();
+// remove http header
 app.disable('x-powered-by');
+// log http request
 app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
   skip: function (req, res) { return res.statusCode < 400 && req.originalUrl != "/" }
 }));
 
 //===============MONGODB=================
+// configure mongo database
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
+// retrieve mongodb parameters from config file
 var mongoConfig = require('./config').mongoConfig;
 global.db = mongoose.connection;
 
@@ -25,12 +29,15 @@ db.once('open', function () {
   console.info("\x1b[32minfo\x1b[0m:", "Connected to mongoDB on " + mongoConfig.host + " server");
 });
 
+// connect to mongodb
 mongoose.connect('mongodb://' + mongoConfig.host + '/' + mongoConfig.base);
 
 
 //===============APP=================
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
 app.use(bodyParser.json({ limit: '1mb' }));
+// express-session parameters:
+// save sessions into mongodb 
 app.use(session(
   {
     secret: 'T9QrskYinhvSyt6NUrEcCaQdgez3',
@@ -49,6 +56,7 @@ app.use(session(
 ));
 
 //===============PASSPORT=================
+// passport is used to save authentication sessions
 global.passport = require('passport');
 app.use(passport.initialize());
 app.use(passport.session());

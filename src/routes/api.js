@@ -1,19 +1,28 @@
-var express = require('express');
+/*================================================================
+API:
+Deal with all the web browser API call:
+- users (to create/delete/... keys)
+- admins (to retrieve/save the app parameters)
+ ================================================================*/
+ var express = require('express');
 var router = express.Router();
 var API = require("../bin/aerohive/api/main");
-
 var serverHostname = require("../config.js").appServer.vhost;
-
 var Account = require("../bin/models/account");
 var AzureAd = require("../bin/models/azureAd");
+var ADFS = require("../bin/models/azureAd");
 var Config = require("../bin/models/configuration");
 var Customization = require("../bin/models/customization");
-/* GET users listing. */
 
+
+/*================================================================
+ FUNCTIONS
+ ================================================================*/
+// ACS API call to retrieve Guest accounts based on the username
 function getCredentials(req, callback) {
     var credentials = [];
     var username = req.session.email;
-    //module.exports.getCredentials = function (xapi, credentialType, userGroup, memberOf, adUser, creator, userName, firstName, lastName, phone, email, page, pageSize, callback) {
+    // ACS API call
     API.identity.credentials.getCredentials(req.session.xapi, null, null, null, null, null, username, null, null, null, null, null, null, function (err, result) {
         if (err) callback(err, null);
         else {
@@ -32,6 +41,8 @@ function getCredentials(req, callback) {
     });
 
 };
+
+// ACS API call to create a new Guest account
 function createCredential(req, callback) {
     var hmCredentialsRequestVo = {
         email: req.session.email,
@@ -45,8 +56,9 @@ function createCredential(req, callback) {
     })
 
 };
-function deleteCredential(req, account, callback) {
 
+// ACS API call to delete a Guest account
+function deleteCredential(req, account, callback) {
     // if we get the account, removing it
     if (account) {
         var id = account.id;
@@ -57,6 +69,7 @@ function deleteCredential(req, account, callback) {
     } else callback();
 };
 
+// ACS API call to deliver a Guest account
 function deliverCredential(req, account, callback) {
     if (account) {
         var hmCredentialDeliveryInfoVo = {
@@ -72,14 +85,27 @@ function deliverCredential(req, account, callback) {
     } else callback();
 };
 
+/*================================================================
+ ROUTES
+ ================================================================*/
+
+/*==================   USER API   ===========================*/
+
+// When user wants to get a new key
 router.get("/myKey", function (req, res, next) {
+    // check if the user is authenticated 
     if (req.session.passport) {
+        // try to create a new key with the user information
         createCredential(req, function (err, result) {
+            // if the user already has a key
             if (err && err.code == "registration.service.item.already.exist") {
+                // retrieve the account details (to have the account_id)
                 getCredentials(req, function (err, account) {
                     if (err) res.status(500).json({ action: "create", error: err });
+                    // try to delete the current key
                     else deleteCredential(req, account, function (err, result) {
                         if (err) res.status(500).json({ action: "create", error: err });
+                        // try to create a new key
                         else createCredential(req, function (err, result) {
                             if (err) res.status(500).json({ action: "create", error: err });
                             else res.status(200).json({ action: "create", email: req.session.email, status: 'deleted_and_done', result: result });
@@ -92,11 +118,14 @@ router.get("/myKey", function (req, res, next) {
     } else res.status(403).send('Unknown session');
 });
 
-
+// When user wants to delete its key
 router.delete("/myKey", function (req, res, next) {
+    // check if the user is authenticated 
     if (req.session.xapi) {
+        // retrieve the account details (to have the account_id)
         getCredentials(req, function (err, account) {
             if (err) res.status(500).json({ action: "delete", error: err });
+            // try to delete the current key
             else if (account) deleteCredential(req, account, function (err, result) {
                 if (err) res.status(500).json({ action: "delete", error: err });
                 else res.status(200).json({ action: "delete", email: req.session.email, status: 'done' });
@@ -106,11 +135,14 @@ router.delete("/myKey", function (req, res, next) {
     } else res.status(403).send('Unknown session');
 })
 
-
+// When user wants to receive the key one more time (same key sent by email)
 router.post("/myKey", function (req, res, next) {
+    // check if the user is authenticated 
     if (req.session.xapi) {
+        // retrieve the account details (to have the account_id)
         getCredentials(req, function (err, account) {
             if (err) res.status(500).json({ action: "deliver", error: err });
+            // try to deliver the key
             else if (account) deliverCredential(req, account, function (err, result) {
                 if (err) res.status(500).json({ action: "deliver", error: err });
                 else res.status(200).json({ action: "deliver", email: req.session.email, status: 'done' });
@@ -121,17 +153,18 @@ router.post("/myKey", function (req, res, next) {
 })
 
 
+/*==================   ADMIN API - CONFIG   ===========================*/
 
-/**
- * ADMIN API
- */
-
+// When admin is loading the "config" page (with the user group to use)
 router.get("/admin/config", function (req, res, next) {
     var userGroupId;
+    // check if the admin is authenticated 
     if (req.session.xapi) {
+        // ACS API call to get the list of User Groups
         API.identity.userGroups.getUserGroups(req.session.xapi, null, null, function (err, userGroups) {
             if (err) res.status(500).json({ error: err });
             else
+                // retrieve the account in DB to get the currently selected user group
                 Account
                     .findById(req.session.account._id)
                     .populate("config")
@@ -151,20 +184,23 @@ router.get("/admin/config", function (req, res, next) {
         })
     } else res.status(403).send('Unknown session');
 })
-
+// Function to save the admin configuration
 function saveConfig(req, res) {
     var newConfig = { userGroupId: req.body.userGroupId };
-
+    // retrieve the current Account in the DB
     Account
         .findById(req.session.account._id)
         .exec(function (err, account) {
             if (err) res.status(500).json({ error: err });
             else if (account) {
+                // if the current account already has a configuration
                 if (account.config) {
+                    // update the account configuration
                     Config.update({ _id: account.config }, newConfig, function (err, savedConfig) {
                         if (err) res.status(500).json({ error: err });
                         else res.status(200).json({ action: "save", status: 'done' });
                     })
+                    // if the current account has no configuration, create it
                 } else Config(newConfig).save(function (err, savedConfig) {
                     if (err) res.status(500).json({ error: err });
                     else {
@@ -178,21 +214,57 @@ function saveConfig(req, res) {
             } else res.status(500).json({ error: "not able to retrieve the account" });
         });
 }
-
+// Called when admin save the new configuration
 router.post("/admin/config", function (req, res, next) {
+    // check if the admin is authenticated 
     if (req.session.xapi) {
         if (req.body.userGroupId) saveConfig(req, res);
         else res.status(500).send({ error: "userGroupId value is missing." });
     } else res.status(403).send('Unknown session');
 })
-
+/*==================   ADMIN API - AZUREAD   ===========================*/
+// Function to save the AzureAD configuration
+function saveAzureAd(req, res) {
+    // retrieve the current Account in the DB
+    Account
+        .findById(req.session.account._id)
+        .exec(function (err, account) {
+            if (err) res.status(500).json({ error: err });
+            else if (account) {
+                // if the current account already has a AzureAD configuration
+                if (account.azureAd)
+                    // update it
+                    AzureAd.update({ _id: account.azureAd }, req.body.azureAd, function (err, result) {
+                        if (err) res.status(500).json({ error: err });
+                        else res.status(200).json({ action: "save", status: 'done' });
+                    })
+                // if the current account has no AzureAD aconfiguration, create it
+                else AzureAd(req.body.azureAd).save(function (err, result) {
+                    if (err) res.status(500).json({ error: err });
+                    else {
+                        // @TODO: improve migration from ADFS to Azure
+                        account.azureAd = result;
+                        account.adfs = null;
+                        account.save(function (err, result) {
+                            if (err) res.status(500).json({ error: err });
+                            else res.status(200).json({ action: "save", status: 'done' });
+                        })
+                    }
+                });
+            } else res.status(500).json({ error: "not able to retrieve the account" });
+        });
+}
+// When to admin loads the AzureAD configuration page
 router.get("/aad", function (req, res, next) {
+    // check if the admin is authenticated 
     if (req.session.xapi) {
+        // retrieve the current Account in the DB
         Account
             .findById(req.session.account._id)
             .populate("azureAd")
             .exec(function (err, account) {
                 if (err) res.status(500).json({ error: err });
+                // return values to web server
                 else if (account)
                     res.status(200).json({
                         signin: "https://" + serverHostname + "/login/" + account._id + "/",
@@ -204,63 +276,48 @@ router.get("/aad", function (req, res, next) {
             })
     } else res.status(403).send('Unknown session');
 })
-
-function saveAzureAd(req, res) {
-    Account
-        .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
-        .exec(function (err, account) {
-            if (err) res.status(500).json({ error: err });
-            else if (account.length == 1) {
-                if (account[0].azureAd) {
-                    AzureAd.update({ _id: account[0].azureAd }, req.body.azureAd, function (err, result) {
-                        if (err) res.status(500).json({ error: err });
-                        else res.status(200).json({ action: "save", status: 'done' });
-                    })
-                } else AzureAd(req.body.azureAd).save(function (err, result) {
-                    if (err) res.status(500).json({ error: err });
-                    else {
-                        account[0].azureAd = result;
-                        account[0].adfs = null;
-                        account[0].save(function (err, result) {
-                            if (err) res.status(500).json({ error: err });
-                            else res.status(200).json({ action: "save", status: 'done' });
-                        })
-                    }
-                });
-            } else res.status(500).json({ error: "not able to retrieve the account" });
-        });
-}
+// When the admin save the AzureAD configuration
+router.post("/aad/", function (req, res, next) {
+    // check if the admin is authenticated 
+    if (req.session.xapi) {
+        if (req.body.azureAd) saveAzureAd(req, res);
+        else res.status(500).send({ error: "missing azureAd" });
+    } else res.status(403).send('Unknown session');
+})
+/*==================   ADMIN API - ADFS   ===========================*/
+// Function to save the ADFS configuration
 function saveAdfs(req, res) {
+    // retrieve the current Account in the DB
     Account
-        .find({ ownerId: req.session.xapi.ownerId, vpcUrl: req.session.xapi.vpcUrl, vhmId: req.session.xapi.vhmId })
+        .findById(req.session.account._id)
         .exec(function (err, account) {
             if (err) res.status(500).json({ error: err });
-            else if (account.length == 1) {
-                if (account[0].azureAd) AzureAd.findByIdAndRemove(account[0].azureAd, function (err) {
-                    if (err) res.status(500).json({ error: "not able to save data" });
-                    else {
-                        account[0].azureAd = null;
-                        account[0].save(function (err, result) {
-                            if (err) res.status(500).json({ error: "not able to save data" });
-                            else res.status(200).json({ action: "save", status: 'done' });
-                        })
-                    }
-                });
+            else if (account) {
+                // if the current account already has a ADFS configuration
+                // @TODO
+                if (account.azureAd)
+                    AzureAd.findByIdAndRemove(account.azureAd, function (err) {
+                        if (err) res.status(500).json({ error: "not able to save data" });
+                        else {
+                            account.azureAd = null;
+                            account.save(function (err, result) {
+                                if (err) res.status(500).json({ error: "not able to save data" });
+                                else res.status(200).json({ action: "save", status: 'done' });
+                            })
+                        }
+                    });
                 else res.status(200).json({ action: "save", status: 'done' });
             }
             else res.status(500).json({ error: "not able to retrieve the account" });
         });
 }
 
-router.post("/aad/", function (req, res, next) {
-    if (req.session.xapi) {
-        if (req.body.azureAd) saveAzureAd(req, res);
-        else res.status(500).send({ error: "missing azureAd" });
-    } else res.status(403).send('Unknown session');
-})
 
+/*==================   ADMIN API - CUSTOMIZATION   ===========================*/
 router.get("/admin/custom/", function (req, res, next) {
+    // check if the admin is authenticated 
     if (req.session.xapi) {
+        // Load the customization from DB
         Customization
             .findById(req.session.account.customization)
             .exec(function (err, custom) {
@@ -271,8 +328,9 @@ router.get("/admin/custom/", function (req, res, next) {
             })
     } else res.status(403).send('Unknown session');
 })
-
+// Function to save customization
 function saveCustomization(custom, req, cb) {
+    
     if (req.body.logo) custom.logo = req.body.logo;
     else custom.logo.enable = false;
 
@@ -282,10 +340,10 @@ function saveCustomization(custom, req, cb) {
     }
     else custom.colors.enable = false;
 
-    if (req.body.login) custom.login = req.body.login;        
+    if (req.body.login) custom.login = req.body.login;
     else custom.login.enable = false;
 
-    if (req.body.app) custom.app = req.body.app;        
+    if (req.body.app) custom.app = req.body.app;
     else custom.app.enable = false;
 
     if (req.body.app) custom.app = req.body.app;
@@ -296,22 +354,27 @@ function saveCustomization(custom, req, cb) {
         else cb(err, result);
     })
 }
-
+// When admin wants to save the customization
 router.post("/admin/custom/", function (req, res, next) {
+    // check if the admin is authenticated 
     if (req.session.xapi) {
+        // retrieve the current Account in the DB
         Account
             .findById(req.session.account._id)
             .populate("customization")
             .exec(function (err, account) {
                 if (err) res.status(500).json({ error: err });
                 else if (account) {
+                    // update the account
                     var custom;
                     if (account.customization) custom = account.customization;
                     else custom = new Customization;
+                    // save the customization
                     saveCustomization(custom, req, function (err, result) {
                         if (err) res.status(500).json({ error: err });
                         else {
                             account.customization = result;
+                            // save the account with the customization id
                             account.save(function (err, result) {
                                 if (err) res.status(500).json({ error: err });
                                 else res.status(200).json({ action: "save", status: 'done' });

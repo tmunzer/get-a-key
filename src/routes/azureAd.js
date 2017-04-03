@@ -1,15 +1,21 @@
+/*================================================================
+AZUREAD:
+deals with azure authentication for users
+the req param "account_id" in the URL is used to identify the app account (so the Azure configuration)
+================================================================*/
 var express = require('express');
 var router = express.Router();
 var getAzureAdAccount = require("../bin/azureAd");
 
-
-
-/* GET login page. */
+/*================================================================
+ USER AZURE OAUTH
+ ================================================================*/
+/* GET login page. Passport will redirect to Azure authentication page */
 router.get('/:account_id/login', getAzureAdAccount,
     passport.authenticate('azure_ad_oauth2', { failureRedirect: '/', failureFlash: true })
 );
 
-/* Handle Login POST */
+/* GET callback page. Azure is sending the Authorizaton Code. Passport will deal with that */
 router.get('/:account_id/callback', getAzureAdAccount,
     passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
     function (req, res) {

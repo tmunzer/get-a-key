@@ -1,3 +1,7 @@
+/*================================================================
+ERROR:
+Generic error rendering with console loging
+================================================================*/
 var app = require("../app");
 
 module.exports.render = function (error, currentPage, req, res) {

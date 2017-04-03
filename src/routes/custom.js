@@ -1,8 +1,15 @@
+/*================================================================
+CUSTOM:
+endpoints used to dynamicly return customized colors
+================================================================*/
 var express = require('express');
 var router = express.Router();
-
 var Account = require("../bin/models/account");
 
+/*================================================================
+FUNCTIONS
+================================================================*/
+// generate default colors
 function defaultColors() {
     return "var colors = {" +
         "'50': 'eaf1f4'," +
@@ -22,6 +29,7 @@ function defaultColors() {
         "'contrastDefaultColor': 'light'" +
         "}";
 }
+// based on the main color, generate a lighter or darker color 
 function LightenDarkenColor(col, amt) {
     var usePound = false;
     if (col[0] == "#") {
@@ -46,8 +54,11 @@ function LightenDarkenColor(col, amt) {
     return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
 }
 
+// return the account colors
 function getColors(req, res, next) {
+    // if the session has the account information
     if (req.session.account) {
+        // retrieve the account customization
         Account
             .findById(req.session.account)
             .populate("customization")
@@ -56,6 +67,7 @@ function getColors(req, res, next) {
                     req.colors = defaultColors();
                     next();
                 }
+                // if the color customization is enabled, generate and return all the needed colors
                 else if (result && result.customization && result.customization.colors && result.customization.colors.enable) {
                     var delta;
                     if (result.customization.colors.contrastDefaultColor == "light") delta = 32;
@@ -79,6 +91,7 @@ function getColors(req, res, next) {
                         "}";
                     next();
                 }
+                // if the color customization is not enabled, return the default colors
                 else {
                     req.colors = defaultColors();
                     next();
@@ -89,11 +102,14 @@ function getColors(req, res, next) {
         next();
     }
 }
-
+/*================================================================
+ ROUTES
+ ================================================================*/
+// When web browser wants to load the custom colors
 router.get("/colors/", getColors, function (req, res) {
-    res.send(req.colors);
-    
+    res.send(req.colors); 
 })
+// When web browser wants to load the default colors
 router.get("/colors/default", function (req, res) {
     res.send(defaultColors());
 })

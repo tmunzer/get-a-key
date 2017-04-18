@@ -21,7 +21,7 @@ const devAccount = require("../config.js").devAccount;
 // ACS API call to retrieve Guest accounts based on the username
 function getCredentials(req, callback) {
     var credentials = [];
-    var username = req.session.email;
+    var username = req.session.email.substr(0,req.session.email.indexOf("@")).substr(0,32);
     // ACS API call
     API.identity.credentials.getCredentials(req.session.xapi, devAccount, null, null, null, null, null, username, null, null, null, null, null, null, function (err, result) {
         if (err) callback(err, null);

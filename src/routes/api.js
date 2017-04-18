@@ -45,6 +45,7 @@ function getCredentials(req, callback) {
 // ACS API call to create a new Guest account
 function createCredential(req, callback) {
     var hmCredentialsRequestVo = {
+        userName: req.session.email.substr(0,req.session.email.indexOf("@")).substr(0,32),
         email: req.session.email,
         groupId: req.session.groupId,
         policy: "PERSONAL",

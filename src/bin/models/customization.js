@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var CustomizationSchema = new mongoose.Schema({
+const CustomizationSchema = new mongoose.Schema({
     logo: {
         enable: { type: Boolean, required: true },
         header: { type: String },
@@ -34,12 +34,12 @@ var CustomizationSchema = new mongoose.Schema({
     updated_at: { type: Date }
 });
 
-var Customization = mongoose.model('Customization', CustomizationSchema);
+const Customization = mongoose.model('Customization', CustomizationSchema);
 
 
 // Pre save
 CustomizationSchema.pre('save', function (next) {
-    var now = new Date();
+    const now = new Date();
     this.updated_at = now;
     if (!this.created_at) {
         this.created_at = now;

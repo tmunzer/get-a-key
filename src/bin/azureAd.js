@@ -48,6 +48,7 @@ function getUserGroups(organization, oid, access_token, callback) {
     };
     req(options, callback);
 }
+
 // Function to generate the Azure API call
 function req(options, callback) {
     let result = {};
@@ -104,7 +105,7 @@ function req(options, callback) {
 
 function checkUserAccount(azureAccount, oid, params, callback) {
     // retrieve the user information from Azure
-    getUserDetails(azureAccount.tenant, oid, params.access_token, function (err, user) {
+    getUserDetails(azureAccount.tenant, oid, params.access_token, function (err, user) {        
         if (err) console.log(err);
         // if the App configuration is not allowing Guest accounts and if the current user is not a Member of the domain
         else if (!azureAccount.allowExternalUsers && user.userType != "Member")
@@ -113,25 +114,28 @@ function checkUserAccount(azureAccount, oid, params, callback) {
         // if the app is configured to filter on userGroups, but it has not the required permissions from Azure, raise an error
         else if (azureAccount.userGroupsFilter && params.scope.indexOf("Directory.AccessAsUser.All") < 0)
             callback("permissions", user.mail);
+        // if the app is configured to filter on licensed users, but the user doesn't have any license
+        else if (!azureAccount.unlicensedFilter && (!user.assignedLicenses || user.assignedLicenses.length == 0))
+            callback("license", user.mail);
         // if the app is configured to filter on userGroups and it has the required permissions from Azure
         else if (azureAccount.userGroupsFilter)
-            // retrieve the user's user groups
-            getUserGroups(azureAccount.tenant, oid, params.access_token, function (err, memberOf) {
-                let isMemberOf = false;
-                const userGroups = [];
-                // passes all the user groups to lower case
-                azureAccount.userGroups.forEach(function (group) {
-                    userGroups.push(group.toLowerCase());
-                })
-                // try to see if at least one of the user's user group is in the required user groups list
-                memberOf.value.forEach(function (group) {
-                    if (group.objectType == "Group" && userGroups.indexOf(group.displayName.toLowerCase()) > -1) isMemberOf = true;
-                })
-                // if the user belong to at least one required user group, callback without error
-                if (isMemberOf) callback(null, user.mail);
-                // if the user deson't belong to the required user groups, callback with error
-                else callback("memberOf", user.mail);
-            });
+        // retrieve the user's user groups
+        getUserGroups(azureAccount.tenant, oid, params.access_token, function (err, memberOf) {
+            let isMemberOf = false;
+            const userGroups = [];
+            // passes all the user groups to lower case
+            azureAccount.userGroups.forEach(function (group) {
+                userGroups.push(group.toLowerCase());
+            })
+            // try to see if at least one of the user's user group is in the required user groups list
+            memberOf.value.forEach(function (group) {
+                if (group.objectType == "Group" && userGroups.indexOf(group.displayName.toLowerCase()) > -1) isMemberOf = true;
+            })
+            // if the user belong to at least one required user group, callback without error
+            if (isMemberOf) callback(null, user.mail);
+            // if the user deson't belong to the required user groups, callback with error
+            else callback("memberOf", user.mail);
+        });
         // if the app is not configured to check the user groups, callback without error
         else callback(null, user.mail);
     });
@@ -143,6 +147,8 @@ function renderError(error, user, req, res) {
         message = "User " + user + " is not allowed to access to this network because the account is an external account";
     else if (error == "memberOf")
         message = "User " + user + " does not belong to the required user groups";
+    else if (error == "license")
+        message = "User " + user + " does not any license to use this app";
     else if (error == "permissions")
         message = "Unable to retrieve memberOf information for user " + user + ". Please check the application permission in your Azure portal.";
     console.error("\x1b[31mERROR\x1b[0m:", message);
@@ -162,7 +168,7 @@ module.exports = function (req, res, next) {
         res.render('error', {
             status: req.query.error,
             message: req.query.error_description.replace(/\+/g, " ")
-        });    
+        });
     } else
         // retrieve the configuration from DB
         Account

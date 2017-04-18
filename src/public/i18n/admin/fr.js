@@ -55,6 +55,7 @@ var fr = {
             callbackURL: "Callback URL:",
             logoutURL: "logoutURL:",
             external: "Autoriser les utilisateurs externe à obtenir une clé",
+            unlicensed: "Autoriser les utilisateurs sans licence",
             groupsFilter: "N'autoriser que les utilisateurs appartenant aux groupes utilisateurs suivants"
         },
         adfs: {

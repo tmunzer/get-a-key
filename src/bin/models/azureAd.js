@@ -1,23 +1,24 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var AzureAdSchema = new mongoose.Schema({
+const AzureAdSchema = new mongoose.Schema({
     clientID: { type: String, required: true },
     clientSecret: { type: String, required: true },
     tenant: { type: String, required: false },
     resource: { type: String, required: false },
     allowExternalUsers: { type: Boolean, default: false },
     userGroupsFilter: {type: Boolean, default: false},
+    unlicensedFilter: {type: Boolean, default: false},
     userGroups: [{type: String}],
     created_at: { type: Date },
     updated_at: { type: Date }
 });
 
-var AzureAd = mongoose.model('AzureAd', AzureAdSchema);
+const AzureAd = mongoose.model('AzureAd', AzureAdSchema);
 
 
 // Pre save
 AzureAdSchema.pre('save', function (next) {
-    var now = new Date();
+    const now = new Date();
     this.updated_at = now;
     if (!this.created_at) {
         this.created_at = now;

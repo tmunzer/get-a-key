@@ -46,10 +46,15 @@
 						<span>Access Rules</span>
 					</div>
 				</md-toolbar>
-				<md-content layout-padding>
+				<md-content layout-padding layout="column">
 					<md-input-container style="margin: 0;">
 						<md-checkbox class='md-primary' ng-model="admin.azureAd.allowExternalUsers" aria-label="allowExternalUsers">
 							<span translate="authentication.azureAd.external"></span><span>: {{admin.azureAd.allowExternalUsers || false}}</span>
+						</md-checkbox>
+					</md-input-container>
+					<md-input-container style="margin: 0;">
+						<md-checkbox class='md-primary' ng-model="admin.azureAd.unlicensedFilter" aria-label="allowLicensedUsers">
+							<span translate="authentication.azureAd.unlicensed"></span><span>: {{admin.azureAd.unlicensedFilter || false}}</span>
 						</md-checkbox>
 					</md-input-container>
 					<md-container layout="column">

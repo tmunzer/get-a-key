@@ -55,7 +55,7 @@ var en = {
             callbackURL: "Callback URL:",
             logoutURL: "logoutURL:",
             external: "Allow External Users to get a key",
-            unlicensed: "Allow users without assigned licenses",
+            unlicensed: "Allow Users without license",
             groupsFilter: "Only authorize users belonging to the following user groups"
         },
         adfs: {

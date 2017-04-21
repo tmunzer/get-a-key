@@ -1,4 +1,4 @@
-doctype html5
+doctype html
 html
     head
         title= title
@@ -13,7 +13,23 @@ html
         link(rel='stylesheet' href='/css/ah-tm.md-table.css')
         link(rel='stylesheet' href='/css/ah-tm.md-list.css')
         link(rel='stylesheet' href='/css/ah-tm.header.css')
-        
+        script(type="text/javascript").
+            function fadeIn(element){  
+                var i = 1;
+                var f = 0.5;  
+                setTimeout(function(){
+                    element.style.opacity = parseFloat(element.style.opacity) - (f * i * i);
+                    i++;
+                    if (element.style.opacity < 0 || i > 50) element.parentNode.removeChild(element);
+                    else fadeIn(element);
+                    }, 40);
+            }
+            document.addEventListener("DOMContentLoaded", function(event) {
+                var element = document.getElementById("loading"); 
+                element.style.opacity = 1.0;                
+                fadeIn(element);
+            });
+
     body(ng-app="gak" ng-controller="AppCtrl").icons-docs
         div(id="loading")
         header.md-page-header
@@ -108,22 +124,6 @@ html
                         md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getMyKey()" translate="get" aria-label="get") 
                         md-button.md-primary.md-raised(ng-disabled="isWorking" translate="send" ng-click="deliver()" aria-label="send") 
                         md-button.md-primary(ng-disabled="isWorking" translate="revoke" ng-click="revoke()" aria-label="revoke") 
-        script(type="text/javascript").
-            function fadeIn(element){  
-                var i = 1;
-                var f = 0.5;  
-                setTimeout(function(){
-                    element.style.opacity = parseFloat(element.style.opacity) - (f * i * i);
-                    i++;
-                    if (element.style.opacity < 0 || i > 50) element.parentNode.removeChild(element);
-                    else fadeIn(element);
-                    }, 40);
-            }
-            document.addEventListener("DOMContentLoaded", function(event) {
-                var element = document.getElementById("loading"); 
-                element.style.opacity = 1.0;                
-                fadeIn(element);
-            });
 
         script(src="/bower_components/angular/angular.min.js")
 

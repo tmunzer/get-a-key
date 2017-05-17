@@ -49,9 +49,8 @@ module.exports.refreshToken = function (refreshToken, devAccount, callback) {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
         client_secret: devAccount.clientSecret,
-        client_id: devAccount.clientId
+        client_id: devAccount.clientID
     };
-
     req(options, qs.stringify(body), callback);
 }
 

@@ -31,7 +31,7 @@ function getCredentials(req, callback) {
             if (result.length > 1) {
                 var tempAccount;
                 result.forEach(function (tempAccount) {
-                    if (tempAccount.userName == req.session.email) account = tempAccount;
+                    if (tempAccount.userName == username) account = tempAccount;
                 })
                 // if ACS filtering returned 1 account
             } else if (result.length == 1) account = result[0];

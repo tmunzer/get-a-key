@@ -18,10 +18,18 @@ const devAccount = require("../config.js").devAccount;
 /*================================================================
  FUNCTIONS
  ================================================================*/
+// generate the username (to fit ACS limitations)
+function generateUsername(req){
+    //var username = req.session.email.substr(0,req.session.email.indexOf("@")).substr(0,32);
+    var username = req.session.email.substr(0,32);
+    return username;
+}
+
+
 // ACS API call to retrieve Guest accounts based on the username
 function getCredentials(req, callback) {
     var credentials = [];
-    var username = req.session.email.substr(0,req.session.email.indexOf("@")).substr(0,32);
+    var username = generateUsername(req);
     // ACS API call
     API.identity.credentials.getCredentials(req.session.xapi, devAccount, null, null, null, null, null, username, null, null, null, null, null, null, function (err, result) {
         if (err) callback(err, null);
@@ -45,7 +53,7 @@ function getCredentials(req, callback) {
 // ACS API call to create a new Guest account
 function createCredential(req, callback) {
     var hmCredentialsRequestVo = {
-        userName: req.session.email.substr(0,req.session.email.indexOf("@")).substr(0,32),
+        userName: generateUsername(req),
         email: req.session.email,
         groupId: req.session.groupId,
         policy: "PERSONAL",

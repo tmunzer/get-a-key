@@ -92,6 +92,9 @@ app.use('/web-app/', webApp);
 //API
 var api = require('./routes/api');
 app.use('/api/', api);
+//API Auth Config
+var api_auth = require('./routes/api.auth');
+app.use('/api/auth/', api_auth);
 //Admin
 var admin = require('./routes/admin');
 app.use('/admin/', admin);

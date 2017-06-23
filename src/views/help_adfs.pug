@@ -1,0 +1,138 @@
+doctype html
+html
+    head
+        title= title
+        // [if IE]
+        meta(http-equiv="X-UA-Compatible" content="IE=10; IE=EDGE")
+        // [endif]
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+
+        link(rel='stylesheet' href='/css/ah-tm.tags.css')
+        link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
+        link(rel='stylesheet' href='/css/ah-tm.login.css')
+        link(rel='stylesheet' href='/css/ah-tm.help.css')
+        link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
+
+    body(ng-app="gak" ng-controller="AppCtrl").icons-docs
+        div(id="loading")
+                        
+        header.md-page-header
+            div.header
+            md-toolbar.header.fixed(layout='row')
+                h1.logo.md-toolbar-tools
+                    img(src="/images/logo_w.png" alt="Aerohive")
+                span(flex)
+
+                             
+        div.page-footer
+            span © 2017 Aerohive Networks. All Rights Reserved.
+
+
+        div(layout="column" layout-align="center center" layout-gt-sm="row" layout-align-gt-sm="center start")
+
+            div.panel
+                div.inside(md-whiteframe="5" style="width: 100%" )
+                    md-toolbar
+                        div.md-toolbar-tools
+                            h2 ADFS Configuration Help
+                    md-content(layout="column" layout-padding)
+                        h3 Get your ADFS Metadata
+                        div 
+                            span To be able to use ADFS authentication, the App will have to know your ADFS Metadata.
+                            span You can easily retrieve your ADFS Metadata directly from the App:
+                        ul 
+                            li 
+                                span Fill the 
+                                b=" ADFS Server FQDN "
+                                span field, and click the 
+                                b=" Download "
+                                span button to download the Metadata from your ADFS server. You will get a xml file.
+                        img(src="/web-app/help/adfs/1.png" style="width: 50%;margin: auto;")
+                        ul
+                            li
+                                span Copy the content of the XML file into the 
+                                b=" ADFS Metadata "
+                                span text field. Once done, the 
+                                b=" Entity ID "
+                                span ,
+                                b=" Login URL "
+                                span and 
+                                b=" Logout URL "
+                                span should be automatically filled.
+                        img(src="/web-app/help/adfs/2.png" style="width: 50%;margin: auto;")
+                        ul
+                            li
+                                span Click on the 
+                                b=" Download Get-a-Key Certificate " 
+                                span to download the xml file required to configure the rule on your ADFS. This file will be used in the next steps.
+                        img(src="/web-app/help/adfs/3.png" style="width: 50%;margin: auto;")
+                        h3 ADFS Configuration
+                        ul
+                            li
+                                span Open the ADFS Snap'in, and create a new 
+                                b=" Relying Party Trust"
+                        div
+                            img(src="/web-app/help/adfs/4.png" style="width: 25%;margin: auto;")
+                            img(src="/web-app/help/adfs/5.png" style="width: 50%;margin: auto;")
+                        ul
+                            li
+                                span In the 
+                                b=" Select Data Source "
+                                span step, import the XML file you downloaded from the App.
+                        img(src="/web-app/help/adfs/6.png" style="width: 50%;margin: auto;")
+                        ul 
+                            li
+                                span Create a rule to limit the access to some members of your domain, or select "Permit Everyone"
+                        img(src="/web-app/help/adfs/8.png" style="width: 50%;margin: auto;")
+                        ul
+                            li 
+                                span At the end of the wizard, select
+                                b=" Configure claims issuance policy for this application"
+                                span . This will allow you to select the information to send to the App when a user logs in.
+                        img(src="/web-app/help/adfs/10.png" style="width: 50%;margin: auto;")
+                        ul
+                            li
+                                span Create a new Issuance rule
+                        img(src="/web-app/help/adfs/11.png" style="width: 35%;margin: auto;")
+                        ul 
+                            li 
+                                span In the Claim rule template, select
+                                b=" Send LDAP Attributes as Claims"
+                                span .
+                        img(src="/web-app/help/adfs/12.png" style="width: 50%;margin: auto;")
+                        ul 
+                            li 
+                                span Create the rule as per below
+                        img(src="/web-app/help/adfs/13.png" style="width: 50%;margin: auto;")
+                        ul
+                            li
+                                b="Save "
+                                span the rule. Your ADFS configuration is finished!
+                            
+
+    script(type="text/javascript").
+        function fadeIn(element){  
+            var i = 1;
+            var f = 0.5;  
+            setTimeout(function(){
+                element.style.opacity = parseFloat(element.style.opacity) - (f * i * i);
+                i++;
+                if (element.style.opacity < 0 || i > 50) element.parentNode.removeChild(element);
+                else fadeIn(element);
+                }, 40);
+        }
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var element = document.getElementById("loading"); 
+            element.style.opacity = 1.0;                
+            fadeIn(element);
+        });
+    script(src="/custom/colors/default")
+    script(src="/bower_components/angular/angular.min.js")
+    script(src="/bower_components/angular-aria/angular-aria.js")
+    script(src="/bower_components/angular-animate/angular-animate.min.js")
+    script(src="/bower_components/angular-material/angular-material.js")
+    script(src="/bower_components/angular-messages/angular-messages.js")
+    script(src="/bower_components/angular-route/angular-route.min.js")
+    script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
+    script(src="/bower_components/angular-sanitize/angular-sanitize.min.js")
+    script(src="/web-app/help/app.js")

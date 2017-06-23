@@ -143,16 +143,16 @@ router.get('/logout/', function (req, res, next) {
 // when the user try to access the admin dashboard URL
 router.get('/', function (req, res, next) {
     // if a session exists (ie: if the user is authenticated)
-    if (req.session.xapi) 
+    if (req.session.xapi)
         // display the admin page
         res.render('admin', {
             title: 'Get-a-key Parameters'
         });
     // else redirect to the login page
-     else {
-            res.redirect("/login/");
-        }
-    });
+    else {
+        res.redirect("/login/");
+    }
+});
 
 // called to load the customized data (colors, logo, ...)
 function getCustom(req, res, next) {
@@ -176,10 +176,24 @@ router.get("/preview/", getCustom, function (req, res, next) {
     });
 })
 // when user wants to see the help page
-router.get('/help/', function (req, res, next) {
-    res.render('help', {
-        title: 'Get-a-Key Help'
-    });
+router.get('/help/:method', function (req, res, next) {
+    if (req.params.method == "azureAd")
+        res.render('help_azure', {
+            title: 'Get-a-Key Help'
+        });
+    else if (req.params.method == "adfs")
+        res.render('help_adfs', {
+            title: 'Get-a-Key Help'
+        });
+    else {        
+        const message = "The requested url " + req.originalUrl + " was not found on this server.";
+        res.status(404);
+        res.render('error', {
+            status: 404,
+            message: message,
+            stack: {}
+        });
+    }
 });
 
 module.exports = router;

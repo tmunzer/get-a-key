@@ -42,21 +42,16 @@ angular
                 var start, stop, temp;
 
                 start = $scope.admin.adfs.metadata.indexOf("entityID=") + 10;
-                console.log(start);
                 if (start) $scope.admin.adfs.entityID = $scope.admin.adfs.metadata.substring(start, $scope.admin.adfs.metadata.indexOf("\"", start));
                 start = -1;
 
                 start = $scope.admin.adfs.metadata.indexOf("SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"");
-                console.log(start);
                 if (start) start = $scope.admin.adfs.metadata.indexOf("Location=", start) + 10;
-                console.log(start);
                 if (start) $scope.admin.adfs.loginUrl = $scope.admin.adfs.metadata.substring(start, $scope.admin.adfs.metadata.indexOf("\"", start));
 
                 start = -1;
                 start = $scope.admin.adfs.metadata.indexOf("SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"");
-                console.log(start);
                 if (start) start = $scope.admin.adfs.metadata.indexOf("Location=", start) + 10;
-                console.log(start);
                 if (start) $scope.admin.adfs.logoutUrl = $scope.admin.adfs.metadata.substring(start, $scope.admin.adfs.metadata.indexOf("\"", start));
             }
         })
@@ -123,10 +118,6 @@ angular
                 if (promise.data.method) $scope.admin.method = promise.data.method;
                 if (promise.data.azure) $scope.admin.azure = promise.data.azure;
                 if (promise.data.adfs) $scope.admin.adfs = promise.data.adfs;
-                $scope.admin.azure.signin = promise.data.signin;
-                $scope.admin.azure.callback = promise.data.callback;
-                $scope.admin.azure.logout = promise.data.logout;
-
             }
         })
 

@@ -20,11 +20,11 @@ angular
                 server: "",
                 entityID: "",
                 loginUrl: "",
-                logoutURL: "",
+                logoutUrl: "",
                 entryPoint: "",
                 metadata: undefined
             },
-            method: "azure"
+            method: "adfs"
         };
 
         $scope.method = {
@@ -134,7 +134,7 @@ angular
 
 
         $scope.isValid = function () {
-            if ($scope.method.aad == true) {
+            if ($scope.admin.method == 'azure') {
                 if (!$scope.admin.azureAd.clientID || $scope.admin.azureAd.clientID == "") return false;
                 else if (!$scope.admin.azureAd.clientSecret || $scope.admin.azureAd.clientSecret == "") return false;
                 else if (!$scope.admin.azureAd.tenant || $scope.admin.azureAd.tenant == "") return false;
@@ -152,8 +152,9 @@ angular
         }
 
         $scope.save = function () {
+            console.log($scope.admin.method);
             $scope.isWorking = true;
-            if ($scope.method.aad == true) {
+            if ($scope.admin.method == 'azure') {
                 azureAdSaveConfig();
             } else if ($scope.admin.method == "adfs") {
                 adfsSaveConfig();

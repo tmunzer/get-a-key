@@ -10,6 +10,7 @@ md-sidenav {
 
 * {
     outline: none;
+    font-size: small;
 }
 
 md-icon,

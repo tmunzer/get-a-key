@@ -16,7 +16,7 @@ var en = {
             logo: "Logos",
             header: "Header Logo",
             login: "Login Page Logo"
-            },
+        },
         headerLogo: "Header Logo",
         loginLogo: "Login Logo",
         preview: "Preview",
@@ -60,7 +60,11 @@ var en = {
         },
         adfs: {
             adfs: "AD Federation Service",
-            params: "ADFS configuration"
+            params: "ADFS configuration",
+            getAdfsMetadata: "Download ADFS Metadata",
+            pasteAdfsMetadata: "Paste ADFS Metadata",
+            getAppCertificate: "Download Get-A-Key Certificate",
+            server: "ADFS Server FQDN"
         },
     },
     modal: {

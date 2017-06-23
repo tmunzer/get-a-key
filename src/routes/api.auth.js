@@ -8,7 +8,7 @@ var express = require('express');
 var router = express.Router();
 var serverHostname = require("../config.js").appServer.vhost;
 var Account = require("../bin/models/account");
-var Azure = require("../bin/models/azure");
+var Azure = require("../bin/models/azureAd");
 var Adfs = require("../bin/models/adfs");
 var fs = require('fs');
 var exec = require('child_process').exec;
@@ -57,23 +57,22 @@ function saveAzureAd(req, res) {
         .exec(function (err, account) {
             if (err) res.status(500).json({ error: err });
             else if (account) {
-                // if the current account already has a ADFS configuration
-                if (account.adfs)
+                // if the current account already has a AzureAd configuration
+                if (account.azureAd)
                     // update it
-                    Adfs.update({ _id: account.adfs }, req.body.adfs, function (err, result) {
+                    azureAd.update({ _id: account.azureAd }, req.body.config, function (err, result) {
                         if (err) res.status(500).json({ error: err });
-                        else res.status(200).json({ action: "save", status: 'done' });
+                        else res.status(200).json({ action: "save", status: 'done' , result: result});
                     })
-                // if the current account has no ADFS aconfiguration, create it
-                else Adfs(req.body.adfs).save(function (err, result) {
+                // if the current account has no AzureAd aconfiguration, create it
+                else azureAd(req.body.config).save(function (err, result) {
                     if (err) res.status(500).json({ error: err });
                     else {
-                        // @TODO: improve migration from ADFS to Azure
-                        account.adfs = result;
-                        account.azureAd = null;
+                        account.azureAd = result;
+                        account.adfs = null;
                         account.save(function (err, result) {
                             if (err) res.status(500).json({ error: err });
-                            else res.status(200).json({ action: "save", status: 'done' });
+                            else res.status(200).json({ action: "save", status: 'done' , result: result});
                         })
                     }
                 });
@@ -82,7 +81,7 @@ function saveAzureAd(req, res) {
 }
 
 /*==================  ADFS   ===========================*/
-// Function to save the AzureAD configuration
+// Function to save the ADFS configuration
 function saveAdfs(req, res) {
     // retrieve the current Account in the DB
     Account
@@ -90,23 +89,22 @@ function saveAdfs(req, res) {
         .exec(function (err, account) {
             if (err) res.status(500).json({ error: err });
             else if (account) {
-                // if the current account already has a AzureAD configuration
-                if (account.azureAd)
+                // if the current account already has a ADFS configuration
+                if (account.adfs)
                     // update it
-                    AzureAd.update({ _id: account.azureAd }, req.body.azureAd, function (err, result) {
+                    Adfs.update({ _id: account.adfs }, req.body.config, function (err, result) {
                         if (err) res.status(500).json({ error: err });
-                        else res.status(200).json({ action: "save", status: 'done' });
+                        else res.status(200).json({ action: "save", status: 'done', result: result });
                     })
-                // if the current account has no AzureAD aconfiguration, create it
-                else AzureAd(req.body.azureAd).save(function (err, result) {
+                // if the current account has no ADFS aconfiguration, create it
+                else Adfs(req.body.config).save(function (err, result) {
                     if (err) res.status(500).json({ error: err });
                     else {
-                        // @TODO: improve migration from ADFS to Azure
-                        account.azureAd = result;
-                        account.adfs = null;
+                        account.adfs = result;
+                        account.azureAd = null;
                         account.save(function (err, result) {
                             if (err) res.status(500).json({ error: err });
-                            else res.status(200).json({ action: "save", status: 'done' });
+                            else res.status(200).json({ action: "save", status: 'done', result: result });                        
                         })
                     }
                 });
@@ -116,19 +114,24 @@ function saveAdfs(req, res) {
 /*================================================================
  ROUTES
  ================================================================*/
+ /*==================   AUTH API - COMMON   ===========================*/
+ // When to admin loads the AUTH configuration page
 router.get("/", function (req, res, next) {
-    genCertificate(req.session.account._id);
+    // check if the admin is authenticated 
     if (req.session.xapi) {
+        // generate the x509 certifiate if needed
+        genCertificate(req.session.account._id);
+        // retrieve the current Account in the DB
         Account
             .findById(req.session.account._id)
-            .populate("azure")
+            .populate("azureAd")
             .populate("adfs")
             .exec(function (err, account) {
                 if (err) res.status(500).json({ error: err });
                 else if (account)
+                // return values to web server
                     res.status(200).json({
-                        method: account.method,
-                        azure: account.azure,
+                        azureAd: account.azureAd,
                         adfs: account.adfs,
                         signin: "https://" + serverHostname + "/login/" + account._id + "/",
                         callback: "https://" + serverHostname + "/azure/" + account._id + "/callback",
@@ -139,114 +142,28 @@ router.get("/", function (req, res, next) {
     } else res.status(403).send('Unknown session');
 })
 
-router.get("/cert", function (req, res) {
-    var vhost = require("../config").appServer.vhost;
-    var file = '../certs/' + vhost + "_" + req.session.account._id + ".xml";
-    res.download(file);
-})
-
-// When to admin loads the AzureAD configuration page
-router.get("/aad", function (req, res, next) {
-    // check if the admin is authenticated 
-    if (req.session.xapi) {
-        // retrieve the current Account in the DB
-        Account
-            .findById(req.session.account._id)
-            .populate("azureAd")
-            .exec(function (err, account) {
-                if (err) res.status(500).json({ error: err });
-                // return values to web server
-                else if (account)
-                    res.status(200).json({
-                        signin: "https://" + serverHostname + "/login/" + account._id + "/",
-                        callback: "https://" + serverHostname + "/aad/" + account._id + "/callback",
-                        logout: "https://" + serverHostname + "/login/" + account._id + "/",
-                        azureAd: account.azureAd
-                    });
-                else res.status(500).json({ err: "not able to retrieve the account" });
-            })
-    } else res.status(403).send('Unknown session');
-})
+/*==================   AUTH API - AZUREAD   ===========================*/
 // When the admin save the AzureAD configuration
 router.post("/aad/", function (req, res, next) {
     // check if the admin is authenticated 
     if (req.session.xapi) {
-        if (req.body.azureAd) saveAzureAd(req, res);
+        if (req.body.config) saveAzureAd(req, res);
         else res.status(500).send({ error: "missing azureAd" });
     } else res.status(403).send('Unknown session');
 })
-/*==================   ADMIN API - ADFS   ===========================*/
-// Function to save the ADFS configuration
-function saveAdfs(req, res) {
-    // retrieve the current Account in the DB
-    Account
-        .findById(req.session.account._id)
-        .exec(function (err, account) {
-            if (err) res.status(500).json({ error: err });
-            else if (account) {
-                // if the current account already has a ADFS configuration
-                // @TODO
-                if (account.azureAd)
-                    AzureAd.findByIdAndRemove(account.azureAd, function (err) {
-                        if (err) res.status(500).json({ error: "not able to save data" });
-                        else {
-                            account.azureAd = null;
-                            account.save(function (err, result) {
-                                if (err) res.status(500).json({ error: "not able to save data" });
-                                else res.status(200).json({ action: "save", status: 'done' });
-                            })
-                        }
-                    });
-                else res.status(200).json({ action: "save", status: 'done' });
-            }
-            else res.status(500).json({ error: "not able to retrieve the account" });
-        });
-}
+/*==================   AUTH API - ADFS   ===========================*/
 
-
-
-router.post("/azure", function (req, res, next) {
-    if (req.session.xapi) {
-        if (req.body.config) saveAzure(req, res);
-        else res.status(500).send({ error: "missing azure" });
-    } else res.status(403).send('Unknown session');
-})
-
-
-
-function saveAdfs(req, res) {
-    Account
-        .findById(req.session.account._id)
-        .exec(function (err, account) {
-            if (err) res.status(500).json({ error: err });
-            else if (account) {
-                account.method = "adfs";
-                account.save(function (err, result) {
-                    if (account.adfs) {
-                        Adfs.update({ _id: account.adfs }, req.body.config, function (err, result) {
-                            if (err) res.status(500).json({ error: err });
-                            else res.status(200).json({ action: "save", status: 'done' });
-                        })
-                    } else Adfs(req.body.config).save(function (err, result) {
-                        if (err) res.status(500).json({ error: err });
-                        else {
-                            account.adfs = result;
-                            account.save(function (err, result) {
-                                if (err) res.status(500).json({ error: err });
-                                else res.status(200).json({ action: "save", status: 'done' });
-                            })
-                        }
-                    });
-                })
-            } else res.status(500).json({ error: "not able to retrieve the account" });
-        });
-}
-
-router.post("/adfs", function (req, res, next) {
+router.post("/adfs/", function (req, res, next) {
     if (req.session.xapi) {
         if (req.body.config) saveAdfs(req, res);
         else res.status(500).send({ error: "missing adfs" });
     } else res.status(403).send('Unknown session');
+})
+
+router.get("/cert", function (req, res) {
+    var vhost = require("../config").appServer.vhost;
+    var file = '../certs/' + req.session.account._id + "." + vhost + ".xml";
+    res.download(file);
 })
 
 module.exports = router;

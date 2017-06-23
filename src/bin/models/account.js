@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const AzureAd = require('./azureAd');
+const Adfs = require('./adfs');
 const Config = require('./configuration');
 const Customization = require('./customization');
 
@@ -13,6 +14,7 @@ const AccountSchema = new mongoose.Schema({
     config: {type: mongoose.Schema.ObjectId, ref:"Config"},
     customization: {type: mongoose.Schema.ObjectId, ref:"Customization"},
     azureAd: {type: mongoose.Schema.ObjectId, ref:"AzureAd"},
+    adfs: {type: mongoose.Schema.ObjectId, ref:"Adfs"},
     created_at    : { type: Date },
     updated_at    : { type: Date }
 });

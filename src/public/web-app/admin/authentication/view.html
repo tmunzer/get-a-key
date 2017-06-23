@@ -6,18 +6,17 @@
 			</div>
 		</md-toolbar>
 		<md-content layout-padding>
-			<md-checkbox class='md-primary' ng-model="method.aad" aria-label="azureAd">
-				AzureAD
-			</md-checkbox>
-			<md-checkbox class='md-primary' ng-model="method.adfs" aria-label="ADFS" disabled="disabled">
-				ADFS
-			</md-checkbox>
+			<md-radio-group ng-model="admin.method">
+				<md-radio-button value="azure" class="md-primary"><span>AzureAD</span></md-radio-button>
+				<md-radio-button value="adfs" class="md-primary">ADFS</md-radio-button>
+			</md-radio-group>
 			<span style="padding-left: 100px">
 		<md-button href="/admin/help/" target=_blank class="md-primary md-raised">Help</md-button>
 		</span>
 		</md-content>
 	</md-content>
-	<div ng-show="method.aad==true">
+
+	<div ng-show="admin.method=='azure'">
 		<div layout="row" style="margin:15px 0 20px 0">
 			<md-content md-whiteframe="5" flex="50" style="margin-right: 10px;">
 				<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
@@ -63,7 +62,8 @@
 								<span translate="authentication.azureAd.groupsFilter"></span><span>:</span>
 							</md-checkbox>
 						</md-input-container>
-						<md-chips ng-class="{'chips_disabled': !admin.azureAd.userGroupsFilter}" ng-model="admin.azureAd.userGroups" md-separator-keys="customKeys" readonly="!admin.azureAd.userGroupsFilter"></md-chips>
+						<md-chips ng-class="{'chips_disabled': !admin.azureAd.userGroupsFilter}" ng-model="admin.azureAd.userGroups" md-separator-keys="customKeys"
+						 readonly="!admin.azureAd.userGroupsFilter"></md-chips>
 					</md-container>
 				</md-content>
 			</md-content>
@@ -108,7 +108,69 @@
 			</md-content>
 		</md-content>
 	</div>
-	<fieldset ng-show="method.adfs==true">
+
+	<div ng-show="admin.method=='adfs'" layout="column" >		
+			<md-content md-whiteframe="5" style="margin:15px 0 20px 0">
+				<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
+					<div class="md-toolbar-tools">
+						<span>ADFS Metadata</span>
+					</div>
+				</md-toolbar>
+					<div>To use this app with your ADFS, you will have to import your ADFS Metadata.</div>
+					<div>To retrieve your ADFS Metadata, you can manually download them, or indicate your ADFS FQDN below, and use the "Download" Button</div>									
+				<div flex layout="row" layout-margin>
+					<md-input-container class="md-block flex-gt-sm" flex=50>
+						<label for="adfsServer">
+						<span translate="authentication.adfs.server"></span>	
+					</label>
+						<input id="adfsServer" type="text" ng-model="admin.adfs.server" />
+					</md-input-container>
+					<md-input-container>
+					<md-button class='md-primary md-raised' ng-disabled="!adfsCert()" ng-href="{{adfsCert()}}" translate="authentication.adfs.getAdfsMetadata"
+					 aria-label="Get ADFS Metadata" target="_blank"></md-button>
+					</md-input-container>
+				</div>
+				<div>Once you have the xml Metadata file, just edit it, and copy/paste the content below</div>
+				<div layout="column" layout-margin>
+					<md-input-container layout="column" flex=66 md-whiteframe="2">
+						<label for="adfsMetadata">
+							<span translate="authentication.adfs.pasteAdfsMetadata"></span>
+							<span style="color: red">*</span>
+						</label>
+						<textarea id="adfsMetadata" ng-model="admin.adfs.metadata" style="min-height: 182px; max-height: 200px; overflow-y: scroll;"></textarea>
+					</md-input-container>
+					<md-container layout="row">
+											
+						<md-input-container class="md-block flex-gt-sm md-input-focused">
+							<label for="adfsEntityID">Entity ID</label>
+							<span id="adfsEntityID" ng-disabled="true">{{admin.adfs.entityID}}</span>
+						</md-input-container>
+						<md-input-container class="md-block flex-gt-sm md-input-focused">
+							<label for="adfsLoginUrl">Login URL</label>
+							<span id="adfsLoginUrl" ng-disabled="true">{{admin.adfs.loginUrl}}</span>
+						</md-input-container>
+						<md-input-container class="md-block flex-gt-sm md-input-focused">
+							<label for="adfsLogoutUrl">Logout URL</label>
+							<span id="adfsLogoutUrl" ng-disabled="true">{{admin.adfs.logoutUrl}}</span>
+						</md-input-container>
+					
+					</md-container>
+				</div>
+			</md-content>
+			<md-content md-whiteframe="5" style="margin:15px 0 20px 0">
+				<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
+					<div class="md-toolbar-tools">
+						<span>APP Metdata</span>
+					</div>
+				</md-toolbar>
+				<div>You will have create a "Relying Party Trust" on your ADFS. To do so, you can download the App Metadata (including its certificate) by using the button below.</div>
+				<md-button class='md-primary md-raised' ng-disabled="" ng-href="/api/auth/cert" translate="authentication.adfs.getAppCertificate"
+				 aria-label="Get App Certificate"></md-button>
+
+			</md-content>
+	</div>
+
+	<fieldset ng-show="admin.method==true">
 		<legend> {{"authentication.adfs.params" | translate}}</legend>
 		Not yet available...
 	</fieldset>

@@ -17,6 +17,8 @@ function getAccount(req, res, next) {
     Account
         .findById(req.params.account_id)
         .populate("config")
+        .populate("azureAd")
+        .populate("adfs")
         .exec(function (err, account) {
             if (err) res.render('error', { error: { message: err } });
             else if (account) {
@@ -67,9 +69,12 @@ router.get("/login", function (req, res) {
 })
 // When the logout URL is called
 router.get("/logout/", function (req, res) {
+    var loginurl  = require('querystring').escape("https://" + serverHostname + "/login/" + req.session.account._id + "/");
     // if the account is configured with AzureAD, redirect the user to azure logout URL
     if (req.session.account.azureAd) {
-        res.redirect("https://login.windows.net/" + req.session.account.azureAd.tenant + "/oauth2/logout?post_logout_redirect_uri=https://" + serverHostname + "/login/" + req.session.account._id + "/");
+        res.redirect("https://login.windows.net/" + req.session.account.azureAd.tenant + "/oauth2/logout?post_logout_redirect_uri="+loginurl);
+    } else if (req.session.account.adfs) {        
+        res.redirect(req.session.account.adfs.logoutUrl + "?wa=wsignout1.0&wreply=" + loginurl);
     } else res.redirect("/");
     req.logout();
     req.session.destroy();

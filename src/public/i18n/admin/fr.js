@@ -57,10 +57,14 @@ var fr = {
             external: "Autoriser les utilisateurs externe à obtenir une clé",
             unlicensed: "Autoriser les utilisateurs sans licence",
             groupsFilter: "N'autoriser que les utilisateurs appartenant aux groupes utilisateurs suivants"
-        },
+        },        
         adfs: {
             adfs: "Service de Fédération AD",
-            params: "configuration ADFS"
+            params: "configuration ADFS",
+            getAdfsMetadata: "Télecharger les Metadonnées ADFS",
+            pasteAdfsMetadata: "Coller les Metadonnées ADFS",
+            getAppCertificate: "Télecharger le certificat Get-a-Key",
+            server: "FQDN du serveur ADFS"
         },
     },
     modal: {

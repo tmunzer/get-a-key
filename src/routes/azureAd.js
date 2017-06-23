@@ -31,7 +31,7 @@ router.get('/:account_id/logout/', function (req, res) {
     console.log("\x1b[32minfo\x1b[0m:", "User " + req.session.email + " is now logged out.");
     req.logout();
     req.session.destroy();
-    res.redirect('/login/:account_id/');
+    res.redirect('/login/'+req.params.account_id);
 });
 
 module.exports = router;

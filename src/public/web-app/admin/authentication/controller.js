@@ -1,6 +1,6 @@
 angular
     .module('Authentication')
-    .controller("AuthenticationCtrl", function ($scope, $mdDialog, $mdConstant, AzureAdService) {
+    .controller("AuthenticationCtrl", function ($scope, $mdDialog, $mdConstant, ConfigService) {
         $scope.customKeys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.TAB];
 
         const initialized = false;
@@ -16,7 +16,15 @@ angular
                 userGroupsFilter: false,
                 userGroups: []
             },
-            adfs: {}
+            adfs: {
+                server: "",
+                entityID: "",
+                loginUrl: "",
+                logoutUrl: "",
+                entryPoint: "",
+                metadata: undefined
+            },
+            method: "adfs"
         };
 
         $scope.method = {
@@ -29,7 +37,33 @@ angular
         $scope.$watch("method.adfs", function () {
             $scope.method.aad = !$scope.method.adfs;
         })
+        $scope.$watch("admin.adfs.metadata", function (a, b) {
+            if ($scope.admin.adfs.metadata) {
+                var start, stop, temp;
 
+                start = $scope.admin.adfs.metadata.indexOf("entityID=") + 10;
+                console.log(start);
+                if (start) $scope.admin.adfs.entityID = $scope.admin.adfs.metadata.substring(start, $scope.admin.adfs.metadata.indexOf("\"", start));
+                start = -1;
+
+                start = $scope.admin.adfs.metadata.indexOf("SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"");
+                console.log(start);
+                if (start) start = $scope.admin.adfs.metadata.indexOf("Location=", start) + 10;
+                console.log(start);
+                if (start) $scope.admin.adfs.loginUrl = $scope.admin.adfs.metadata.substring(start, $scope.admin.adfs.metadata.indexOf("\"", start));
+
+                start = -1;
+                start = $scope.admin.adfs.metadata.indexOf("SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"");
+                console.log(start);
+                if (start) start = $scope.admin.adfs.metadata.indexOf("Location=", start) + 10;
+                console.log(start);
+                if (start) $scope.admin.adfs.logoutUrl = $scope.admin.adfs.metadata.substring(start, $scope.admin.adfs.metadata.indexOf("\"", start));
+            }
+        })
+        $scope.adfsCert = function () {
+            if ($scope.admin.adfs.server) return "https://" + $scope.admin.adfs.server + "/FederationMetadata/2007-06/FederationMetadata.xml";
+            else return false;
+        }
 
         function apiWarning(warning) {
             $mdDialog.show({
@@ -58,11 +92,21 @@ angular
             };
         }
 
-
-        function azureAdSaveConfig() {
+        function azureSaveConfig() {
             $scope.isWorking = true;
             if (request) request.abort();
-            request = AzureAdService.post($scope.admin.azureAd);
+            request = ConfigService.post("azure", $scope.admin.azure);
+            request.then(function (promise) {
+                $scope.isWorking = false;
+                if (promise && promise.error) apiWarning(promise.error);
+                else reqDone();
+            })
+        }
+        function adfsSaveConfig() {
+            $scope.isWorking = true;
+            $scope.admin.adfs.entryPoint = $scope.admin.adfs.loginUrl;
+            if (request) request.abort();
+            request = ConfigService.post("adfs", $scope.admin.adfs);
             request.then(function (promise) {
                 $scope.isWorking = false;
                 if (promise && promise.error) apiWarning(promise.error);
@@ -71,45 +115,36 @@ angular
         }
 
         $scope.isWorking = true;
-        request = AzureAdService.get();
+        request = ConfigService.get();
         request.then(function (promise) {
             $scope.isWorking = false;
             if (promise && promise.error) apiWarning(promise.error);
             else {
-                $scope.method.aad = true;
-                $scope.method.adfs = false;
-                if (promise.data.azureAd) {
-                    $scope.admin.azureAd = promise.data.azureAd;
-                    if (!$scope.admin.azureAd.userGroupsFilter) $scope.admin.azureAd.userGroupsFilter = false;
-                    if (!$scope.admin.azureAd.userGroups) $scope.admin.azureAd.userGroups = [];
-                } else {
-                    $scope.admin = {
-                        azureAd: {
-                            clientId: "",
-                            clientSecret: "",
-                            tenant: "",
-                            resource: "",
-                            allowExternalUsers: false,
-                            userGroupsFilter: false,
-                            userGroups: []
-                        },
-                        adfs: {}
-                    };
-                }
-                $scope.admin.azureAd.signin = promise.data.signin;
-                $scope.admin.azureAd.callback = promise.data.callback;
-                $scope.admin.azureAd.logout = promise.data.logout;
+                if (promise.data.method) $scope.admin.method = promise.data.method;
+                if (promise.data.azure) $scope.admin.azure = promise.data.azure;
+                if (promise.data.adfs) $scope.admin.adfs = promise.data.adfs;
+                $scope.admin.azure.signin = promise.data.signin;
+                $scope.admin.azure.callback = promise.data.callback;
+                $scope.admin.azure.logout = promise.data.logout;
+
             }
         })
 
 
 
+
         $scope.isValid = function () {
-            if ($scope.method.aad == true) {
+            if ($scope.admin.method == 'azure') {
                 if (!$scope.admin.azureAd.clientID || $scope.admin.azureAd.clientID == "") return false;
                 else if (!$scope.admin.azureAd.clientSecret || $scope.admin.azureAd.clientSecret == "") return false;
                 else if (!$scope.admin.azureAd.tenant || $scope.admin.azureAd.tenant == "") return false;
                 else if (!$scope.admin.azureAd.resource || $scope.admin.azureAd.resource == "") return false;
+                else return true;
+            }
+            else if ($scope.admin.method == "adfs") {
+                if (!$scope.admin.adfs.entityID || $scope.admin.adfs.entityID == "") return false;
+                else if (!$scope.admin.adfs.loginUrl || $scope.admin.adfs.loginUrl == "") return false;
+                else if (!$scope.admin.adfs.logoutUrl || $scope.admin.adfs.logoutUrl == "") return false;
                 else return true;
             }
             else if (isWorking) return true;
@@ -117,38 +152,42 @@ angular
         }
 
         $scope.save = function () {
+            console.log($scope.admin.method);
             $scope.isWorking = true;
-            if ($scope.method.aad == true) {
+            if ($scope.admin.method == 'azure') {
                 azureAdSaveConfig();
+            } else if ($scope.admin.method == "adfs") {
+                adfsSaveConfig();
             }
         }
     })
 
-    .factory("AzureAdService", function ($http, $q, $rootScope) {
-        function get(azureAdConfig) {
-            const canceller = $q.defer();
-            const request = $http({
-                url: "/api/aad/",
+
+    .factory("ConfigService", function ($http, $q, $rootScope) {
+
+        function get() {
+            var canceller = $q.defer();
+            var request = $http({
+                url: "/api/auth/",
                 method: "GET",
-                data: { azureAd: azureAdConfig },
                 timeout: canceller.promise
             });
             return httpReq(request);
         }
 
-        function post(azureAdConfig) {
-            const canceller = $q.defer();
-            const request = $http({
-                url: "/api/aad/",
+        function post(method, config) {
+            var canceller = $q.defer();
+            var request = $http({
+                url: "/api/auth/" + method + "/",
                 method: "POST",
-                data: { azureAd: azureAdConfig },
+                data: { config: config },
                 timeout: canceller.promise
             });
             return httpReq(request);
         }
 
         function httpReq(request) {
-            let promise = request.then(
+            var promise = request.then(
                 function (response) {
                     return response;
                 },
@@ -173,4 +212,3 @@ angular
             post: post
         }
     });
-

@@ -1,5 +1,5 @@
 # Get-a-Key
-This application provides a single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS (soon) to authenticate users.
+This application provides a single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS to authenticate users.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
@@ -10,7 +10,7 @@ This program is free software: you can redistribute it and/or modify it under th
 # Get-a-Key v1
 * full user interface customization
 * full configuration interface
-* AzureAD integration
+* AzureAD and ADFS integration
 * Docker version (deployement script available below) with NGINX and Let's Encrypt
 
 ## Install

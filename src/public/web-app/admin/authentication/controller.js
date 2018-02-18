@@ -87,7 +87,7 @@ angular
             };
         }
 
-        function azureSaveConfig() {
+        function azureAdSaveConfig() {
             $scope.isWorking = true;
             if (request) request.abort();
             request = ConfigService.post("azure", $scope.admin.azure);

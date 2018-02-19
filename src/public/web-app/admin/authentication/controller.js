@@ -90,7 +90,7 @@ angular
         function azureAdSaveConfig() {
             $scope.isWorking = true;
             if (request) request.abort();
-            request = ConfigService.post("azure", $scope.admin.azure);
+            request = ConfigService.post("aad", $scope.admin.azureAd);
             request.then(function (promise) {
                 $scope.isWorking = false;
                 if (promise && promise.error) apiWarning(promise.error);
@@ -116,7 +116,7 @@ angular
             if (promise && promise.error) apiWarning(promise.error);
             else {
                 if (promise.data.method) $scope.admin.method = promise.data.method;
-                if (promise.data.azure) $scope.admin.azure = promise.data.azure;
+                if (promise.data.azure) $scope.admin.azureAd = promise.data.azure;
                 if (promise.data.adfs) $scope.admin.adfs = promise.data.adfs;
             }
         })

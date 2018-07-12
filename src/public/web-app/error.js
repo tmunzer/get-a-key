@@ -13,7 +13,7 @@ error
                 'default': '200' // by default use shade 400 from the pink palette for primary intentions
             });
     }).config(function ($translateProvider) {
-        $translateProvider.useMissingTranslationHandlerLog();
+        //$translateProvider.useMissingTranslationHandlerLog();
         $translateProvider
             .translations('en', en)
             .translations('fr', fr)

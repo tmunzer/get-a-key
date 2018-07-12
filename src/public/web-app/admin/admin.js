@@ -66,7 +66,7 @@ gak
         $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
         $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
     }]).config(function ($translateProvider) {
-        $translateProvider.useMissingTranslationHandlerLog();
+        //$translateProvider.useMissingTranslationHandlerLog();
         $translateProvider
             .translations('en', en)
             .translations('fr', fr)

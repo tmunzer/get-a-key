@@ -9,7 +9,17 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 var path = require('path');
 
 global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'),"");
-if (process.env.DOCKERIZED) global.appPath += "/src";
+//if (process.env.DOCKERIZED) global.appPath += "/src";
+global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'),"");
+console.info(global.appPath);
+var exec = require('child_process').exec;
+
+exec("ls " + global.appPath, function (error, stdout, stderr) {
+    if (error) console.log(error);
+    else {
+        console.log(stdout);
+    }
+});
 
 var app = express();
 // remove http header

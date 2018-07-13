@@ -10,16 +10,6 @@ var path = require('path');
 
 global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'),"");
 
-//DEBUG
-console.info(global.appPath);
-var exec = require('child_process').exec;
-exec("ls " + global.appPath, function (error, stdout, stderr) {
-    if (error) console.log(error);
-    else {
-        console.log(stdout);
-    }
-});
-
 var app = express();
 // remove http header
 app.disable('x-powered-by');

@@ -25,7 +25,7 @@ function genCertificate(account_id) {
     ];
     done = 0;
     var error;
-    var cmd = 'pwd && ./generate_app_certificate.sh ' +
+    var cmd = './generate_app_certificate.sh ' +
         account_id + "." + serverHostname + ' https://' + serverHostname + "/adfs/" + account_id + '/';
 
     for (var i = 0; i < files.length; i++)
@@ -38,9 +38,10 @@ function genCertificate(account_id) {
                     exec(cmd, {
                         cwd: '"' + global.appPath + '/certs/"'
                     }, function (error, stdout, stderr) {
-                        if (error)
+                        if (error) {
                             console.log(error);
-                        else {
+                            console.log(stderr);
+                        } else {
                             console.log("ADFS Certificates created for " + serverHostname + "/" + account_id);
                             i = files.length;
                         }

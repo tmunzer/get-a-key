@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 set -e
 
 PROG="$(basename "$0")"
@@ -68,7 +68,7 @@ policy             = policy_anything
 commonName         = $HOST
 EOF
 echo "DEBUG 2"
-/usr/bin/openssl req -utf8 -batch -config "$TEMPLATEFILE" -new -x509 -days 3652 -nodes -out "$OUTFILE.cert" -keyout "$OUTFILE.key" 2>/dev/null
+/usr/bin/openssl req -utf8 -batch -config "$TEMPLATEFILE" -new -x509 -days 3652 -nodes -out "$OUTFILE.cert" -keyout "$OUTFILE.key" #2>/dev/null
 echo "DEBUG 3"
 /bin/rm -f "$TEMPLATEFILE"
 echo "DEBUG 4"

@@ -18,6 +18,7 @@ function create_app_container
     $DOCKER create \
     --security-opt label:disable \
     -v $PERSISTANT_FOLDER/$APP_NAME/config.js:$APP_CNF_LOC/config.js:ro \
+    -v $PERSISTANT_FOLDER/$APP_NAME/certs:$APP_CNF_LOC/certs/:rw \
     --link $DB_NAME:mongo \
     --name="$APP_NAME" \
     --restart="on-failure:5" \

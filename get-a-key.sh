@@ -1252,6 +1252,7 @@ function init_script
   check_folder "Database" $DB_FOLDER
   check_folder "Certificates" $NGINX_CERTS_FOLDER
   check_folder "App" "$PERSISTANT_FOLDER/$APP_NAME"
+  check_folder "App certificates" "$PERSISTANT_FOLDER/$APP_NAME/certs/"
   check_folder "bower_components" "$PERSISTANT_FOLDER/bower_components"
 
   init_acs_conf

@@ -22,7 +22,7 @@ ADFS_SERVER=$1
 #fi
 
 echo "-----BEGIN CERTIFICATE-----"
-(xmllint --shell FederationMetadata.xml | grep -v '^/ >' | fold -w 64) << EndOfScript
+(xmllint --shell FederationMetadata.xml | /bin/grep -v '^/ >' | fold -w 64) << EndOfScript
 setns a=urn:oasis:names:tc:SAML:2.0:metadata
 setns b=http://www.w3.org/2000/09/xmldsig#
 cat /a:EntityDescriptor/b:Signature/b:KeyInfo/b:X509Data/b:X509Certificate/text()

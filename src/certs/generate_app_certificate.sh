@@ -30,15 +30,15 @@ fi
 
 PATH="$3"
 
-if ! echo "$BASEURL" | grep -q '^https\?://'; then
+if ! echo "$BASEURL" | /bin/grep -q '^https\?://'; then
     echo "$PROG: The URL must start with \"http://\" or \"https://\"." >&2
     exit 1
 fi
 
-HOST="$(echo "$BASEURL" | sed 's#^[a-z]*://\([^/]*\).*#\1#')"
-BASEURL="$(echo "$BASEURL" | sed 's#/$##')"
+HOST="$(echo "$BASEURL" | /bin/sed 's#^[a-z]*://\([^/]*\).*#\1#')"
+BASEURL="$(echo "$BASEURL" | /bin/sed 's#/$##')"
 
-OUTFILE="$PATH$(echo "$ENTITYID" | sed 's/[^0-9A-Za-z.-]/_/g' | sed 's/__*/_/g')"
+OUTFILE="$PATH$(echo "$ENTITYID" | /bin/sed 's/[^0-9A-Za-z.-]/_/g' | /bin/sed 's/__*/_/g')"
 
 echo "Output files:"
 echo "Private key:               $OUTFILE.key"
@@ -56,7 +56,7 @@ umask 0077
 
 TEMPLATEFILE="$(mktemp -t mellon_create_sp.XXXXXXXXXX)"
 
-cat >"$TEMPLATEFILE" <<EOF
+/bin/cat >"$TEMPLATEFILE" <<EOF
 RANDFILE           = /dev/urandom
 [req]
 default_bits       = 2048
@@ -68,13 +68,13 @@ policy             = policy_anything
 commonName         = $HOST
 EOF
 
-openssl req -utf8 -batch -config "$TEMPLATEFILE" -new -x509 -days 3652 -nodes -out "$OUTFILE.cert" -keyout "$OUTFILE.key" 2>/dev/null
+/usr/bin/openssl req -utf8 -batch -config "$TEMPLATEFILE" -new -x509 -days 3652 -nodes -out "$OUTFILE.cert" -keyout "$OUTFILE.key" 2>/dev/null
 
-rm -f "$TEMPLATEFILE"
+/bin/rm -f "$TEMPLATEFILE"
 
-CERT="$(grep -v '^-----' "$OUTFILE.cert")"
+CERT="$(/bin/grep -v '^-----' "$OUTFILE.cert")"
 
-cat >"$OUTFILE.xml" <<EOF
+/bin/cat >"$OUTFILE.xml" <<EOF
 <EntityDescriptor entityID="$ENTITYID" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
   <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <KeyDescriptor use="signing">
@@ -93,5 +93,5 @@ cat >"$OUTFILE.xml" <<EOF
 EOF
 
 umask 0777
-chmod go+r "$OUTFILE.xml"
-chmod go+r "$OUTFILE.cert"
+/bin/chmod go+r "$OUTFILE.xml"
+/bin/chmod go+r "$OUTFILE.cert"

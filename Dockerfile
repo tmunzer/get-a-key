@@ -14,5 +14,5 @@ RUN groupadd -r ah && useradd -mr -g ah ah
 USER ah
 
 EXPOSE 51360
-ENTRYPOINT /app/docker-entrypoint.sh 51360
+ENTRYPOINT /bin/sh
 

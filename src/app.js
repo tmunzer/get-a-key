@@ -9,8 +9,6 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 var path = require('path');
 
 global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'),"");
-//if (process.env.DOCKERIZED) global.appPath += "/src";
-global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'),"");
 
 //DEBUG
 console.info(global.appPath);

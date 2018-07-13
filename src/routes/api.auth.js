@@ -37,7 +37,7 @@ function genCertificate(account_id) {
                     exec(cmd, {
                         cwd: global.appPath + '/certs/'
                     }, function (error, stdout, stderr) {
-                        if (error) {
+                        if (error.code) {
                             console.log(error);
                             console.log(stderr);
                             console.log(stdout);

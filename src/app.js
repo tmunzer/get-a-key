@@ -1,19 +1,21 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var morgan = require('morgan')
+var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(session);
+var path = require('path');
 
+global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'),"");
 
 var app = express();
 // remove http header
 app.disable('x-powered-by');
 // log http request
 app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
-  skip: function (req, res) { return res.statusCode < 400 && req.originalUrl != "/" }
+  skip: function (req, res) { return res.statusCode < 400 && req.originalUrl != "/"; }
 }));
 
 //===============MONGODB=================
@@ -104,7 +106,7 @@ app.use('/', login);
 //Otherwise
 app.get("*", function (req, res) {
   res.redirect("/web-app/");
-})
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

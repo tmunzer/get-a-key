@@ -46,7 +46,7 @@ router.get('/oauth/reg', function (req, res) {
                         vhmId: data.data[owner].vhmId,
                         expireAt: data.data[owner].expireAt,
                         userGroupId: 0
-                    }
+                    };
                     numAccounts++;
                 }
                 // if the admin selected only one account, continue
@@ -85,9 +85,9 @@ router.get('/oauth/reg', function (req, res) {
                                         req.session.account = JSON.parse(JSON.stringify(account));
                                         req.session.save(function (err) {
                                             res.redirect('/admin/');
-                                        })
+                                        });
                                     }
-                                })
+                                });
                             }
                             // else create a new entry in the DB
                             else {
@@ -111,11 +111,11 @@ router.get('/oauth/reg', function (req, res) {
                                         req.session.account = JSON.parse(JSON.stringify(account));
                                         req.session.save(function (err) {
                                             res.redirect('/admin/');
-                                        })
+                                        });
                                     }
-                                })
+                                });
                             }
-                        })
+                        });
                     // if the admin selected many HMNG account, raise an error
                 } else Error.render(
                     { status: 500, message: "Please select only one Aerohive account." },
@@ -128,7 +128,7 @@ router.get('/oauth/reg', function (req, res) {
                 req,
                 res);
         });
-    };
+    }
 });
 
 router.get('/logout/', function (req, res, next) {
@@ -164,7 +164,7 @@ function getCustom(req, res, next) {
             .exec(function (err, custom) {
                 if (!err) req.custom = custom;
                 next();
-            })
+            });
     else next();
 }
 
@@ -174,7 +174,7 @@ router.get("/preview/", getCustom, function (req, res, next) {
         title: 'Get a Key!',
         custom: req.custom
     });
-})
+});
 // when user wants to see the help page
 router.get('/help/:method', function (req, res, next) {
     if (req.params.method == "azureAd")

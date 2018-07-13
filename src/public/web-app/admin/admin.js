@@ -87,7 +87,7 @@ gak
 gak.controller('AppCtrl', function ($scope, $translate, $location) {
     $scope.translate = function (langKey) {
         $translate.use(langKey);
-    }
+    };
 
     $scope.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
@@ -97,7 +97,7 @@ gak.controller('AppCtrl', function ($scope, $translate, $location) {
     $scope.active = function (tab) {
         if ($location.path() == '/' + tab) return true;
         else return false;
-    }
+    };
     $scope.select = function (tab) {
         $location.path('/'+tab);
     };

@@ -67,7 +67,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
 
     $scope.translate = function (langKey) {
         $translate.use(langKey);
-    }
+    };
 
     $scope.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
@@ -80,7 +80,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
     var message = {
         title: "",
         text: "",
-    }
+    };
 
     function userNotFound(error) {
         $mdDialog.show({
@@ -91,7 +91,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
                     email: error.email
                 }
             }
-        })
+        });
     }
 
     function reqDone(data) {
@@ -101,7 +101,7 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
             locals: {
                 items: data
             }
-        })
+        });
     }
 
     function apiWarning(warning) {
@@ -123,8 +123,8 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
             $scope.isWorking = false;
             if (promise && promise.error) apiWarning(promise.error);
             else reqDone(promise.data);
-        })
-    }
+        });
+    };
 
     $scope.revoke = function () {
         $mdDialog.show({
@@ -146,10 +146,9 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
                     else apiWarning(promise.error);
                 }
                 else reqDone(promise.data);
-            })
+            });
         });
-
-    }
+    };
 
     $scope.deliver = function () {
         $scope.isWorking = true;
@@ -162,8 +161,8 @@ gak.controller("AppCtrl", function ($scope, $rootScope, $location, $mdDialog, $t
                 else apiWarning(promise.error);
             }
             else reqDone(promise.data);
-        })
-    }
+        });
+    };
 
     $translate('errorTitle').then(function (errorTitle) {
         $scope.errorTitle = errorTitle;
@@ -242,6 +241,6 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
         getMyKey: getMyKey,
         deliverMyKey: deliverMyKey,
         removeMyKey: removeMyKey
-    }
+    };
 });
 

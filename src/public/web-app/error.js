@@ -30,7 +30,7 @@ error
 error.controller('ErrorCtrl', function ($scope, $translate) {
     $scope.translate = function (langKey) {
         $translate.use(langKey);
-    }
+    };
     $scope.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
         $mdOpenMenu(ev);

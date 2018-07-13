@@ -54,7 +54,7 @@ echo
 # No files should not be readable by the rest of the world.
 umask 0077
 
-TEMPLATEFILE="$(mktemp -t mellon_create_sp.XXXXXXXXXX)"
+TEMPLATEFILE="$(/bin/mktemp -t mellon_create_sp.XXXXXXXXXX)"
 
 /bin/cat >"$TEMPLATEFILE" <<EOF
 RANDFILE           = /dev/urandom

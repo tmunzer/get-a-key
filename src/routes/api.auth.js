@@ -37,7 +37,8 @@ function genCertificate(account_id) {
                 if (!error) console.log("ADFS Ceritificates for " + serverHostname + "/" + account_id + " present.");
                 else {
                     exec(cmd, {
-                        cwd: global.appPath + '/certs/'
+                        cwd: global.appPath + '/certs/',
+                        shell: "/bin/bash"
                     }, function (error, stdout, stderr) {
                         if (error) {
                             console.log(error);

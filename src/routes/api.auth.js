@@ -25,7 +25,7 @@ function genCertificate(account_id) {
     ];
     done = 0;
     var error;
-    var cmd = './generate_app_certificate.sh ' +
+    var cmd = global.appPath + 'certs/generate_app_certificate.sh ' +
         account_id + "." + serverHostname + ' https://' + serverHostname + "/adfs/" + account_id + '/';
 
     for (var i = 0; i < files.length; i++)

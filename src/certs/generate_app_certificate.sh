@@ -4,10 +4,10 @@ set -e
 PROG="$(basename "$0")"
 
 printUsage() {
-    echo "Usage: $PROG ENTITY-ID ENDPOINT-URL"
+    echo "Usage: $PROG ENTITY-ID ENDPOINT-URL PATH"
     echo ""
     echo "Example:"
-    echo "  $PROG urn:someservice https://sp.example.org/mellon"
+    echo "  $PROG urn:someservice https://sp.example.org/mellon /tmp/"
     echo ""
 }
 
@@ -28,6 +28,8 @@ if [ -z "$BASEURL" ]; then
     exit 1
 fi
 
+PATH="$3"
+
 if ! echo "$BASEURL" | grep -q '^https\?://'; then
     echo "$PROG: The URL must start with \"http://\" or \"https://\"." >&2
     exit 1
@@ -36,7 +38,8 @@ fi
 HOST="$(echo "$BASEURL" | sed 's#^[a-z]*://\([^/]*\).*#\1#')"
 BASEURL="$(echo "$BASEURL" | sed 's#/$##')"
 
-OUTFILE="$(echo "$ENTITYID" | sed 's/[^0-9A-Za-z.-]/_/g' | sed 's/__*/_/g')"
+OUTFILE="$PATH$(echo "$ENTITYID" | sed 's/[^0-9A-Za-z.-]/_/g' | sed 's/__*/_/g')"
+
 echo "Output files:"
 echo "Private key:               $OUTFILE.key"
 echo "Certificate:               $OUTFILE.cert"

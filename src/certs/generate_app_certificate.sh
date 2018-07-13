@@ -53,9 +53,9 @@ echo
 
 # No files should not be readable by the rest of the world.
 umask 0077
-
+echo "DEBUG 0"
 TEMPLATEFILE="$(/bin/mktemp -t mellon_create_sp.XXXXXXXXXX)"
-
+echo "DEBUG 1"
 /bin/cat >"$TEMPLATEFILE" <<EOF
 RANDFILE           = /dev/urandom
 [req]
@@ -67,13 +67,13 @@ policy             = policy_anything
 [req_distinguished_name]
 commonName         = $HOST
 EOF
-
+echo "DEBUG 2"
 /usr/bin/openssl req -utf8 -batch -config "$TEMPLATEFILE" -new -x509 -days 3652 -nodes -out "$OUTFILE.cert" -keyout "$OUTFILE.key" 2>/dev/null
-
+echo "DEBUG 3"
 /bin/rm -f "$TEMPLATEFILE"
-
+echo "DEBUG 4"
 CERT="$(/bin/grep -v '^-----' "$OUTFILE.cert")"
-
+echo "DEBUG 5"
 /bin/cat >"$OUTFILE.xml" <<EOF
 <EntityDescriptor entityID="$ENTITYID" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
   <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
@@ -91,8 +91,8 @@ CERT="$(/bin/grep -v '^-----' "$OUTFILE.cert")"
   </SPSSODescriptor>
 </EntityDescriptor>
 EOF
-
+echo "DEBUG 6"
 umask 0777
 /bin/chmod go+r "$OUTFILE.xml"
 /bin/chmod go+r "$OUTFILE.cert"
-exit 0
+echo "DEBUG 7"

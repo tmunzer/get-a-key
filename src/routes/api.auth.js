@@ -31,15 +31,15 @@ function genCertificate(account_id) {
     for (var i = 0; i < files.length; i++)
         fs.access(files[i], fs.F_OK, function(err) {
             done++;
-            if (err) {
-                console.error(err);
-                console.error(stderr);
-            }
+            if (err) error = err;
             if (done == files.length)
                 if (!error) console.log("ADFS Ceritificates for " + serverHostname + "/" + account_id + " present.");
                 else {
                     exec(cmd, function (error, stdout, stderr) {
-                        if (error) console.log(error);
+                        if (error) {
+                            console.log(error);
+                            console.log(stdout);
+                        }
                         else {
                             console.log("ADFS Certificates created for " + serverHostname + "/" + account_id);
                             i = files.length;

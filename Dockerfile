@@ -11,8 +11,6 @@ WORKDIR /app
 RUN npm	install	&& bower install --allow-root
 
 RUN groupadd -r ah && useradd -mr -g ah ah
-RUN chown -R ah /app/certs/
-RUN chmod -R u+rwx /app/certs/
 
 USER ah
 

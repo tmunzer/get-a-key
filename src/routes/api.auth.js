@@ -41,6 +41,7 @@ function genCertificate(account_id) {
                         if (error) {
                             console.log(error);
                             console.log(stderr);
+                            console.log(stdout);
                         } else {
                             console.log("ADFS Certificates created for " + serverHostname + "/" + account_id);
                             i = files.length;

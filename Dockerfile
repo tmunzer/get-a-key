@@ -10,9 +10,8 @@ WORKDIR /app
 
 RUN npm	install	&& bower install --allow-root
 
-RUN groupadd -r ah && useradd -mr -g ah ah
-
-USER ah
+#RUN groupadd -r ah && useradd -mr -g ah ah
+#USER ah
 
 EXPOSE 51360
 ENTRYPOINT /app/docker-entrypoint.sh 51360

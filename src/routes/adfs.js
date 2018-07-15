@@ -4,7 +4,7 @@ var router = express.Router();
 var Account = require("../bin/models/account");
 var xapi = require('../config.js').aerohiveXapi;
 var vhost = require("../config").appServer.vhost;
-var SamlStrategy = require('passport-saml').Strategy;
+var SamlStrategy = require('../passport-saml').Strategy;
 var fs = require('fs');
 
 passport.serializeUser(function (user, done) {

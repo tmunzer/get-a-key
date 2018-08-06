@@ -34,9 +34,9 @@ function getAccount(req, res, next) {
                 // update the user session
                 req.session.save(function (err) {
                     next();
-                })
+                });
             } else res.redirect("/login/");
-        })
+        });
 }
 
 /*================================================================
@@ -54,11 +54,11 @@ router.get("/login/:account_id/", getAccount, function (req, res) {
         method: method,
         custom: req.custom
     });
-})
+});
 // just to be sure. Should never be called...
 router.get("/login/:account_id/callback", function (req, res) {
     res.render('error', { error: { message: "It seems the callback URL is misconfigured on your AzureAD or ADFS. Please be sure to use the callback url from the configuration interface." } });
-})
+});
 // When the generic login page is called
 router.get("/login", function (req, res) {
     res.render("login", {
@@ -66,7 +66,7 @@ router.get("/login", function (req, res) {
         oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id=" + devAccount.clientID + "&redirect_uri=" + devAccount.redirectUrl,
         method: null
     });
-})
+});
 // When the logout URL is called
 router.get("/logout/", function (req, res) {
     var loginurl  = require('querystring').escape("https://" + serverHostname + "/login/" + req.session.account._id + "/");
@@ -78,6 +78,6 @@ router.get("/logout/", function (req, res) {
     } else res.redirect("/");
     req.logout();
     req.session.destroy();
-})
+});
 
 module.exports = router;

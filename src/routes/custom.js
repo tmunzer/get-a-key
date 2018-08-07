@@ -96,9 +96,28 @@ function getColors(req, res, next) {
                     req.colors = defaultColors();
                     next();
                 }
-            })
+            });
     } else {
         req.colors = defaultColors();
+        next();
+    }
+}
+
+function getCountry(req, res, next) {
+    var country = "fr";
+    // if the session has the account information
+    if (req.session.account) {
+        // retrieve the account customization
+        Account
+            .findById(req.session.account)
+            .populate("config")
+            .exec(function (err, result) {
+                if (result && result.config && result.config.phoneCountry) country = result.config.phoneCountry;
+                req.country = "var country = '"+country+"'";
+                next();
+            });
+    } else {
+        req.country = "var country = '"+country+"'";
         next();
     }
 }
@@ -107,12 +126,14 @@ function getColors(req, res, next) {
  ================================================================*/
 // When web browser wants to load the custom colors
 router.get("/colors/", getColors, function (req, res) {
-    res.send(req.colors); 
-})
+    res.send(req.colors);
+});
 // When web browser wants to load the default colors
 router.get("/colors/default", function (req, res) {
     res.send(defaultColors());
-})
-
+});
+router.get("/country/", getCountry, function (req, res) {
+    res.send(req.country);
+});
 
 module.exports = router;

@@ -7,6 +7,7 @@ html
         // [endif]
         meta(name="viewport" content="width=device-width, initial-scale=1")
 
+        link(rel="stylesheet" href="/bower_components/intl-tel-input/build/css/intlTelInput.css")
         link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
         link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
         link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
@@ -73,8 +74,9 @@ html
                 md-tab(md-on-select="select('customization')" md-active="active('customization')")
                     md-tab-label {{'custom' | translate}}
             div(ng-view)
-            script(src="/bower_components/angular/angular.min.js")
 
+        script(src="/bower_components/jquery/dist/jquery.min.js")
+        script(src="/bower_components/angular/angular.min.js")
 
         script(src="/i18n/admin/en.js")
         script(src="/i18n/admin/fr.js")
@@ -87,6 +89,9 @@ html
         script(src="/bower_components/angular-route/angular-route.min.js")
         script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
         script(src="/bower_components/angular-translate/angular-translate.min.js")
+        script(src="/bower_components/intl-tel-input/build/js/intlTelInput.min.js")
+        script(src="/bower_components/intl-tel-input/build/js/utils.js")
+        script(src="/bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.min.js")
         
         script(src="/web-app/admin/customization/tinycolor.js")
         script(src="/web-app/admin/customization/mdColorPicker.min.js")

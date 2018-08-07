@@ -9,6 +9,7 @@ var fr = {
         loginUrl: "LoginURL (Pour configurer le portail captif):",
         userAccount: "Comptes",
         userGroup: "Groupe Utilisateurs",
+        customizeDefaultPhonePrefix: "Personnaliser le préfixe télephonique par défaut"
     },
     custom: {
         custom: "Personnalisation",

@@ -309,7 +309,8 @@ router.get("/admin/config", function (req, res, next) {
                         res.status(200).json({
                             loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
                             userGroups: userGroups,
-                            userGroupId: userGroupId
+                            userGroupId: userGroupId,
+                            phoneCountry: account.config.phoneCountry
                         });
                     } else res.status(500).json({
                         error: "not able to retrieve the account"
@@ -321,7 +322,8 @@ router.get("/admin/config", function (req, res, next) {
 // Function to save the admin configuration
 function saveConfig(req, res) {
     var newConfig = {
-        userGroupId: req.body.userGroupId
+        userGroupId: req.body.userGroupId,
+        phoneCountry: req.body.phoneCountry
     };
     // retrieve the current Account in the DB
     Account

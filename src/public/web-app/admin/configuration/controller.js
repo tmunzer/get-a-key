@@ -28,7 +28,7 @@ angular
                 locals: {
                     items: "modal.save.configuration"
                 }
-            })
+            });
         }
         function LocalModal($scope, $mdDialog, items) {
             $scope.items = items;
@@ -37,12 +37,12 @@ angular
             };
         }
 
-
         request = ConfigurationService.get();
         request.then(function (promise) {
             if (promise && promise.error) apiWarning(promise.error);
             else {
                 $scope.userGroups = promise.data.userGroups.userGroups;
+                if (promise.data.phoneCountry) $("#phone").intlTelInput("setCountry", promise.data.phoneCountry);
                 $scope.loginUrl = promise.data.loginUrl;
                 $scope.config.userGroupId = promise.data.userGroupId;
                 isWorking = false;
@@ -50,12 +50,13 @@ angular
         });
 
         $scope.save = function () {
-            request = ConfigurationService.save($scope.config.userGroupId);
+            var phoneCountry = $("#phone").intlTelInput("getSelectedCountryData").iso2;
+            request = ConfigurationService.save($scope.config.userGroupId, phoneCountry);
             request.then(function (promise) {
                 if (promise && promise.error) apiWarning(promise.error);
                 else reqDone();
-            })
-        }
+            });
+        };
     })
     .factory("ConfigurationService", function ($http, $q, $rootScope) {
 
@@ -69,12 +70,12 @@ angular
             return httpReq(request);
         }
 
-        function save(userGroupId) {
+        function save(userGroupId, phoneCountry) {
             var canceller = $q.defer();
             var request = $http({
                 url: "/api/admin/config",
                 method: "POST",
-                data: ({ userGroupId: userGroupId}),
+                data: ({ userGroupId: userGroupId, phoneCountry: phoneCountry}),
                 timeout: canceller.promise
             });
             return httpReq(request);

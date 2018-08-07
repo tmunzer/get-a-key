@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const ConfigSchema = new mongoose.Schema({
     userGroupId: { type: Number, required: true },
+    phoneCountry: { type: String, required: true},
     created_at    : { type: Date },
     updated_at    : { type: Date }
 });

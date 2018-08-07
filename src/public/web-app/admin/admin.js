@@ -1,4 +1,3 @@
-
 angular.module("Modals", []);
 angular.module("Authentication", []);
 angular.module("Configuration", []);
@@ -17,7 +16,8 @@ var gak = angular.module("gak", [
     'pascalprecht.translate',
     'Authentication',
     'Configuration',
-    'Customization'
+    'Customization',
+    'ngIntlTelInput'
 ]);
 
 gak
@@ -42,7 +42,12 @@ gak
                 redirectTo: "/configuration"
             });
     })
-    .config(function ($mdThemingProvider) {
+    .config(function (ngIntlTelInputProvider) {
+        ngIntlTelInputProvider.set({
+            initialCountry: "fr",
+            separateDialCode: true
+        });
+    }).config(function ($mdThemingProvider) {
         $mdThemingProvider.definePalette('ahBlue', colors)
             .theme('default')
             .primaryPalette("ahBlue", {
@@ -99,8 +104,7 @@ gak.controller('AppCtrl', function ($scope, $translate, $location) {
         else return false;
     };
     $scope.select = function (tab) {
-        $location.path('/'+tab);
+        $location.path('/' + tab);
     };
 
 });
-

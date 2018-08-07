@@ -9,6 +9,7 @@ var en = {
         loginUrl: "LoginURL (to configure the CWP):",
         userAccount: "User Account",
         userGroup: "User Group",
+        customizeDefaultPhonePrefix: "Customize default phone number prefix"
     },
     custom: {
         custom: "Customization",

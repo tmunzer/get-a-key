@@ -1,3 +1,8 @@
+<style>
+#phone {display: none;}
+.country-list {margin-top: -100px !important;}
+</style>
+
 <md-content layout-margin>
 	<md-content md-whiteframe="5">
 		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
@@ -12,17 +17,27 @@
 			</md-input-container>
 			<md-input-container class="md-block flex-gt-sm">
 				<label>
-				<span translate="config.userGroup"></span>
-				<span style="color: red">*</span>
-			</label>
+					<span translate="config.userGroup"></span>
+					<span style="color: red">*</span>
+				</label>
 				<md-select ng-model="config.userGroupId" ng-selected="config.userGroupId">
 					<md-option ng-repeat='userGroup in userGroups' value="{{userGroup.id}}">{{userGroup.name}}</md-option>
 				</md-select>
+			</md-input-container>
+			<md-input-container class="md-block flex-gt-sm" style="min-height: 150px">
+					<label>
+					<span translate="config.customizeDefaultPhonePrefix"></span>
+					<span style="color: red">*</span>
+				</label>
+				<md-input-container class="md-block flex-gt-sm">
+						<input type="tel" name="phone" ng-model="phone" id="phone" ng-intl-tel-input style="left: 50px;padding-left: 0; color:black !important" required
+							aria-label="phone number">
+					</md-input-container>
 			</md-input-container>
 		</md-content>
 	</md-content>
 	<md-content layout="column" layout-gt-sm="row">
 		<md-button class="md-primary md-raised" ng-disabled="isWorking || config.userGroupId == 0" ng-click="save()" translate="save"
-		 aria-label="save"></md-button>
+		    aria-label="save"></md-button>
 	</md-content>
 </md-content>

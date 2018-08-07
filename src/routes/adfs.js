@@ -4,7 +4,7 @@ var router = express.Router();
 var Account = require("../bin/models/account");
 var xapi = require('../config.js').aerohiveXapi;
 var vhost = require("../config").appServer.vhost;
-var SamlStrategy = require('../passport-saml').Strategy;
+var SamlStrategy = require('passport-saml').Strategy;
 var fs = require('fs');
 
 passport.serializeUser(function (user, done) {
@@ -14,8 +14,6 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
-
-
 function getAccount(req, res, next) {
   Account
     .findById(req.params.account_id)
@@ -24,13 +22,13 @@ function getAccount(req, res, next) {
       if (err) res.status(500).json({ error: err });
       else {
         req.account = account;
-        passport.use(new SamlStrategy(
+       passport.use(new SamlStrategy(
           {
             entryPoint: account.adfs.entryPoint,
             issuer: req.params.account_id+"."+vhost,
             callbackUrl: 'https://' + vhost + '/adfs/' + req.params.account_id + '/postResponse',
-            privateCert: fs.readFileSync('../certs/' + req.params.account_id+"."+vhost+ '.key', 'utf-8'),
-            cert: fs.readFileSync('../certs/' + req.params.account_id+"."+vhost + '.cert', 'utf-8'),
+            privateCert: fs.readFileSync('../certs/' + req.params.account_id+"."+vhost + '.key', 'utf-8'),
+            cert: account.adfs.certs,
             // other authn contexts are available e.g. windows single sign-on
             authnContext: 'http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/password',
             // not sure if this is necessary?
@@ -38,6 +36,7 @@ function getAccount(req, res, next) {
             identifierFormat: null,
             // this is configured under the Advanced tab in AD FS relying party
             signatureAlgorithm: 'sha256',
+            //forceAuthn: true,
             additionalParams: {}
           },
           function (profile, done) {
@@ -52,7 +51,7 @@ function getAccount(req, res, next) {
         ));
         next();
       }
-    })
+    });
 }
 
 /* GET login page. */
@@ -75,7 +74,8 @@ router.post('/:account_id/postResponse', getAccount,
 
 /* Handle Logout */
 router.get('/:account_id/logout/', function (req, res) {
-  console.log("User " + req.session.passport.user.upn + " is now logged out.");
+  if (req.session.user) console.log("User " + req.session.passport.user.upn + " is now logged out.");
+  else console.log('user logged out.');
   req.logout();
   req.session.destroy();
   res.redirect('/login/'+req.params.account_id);

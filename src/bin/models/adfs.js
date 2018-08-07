@@ -6,7 +6,7 @@ var AdfsSchema = new mongoose.Schema({
     entityID: { type: String, required: true },
     loginUrl : { type: String, required: true },
     logoutUrl: { type: String, required: true },
-    certificate: { type: String, required: false},
+    certs: [{ type: String, required: false}],
     created_at    : { type: Date },
     updated_at    : { type: Date }
 });

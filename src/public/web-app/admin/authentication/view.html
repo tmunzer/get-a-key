@@ -166,6 +166,13 @@
 					</md-input-container>
 
 				</md-container>
+				<md-contaier layout="column">
+					<div ng-repeat="cert in admin.adfs.certs">
+							<md-input-container class="md-block flex-gt-sm md-input-focused">
+									<label for="adfsLogoutUrl">X509 Certificate #{{$index}}</label>
+									<textarea id="adfsLogoutUrl" ng-disabled="true" style="min-height: 24px; max-height: 240px; overflow-y: scroll;">{{cert}}</textarea>
+								</md-input-container>
+				</md-contaier>
 			</div>
 		</md-content>
 		<md-content md-whiteframe="5" style="margin:15px 0 20px 0">

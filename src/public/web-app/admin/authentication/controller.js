@@ -22,6 +22,7 @@ angular
                 loginUrl: "",
                 logoutUrl: "",
                 entryPoint: "",
+                certs: [],
                 metadata: undefined
             },
             method: "adfs"
@@ -38,6 +39,13 @@ angular
             $scope.method.aad = !$scope.method.adfs;
         })
         $scope.$watch("admin.adfs.metadata", function (a, b) {
+            $scope.admin.adfs.server = "";
+            $scope.admin.adfs.entityID = "";
+            $scope.admin.adfs.loginUrl = "";
+            $scope.admin.adfs.logoutUrl = "";
+            $scope.admin.adfs.entryPoint = "";
+            $scope.admin.adfs.certs = [];
+                
             if ($scope.admin.adfs.metadata) {
                 var start, stop, temp;
 
@@ -53,6 +61,19 @@ angular
                 start = $scope.admin.adfs.metadata.indexOf("SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"");
                 if (start) start = $scope.admin.adfs.metadata.indexOf("Location=", start) + 10;
                 if (start) $scope.admin.adfs.logoutUrl = $scope.admin.adfs.metadata.substring(start, $scope.admin.adfs.metadata.indexOf("\"", start));
+
+                start = 0;
+                stop = 0;
+                i = 0;
+                while (start >= 0 && i < 10) {
+                    start = $scope.admin.adfs.metadata.indexOf("<X509Certificate>", stop);
+                    if (start > 0) {
+                        stop = $scope.admin.adfs.metadata.indexOf("</X509Certificate>", start);
+                        var cert = $scope.admin.adfs.metadata.substring(start + 17, stop);
+                        if ($scope.admin.adfs.certs.indexOf(cert) < 0) $scope.admin.adfs.certs.push(cert);
+                    } else break;
+                    i++;
+                }
             }
         })
         $scope.adfsCert = function () {
@@ -70,6 +91,7 @@ angular
                 }
             });
         }
+
         function reqDone() {
             $mdDialog.show({
                 controller: LocalModal,
@@ -79,6 +101,7 @@ angular
                 }
             })
         }
+
         function LocalModal($scope, $mdDialog, items) {
             $scope.items = items;
             $scope.close = function () {
@@ -97,10 +120,12 @@ angular
                 else reqDone();
             })
         }
+
         function adfsSaveConfig() {
             $scope.isWorking = true;
             $scope.admin.adfs.entryPoint = $scope.admin.adfs.loginUrl;
             if (request) request.abort();
+            console.log($scope.admin);
             request = ConfigService.post("adfs", $scope.admin.adfs);
             request.then(function (promise) {
                 $scope.isWorking = false;
@@ -131,14 +156,12 @@ angular
                 else if (!$scope.admin.azureAd.tenant || $scope.admin.azureAd.tenant == "") return false;
                 else if (!$scope.admin.azureAd.resource || $scope.admin.azureAd.resource == "") return false;
                 else return true;
-            }
-            else if ($scope.admin.method == "adfs") {
+            } else if ($scope.admin.method == "adfs") {
                 if (!$scope.admin.adfs.entityID || $scope.admin.adfs.entityID == "") return false;
                 else if (!$scope.admin.adfs.loginUrl || $scope.admin.adfs.loginUrl == "") return false;
                 else if (!$scope.admin.adfs.logoutUrl || $scope.admin.adfs.logoutUrl == "") return false;
                 else return true;
-            }
-            else if (isWorking) return true;
+            } else if (isWorking) return true;
             else return false;
         }
 
@@ -171,7 +194,9 @@ angular
             var request = $http({
                 url: "/api/auth/" + method + "/",
                 method: "POST",
-                data: { config: config },
+                data: {
+                    config: config
+                },
                 timeout: canceller.promise
             });
             return httpReq(request);
@@ -183,7 +208,9 @@ angular
                     return response;
                 },
                 function (response) {
-                    return { error: response.data };
+                    return {
+                        error: response.data
+                    };
                 });
 
             promise.abort = function () {

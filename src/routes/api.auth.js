@@ -58,6 +58,7 @@ function saveAzureAd(req, res) {
     // retrieve the current Account in the DB
     Account
         .findById(req.session.account._id)
+        .populate("azureAd")
         .exec(function (err, account) {
             if (err) res.status(500).json({
                 error: err
@@ -110,6 +111,7 @@ function saveAdfs(req, res) {
     // retrieve the current Account in the DB
     Account
         .findById(req.session.account._id)
+        .populate("adfs")
         .exec(function (err, account) {
             if (err) res.status(500).json({
                 error: err

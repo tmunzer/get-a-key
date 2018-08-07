@@ -125,9 +125,10 @@ html
                             md-divider
                     br                
                     md-content(layout="column" layout-gt-sm="row")
-                        md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getMyKey()" translate="get" aria-label="get") 
-                        md-button.md-primary.md-raised(ng-disabled="isWorking" translate="send" ng-click="deliver()" aria-label="send") 
-                        md-button.md-primary(ng-disabled="isWorking" translate="revoke" ng-click="revoke()" aria-label="revoke") 
+                        md-button.md-primary.md-raised(ng-disabled="isWorking || keyExists" ng-click="getMyKey()" translate="get" aria-label="get") 
+                        md-button.md-primary.md-raised(ng-disabled="isWorking || !keyExists" translate="sendByEmail" ng-click="deliverByEmail()" aria-label="sendByEmail") 
+                        md-button.md-primary.md-raised(ng-disabled="isWorking || !keyExists" translate="sendBySMS" ng-click="deliverBySMS()" aria-label="sendBySMS") 
+                        md-button.md-primary(ng-disabled="isWorking || !keyExists" translate="revoke" ng-click="revoke()" aria-label="revoke") 
 
         script(src="/bower_components/angular/angular.min.js")
 
@@ -136,6 +137,8 @@ html
         
         script(src="/custom/colors")
 
+
+        script(src="/bower_components/jquery/dist/jquery.min.js")
         script(src="/bower_components/angular-aria/angular-aria.js")
         script(src="/bower_components/angular-animate/angular-animate.min.js")
         script(src="/bower_components/angular-material/angular-material.js")
@@ -144,6 +147,9 @@ html
         script(src="/bower_components/angular-bootstrap/ui-bootstrap.js")
         script(src="/bower_components/angular-translate/angular-translate.min.js")
         script(src="/bower_components/angular-sanitize/angular-sanitize.min.js")
+        script(src="/bower_components/intl-tel-input/build/js/intlTelInput.min.js")
+        script(src="/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js")
+        script(src="/bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.min.js")
         script(src="/web-app/app.js")
         script(src="/web-app/filters.js")
         script(src="/web-app/modals/controller.js")

@@ -4,7 +4,7 @@ Deal with all the web browser API call:
 - users (to create/delete/... keys)
 - admins (to retrieve/save the app parameters)
  ================================================================*/
- var express = require('express');
+var express = require('express');
 var router = express.Router();
 var API = require("../bin/aerohive/api/main");
 var serverHostname = require("../config.js").appServer.vhost;
@@ -19,9 +19,9 @@ const devAccount = require("../config.js").devAccount;
  FUNCTIONS
  ================================================================*/
 // generate the username (to fit ACS limitations)
-function generateUsername(req){
+function generateUsername(req) {
     //var username = req.session.email.substr(0,req.session.email.indexOf("@")).substr(0,32);
-    var username = req.session.email.substr(0,32);
+    var username = req.session.email.substr(0, 32);
     return username;
 }
 
@@ -110,22 +110,68 @@ router.get("/myKey", function (req, res, next) {
             if (err && err.code == "registration.service.item.already.exist") {
                 // retrieve the account details (to have the account_id)
                 getCredentials(req, function (err, account) {
-                    if (err) res.status(500).json({ action: "create", error: err });
+                    if (err) res.status(500).json({
+                        action: "create",
+                        error: err
+                    });
                     // try to delete the current key
                     else deleteCredential(req, account, function (err, result) {
-                        if (err) res.status(500).json({ action: "create", error: err });
+                        if (err) res.status(500).json({
+                            action: "create",
+                            error: err
+                        });
                         // try to create a new key
                         else createCredential(req, function (err, result) {
-                            if (err) res.status(500).json({ action: "create", error: err });
-                            else res.status(200).json({ action: "create", email: req.session.email, status: 'deleted_and_done', result: result });
-                        })
-                    })
-                })
-            } else if (err) res.status(500).json({ error: err });
-            else res.status(200).json({ action: "create", email: req.session.email, status: 'done', result: result });
-        })
+                            if (err) res.status(500).json({
+                                action: "create",
+                                error: err
+                            });
+                            else res.status(200).json({
+                                action: "create",
+                                email: req.session.email,
+                                status: 'deleted_and_done',
+                                result: result
+                            });
+                        });
+                    });
+                });
+            } else if (err) res.status(500).json({
+                error: err
+            });
+            else res.status(200).json({
+                action: "create",
+                email: req.session.email,
+                status: 'done',
+                result: result
+            });
+        });
     } else res.status(403).send('Unknown session');
 });
+
+// to let the web app know if the user already has a key (will disable buttons based on this)
+router.get("/exists", function (req, res, next) {
+    // check if the user is authenticated 
+    if (req.session.passport) {
+        // retrieve the account details (to have the account_id)
+        getCredentials(req, function (err, account) {
+            if (err) res.status(500).json({
+                action: "check",
+                error: err
+            });
+            else if (account)
+             res.status(200).json({
+                action: "check",
+                result: true
+            });
+            else 
+            res.status(200).json({
+                action: "check",
+                result: false
+            });
+        });
+    } else res.status(403).send('Unknown session');
+});
+
 
 // When user wants to delete its key
 router.delete("/myKey", function (req, res, next) {
@@ -133,13 +179,27 @@ router.delete("/myKey", function (req, res, next) {
     if (req.session.xapi) {
         // retrieve the account details (to have the account_id)
         getCredentials(req, function (err, account) {
-            if (err) res.status(500).json({ action: "delete", error: err });
+            if (err) res.status(500).json({
+                action: "delete",
+                error: err
+            });
             // try to delete the current key
             else if (account) deleteCredential(req, account, function (err, result) {
-                if (err) res.status(500).json({ action: "delete", error: err });
-                else res.status(200).json({ action: "delete", email: req.session.email, status: 'done' });
+                if (err) res.status(500).json({
+                    action: "delete",
+                    error: err
+                });
+                else res.status(200).json({
+                    action: "delete",
+                    email: req.session.email,
+                    status: 'done'
+                });
             });
-            else res.status(404).json({ action: "delete", email: req.session.email, status: 'not_found' });
+            else res.status(404).json({
+                action: "delete",
+                email: req.session.email,
+                status: 'not_found'
+            });
         });
     } else res.status(403).send('Unknown session');
 })
@@ -150,13 +210,27 @@ router.post("/myKey", function (req, res, next) {
     if (req.session.xapi) {
         // retrieve the account details (to have the account_id)
         getCredentials(req, function (err, account) {
-            if (err) res.status(500).json({ action: "deliver", error: err });
+            if (err) res.status(500).json({
+                action: "deliver",
+                error: err
+            });
             // try to deliver the key
             else if (account) deliverCredential(req, account, function (err, result) {
-                if (err) res.status(500).json({ action: "deliver", error: err });
-                else res.status(200).json({ action: "deliver", email: req.session.email, status: 'done' });
+                if (err) res.status(500).json({
+                    action: "deliver",
+                    error: err
+                });
+                else res.status(200).json({
+                    action: "deliver",
+                    email: req.session.email,
+                    status: 'done'
+                });
             });
-            else res.status(404).json({ action: "deliver", email: req.session.email, status: 'not_found' });
+            else res.status(404).json({
+                action: "deliver",
+                email: req.session.email,
+                status: 'not_found'
+            });
         });
     } else res.status(403).send('Unknown session');
 })
@@ -171,56 +245,82 @@ router.get("/admin/config", function (req, res, next) {
     if (req.session.xapi) {
         // ACS API call to get the list of User Groups
         API.identity.userGroups.getUserGroups(req.session.xapi, devAccount, null, null, function (err, userGroups) {
-            if (err) res.status(500).json({ error: err });
+            if (err) res.status(500).json({
+                error: err
+            });
             else
                 // retrieve the account in DB to get the currently selected user group
                 Account
-                    .findById(req.session.account._id)
-                    .populate("config")
-                    .exec(function (err, account) {
-                        if (err) res.status(500).json({ error: err });
-                        else if (account) {
-                            if (account.config) {
-                                userGroupId = account.config.userGroupId;
-                            }
-                            res.status(200).json({
-                                loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
-                                userGroups: userGroups,
-                                userGroupId: userGroupId
-                            });
-                        } else res.status(500).json({ error: "not able to retrieve the account" });
-                    })
+                .findById(req.session.account._id)
+                .populate("config")
+                .exec(function (err, account) {
+                    if (err) res.status(500).json({
+                        error: err
+                    });
+                    else if (account) {
+                        if (account.config) {
+                            userGroupId = account.config.userGroupId;
+                        }
+                        res.status(200).json({
+                            loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
+                            userGroups: userGroups,
+                            userGroupId: userGroupId
+                        });
+                    } else res.status(500).json({
+                        error: "not able to retrieve the account"
+                    });
+                })
         })
     } else res.status(403).send('Unknown session');
 })
 // Function to save the admin configuration
 function saveConfig(req, res) {
-    var newConfig = { userGroupId: req.body.userGroupId };
+    var newConfig = {
+        userGroupId: req.body.userGroupId
+    };
     // retrieve the current Account in the DB
     Account
         .findById(req.session.account._id)
         .exec(function (err, account) {
-            if (err) res.status(500).json({ error: err });
+            if (err) res.status(500).json({
+                error: err
+            });
             else if (account) {
                 // if the current account already has a configuration
                 if (account.config) {
                     // update the account configuration
-                    Config.update({ _id: account.config }, newConfig, function (err, savedConfig) {
-                        if (err) res.status(500).json({ error: err });
-                        else res.status(200).json({ action: "save", status: 'done' });
+                    Config.update({
+                        _id: account.config
+                    }, newConfig, function (err, savedConfig) {
+                        if (err) res.status(500).json({
+                            error: err
+                        });
+                        else res.status(200).json({
+                            action: "save",
+                            status: 'done'
+                        });
                     })
                     // if the current account has no configuration, create it
                 } else Config(newConfig).save(function (err, savedConfig) {
-                    if (err) res.status(500).json({ error: err });
+                    if (err) res.status(500).json({
+                        error: err
+                    });
                     else {
                         account.config = savedConfig;
                         account.save(function (err, savedAccount) {
-                            if (err) res.status(500).json({ error: err });
-                            else res.status(200).json({ action: "save", status: 'done' });
+                            if (err) res.status(500).json({
+                                error: err
+                            });
+                            else res.status(200).json({
+                                action: "save",
+                                status: 'done'
+                            });
                         })
                     }
                 });
-            } else res.status(500).json({ error: "not able to retrieve the account" });
+            } else res.status(500).json({
+                error: "not able to retrieve the account"
+            });
         });
 }
 // Called when admin save the new configuration
@@ -228,7 +328,9 @@ router.post("/admin/config", function (req, res, next) {
     // check if the admin is authenticated 
     if (req.session.xapi) {
         if (req.body.userGroupId) saveConfig(req, res);
-        else res.status(500).send({ error: "userGroupId value is missing." });
+        else res.status(500).send({
+            error: "userGroupId value is missing."
+        });
     } else res.status(403).send('Unknown session');
 })
 
@@ -240,7 +342,9 @@ router.get("/admin/custom/", function (req, res, next) {
         Customization
             .findById(req.session.account.customization)
             .exec(function (err, custom) {
-                if (err) res.status(500).json({ error: err });
+                if (err) res.status(500).json({
+                    error: err
+                });
                 else if (custom)
                     res.status(200).json(custom);
                 else res.status(200).json();
@@ -249,15 +353,14 @@ router.get("/admin/custom/", function (req, res, next) {
 })
 // Function to save customization
 function saveCustomization(custom, req, cb) {
-    
+
     if (req.body.logo) custom.logo = req.body.logo;
     else custom.logo.enable = false;
 
     if (req.body.colors) {
         if (req.body.colors.color.indexOf("#") == 0) req.body.colors.color = req.body.colors.color.substr(1);
         custom.colors = req.body.colors;
-    }
-    else custom.colors.enable = false;
+    } else custom.colors.enable = false;
 
     if (req.body.login) custom.login = req.body.login;
     else custom.login.enable = false;
@@ -282,7 +385,9 @@ router.post("/admin/custom/", function (req, res, next) {
             .findById(req.session.account._id)
             .populate("customization")
             .exec(function (err, account) {
-                if (err) res.status(500).json({ error: err });
+                if (err) res.status(500).json({
+                    error: err
+                });
                 else if (account) {
                     // update the account
                     var custom;
@@ -290,17 +395,26 @@ router.post("/admin/custom/", function (req, res, next) {
                     else custom = new Customization;
                     // save the customization
                     saveCustomization(custom, req, function (err, result) {
-                        if (err) res.status(500).json({ error: err });
+                        if (err) res.status(500).json({
+                            error: err
+                        });
                         else {
                             account.customization = result;
                             // save the account with the customization id
                             account.save(function (err, result) {
-                                if (err) res.status(500).json({ error: err });
-                                else res.status(200).json({ action: "save", status: 'done' });
+                                if (err) res.status(500).json({
+                                    error: err
+                                });
+                                else res.status(200).json({
+                                    action: "save",
+                                    status: 'done'
+                                });
                             });
                         }
                     });
-                } else res.status(500).json({ err: "not able to retrieve the account" });
+                } else res.status(500).json({
+                    err: "not able to retrieve the account"
+                });
             })
     } else res.status(403).send('Unknown session');
 })

@@ -3,8 +3,8 @@ angular
     .controller("AuthenticationCtrl", function ($scope, $mdDialog, $mdConstant, ConfigService) {
         $scope.customKeys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.TAB];
 
-        const initialized = false;
-        let request;
+        var initialized = false;
+        var request;
         $scope.isWorking = false;
         $scope.admin = {
             azureAd: {
@@ -37,7 +37,7 @@ angular
         });
         $scope.$watch("method.adfs", function () {
             $scope.method.aad = !$scope.method.adfs;
-        })
+        });
         $scope.$watch("admin.adfs.metadata", function (a, b) {
             $scope.admin.adfs.server = "";
             $scope.admin.adfs.entityID = "";
@@ -75,11 +75,11 @@ angular
                     i++;
                 }
             }
-        })
+        });
         $scope.adfsCert = function () {
             if ($scope.admin.adfs.server) return "https://" + $scope.admin.adfs.server + "/FederationMetadata/2007-06/FederationMetadata.xml";
             else return false;
-        }
+        };
 
         function apiWarning(warning) {
             $mdDialog.show({
@@ -99,7 +99,7 @@ angular
                 locals: {
                     items: "modal.save.authentication"
                 }
-            })
+            });
         }
 
         function LocalModal($scope, $mdDialog, items) {
@@ -118,7 +118,7 @@ angular
                 $scope.isWorking = false;
                 if (promise && promise.error) apiWarning(promise.error);
                 else reqDone();
-            })
+            });
         }
 
         function adfsSaveConfig() {
@@ -131,7 +131,7 @@ angular
                 $scope.isWorking = false;
                 if (promise && promise.error) apiWarning(promise.error);
                 else reqDone();
-            })
+            });
         }
 
         $scope.isWorking = true;
@@ -144,7 +144,7 @@ angular
                 if (promise.data.azure) $scope.admin.azureAd = promise.data.azure;
                 if (promise.data.adfs) $scope.admin.adfs = promise.data.adfs;
             }
-        })
+        });
 
 
 
@@ -163,7 +163,7 @@ angular
                 else return true;
             } else if (isWorking) return true;
             else return false;
-        }
+        };
 
         $scope.save = function () {
             console.log($scope.admin.method);
@@ -173,7 +173,7 @@ angular
             } else if ($scope.admin.method == "adfs") {
                 adfsSaveConfig();
             }
-        }
+        };
     })
 
 
@@ -228,5 +228,5 @@ angular
         return {
             get: get,
             post: post
-        }
+        };
     });

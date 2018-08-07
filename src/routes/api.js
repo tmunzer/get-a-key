@@ -40,15 +40,14 @@ function getCredentials(req, callback) {
                 var tempAccount;
                 result.forEach(function (tempAccount) {
                     if (tempAccount.userName == username) account = tempAccount;
-                })
+                });
                 // if ACS filtering returned 1 account
             } else if (result.length == 1) account = result[0];
 
             callback(null, account);
         }
     });
-
-};
+}
 
 // ACS API call to create a new Guest account
 function createCredential(req, callback) {
@@ -62,9 +61,8 @@ function createCredential(req, callback) {
     API.identity.credentials.createCredential(req.session.xapi, devAccount, null, null, hmCredentialsRequestVo, function (err, result) {
         if (err) callback(err, null);
         else callback(null, result);
-    })
-
-};
+    });
+}
 
 // ACS API call to delete a Guest account
 function deleteCredential(req, account, callback) {
@@ -74,26 +72,41 @@ function deleteCredential(req, account, callback) {
         API.identity.credentials.deleteCredential(req.session.xapi, devAccount, null, null, id, function (err, result) {
             if (err) callback(err, null);
             else callback(null, result);
-        })
+        });
     } else callback();
-};
+}
 
-// ACS API call to deliver a Guest account
-function deliverCredential(req, account, callback) {
+// ACS API call to deliver a Guest account by email
+function deliverCredentialByEmail(req, account, callback) {
     if (account) {
         var hmCredentialDeliveryInfoVo = {
             email: req.session.email,
             credentialId: account.id,
             deliverMethod: "EMAIL"
-        }
+        };
         API.identity.credentials.deliverCredential(req.session.xapi, devAccount, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
             if (err) callback(err, null);
             else callback(null, result);
-        })
+        });
 
     } else callback();
-};
+}
 
+// ACS API call to deliver a Guest account by SMS
+function deliverCredentialBySms(req, account, phoneNumber, callback) {
+    if (account) {
+        var hmCredentialDeliveryInfoVo = {
+            credentialId: account.id,
+            phone: phoneNumber,
+            deliverMethod: "SMS"
+        };
+        API.identity.credentials.deliverCredential(req.session.xapi, devAccount, null, null, hmCredentialDeliveryInfoVo, function (err, result) {
+            if (err) callback(err, null);
+            else callback(null, result);
+        });
+
+    } else callback();
+}
 /*================================================================
  ROUTES
  ================================================================*/
@@ -159,15 +172,15 @@ router.get("/exists", function (req, res, next) {
                 error: err
             });
             else if (account)
-             res.status(200).json({
-                action: "check",
-                result: true
-            });
-            else 
-            res.status(200).json({
-                action: "check",
-                result: false
-            });
+                res.status(200).json({
+                    action: "check",
+                    result: true
+                });
+            else
+                res.status(200).json({
+                    action: "check",
+                    result: false
+                });
         });
     } else res.status(403).send('Unknown session');
 });
@@ -202,10 +215,10 @@ router.delete("/myKey", function (req, res, next) {
             });
         });
     } else res.status(403).send('Unknown session');
-})
+});
 
 // When user wants to receive the key one more time (same key sent by email)
-router.post("/myKey", function (req, res, next) {
+router.post("/myKey/email", function (req, res, next) {
     // check if the user is authenticated 
     if (req.session.xapi) {
         // retrieve the account details (to have the account_id)
@@ -215,7 +228,7 @@ router.post("/myKey", function (req, res, next) {
                 error: err
             });
             // try to deliver the key
-            else if (account) deliverCredential(req, account, function (err, result) {
+            else if (account) deliverCredentialByEmail(req, account, function (err, result) {
                 if (err) res.status(500).json({
                     action: "deliver",
                     error: err
@@ -233,8 +246,40 @@ router.post("/myKey", function (req, res, next) {
             });
         });
     } else res.status(403).send('Unknown session');
-})
+});
 
+// When user wants to receive the key one more time (same key sent by sms)
+router.post("/myKey/sms", function (req, res, next) {
+    // check if the user is authenticated 
+    if (req.session.xapi) {
+        if (req.body.phone) {
+            // retrieve the account details (to have the account_id)
+            getCredentials(req, function (err, account) {
+                if (err) res.status(500).json({
+                    action: "deliver",
+                    error: err
+                });
+                // try to deliver the key
+                else if (account) deliverCredentialBySms(req, account, req.body.phone, function (err, result) {
+                    if (err) res.status(500).json({
+                        action: "deliver",
+                        error: err
+                    });
+                    else res.status(200).json({
+                        action: "deliver",
+                        email: req.body.phone,
+                        status: 'done'
+                    });
+                });
+                else res.status(404).json({
+                    action: "deliver",
+                    email: req.body.phone,
+                    status: 'not_found'
+                });
+            });
+        }
+    } else res.status(403).send('Unknown session');
+});
 
 /*==================   ADMIN API - CONFIG   ===========================*/
 
@@ -269,10 +314,10 @@ router.get("/admin/config", function (req, res, next) {
                     } else res.status(500).json({
                         error: "not able to retrieve the account"
                     });
-                })
-        })
+                });
+        });
     } else res.status(403).send('Unknown session');
-})
+});
 // Function to save the admin configuration
 function saveConfig(req, res) {
     var newConfig = {
@@ -299,7 +344,7 @@ function saveConfig(req, res) {
                             action: "save",
                             status: 'done'
                         });
-                    })
+                    });
                     // if the current account has no configuration, create it
                 } else Config(newConfig).save(function (err, savedConfig) {
                     if (err) res.status(500).json({
@@ -315,7 +360,7 @@ function saveConfig(req, res) {
                                 action: "save",
                                 status: 'done'
                             });
-                        })
+                        });
                     }
                 });
             } else res.status(500).json({
@@ -332,7 +377,7 @@ router.post("/admin/config", function (req, res, next) {
             error: "userGroupId value is missing."
         });
     } else res.status(403).send('Unknown session');
-})
+});
 
 /*==================   ADMIN API - CUSTOMIZATION   ===========================*/
 router.get("/admin/custom/", function (req, res, next) {
@@ -348,9 +393,9 @@ router.get("/admin/custom/", function (req, res, next) {
                 else if (custom)
                     res.status(200).json(custom);
                 else res.status(200).json();
-            })
+            });
     } else res.status(403).send('Unknown session');
-})
+});
 // Function to save customization
 function saveCustomization(custom, req, cb) {
 
@@ -374,7 +419,7 @@ function saveCustomization(custom, req, cb) {
     custom.save(function (err, result) {
         if (err) cb(err);
         else cb(err, result);
-    })
+    });
 }
 // When admin wants to save the customization
 router.post("/admin/custom/", function (req, res, next) {
@@ -392,7 +437,7 @@ router.post("/admin/custom/", function (req, res, next) {
                     // update the account
                     var custom;
                     if (account.customization) custom = account.customization;
-                    else custom = new Customization;
+                    else custom = new Customization();
                     // save the customization
                     saveCustomization(custom, req, function (err, result) {
                         if (err) res.status(500).json({
@@ -415,8 +460,8 @@ router.post("/admin/custom/", function (req, res, next) {
                 } else res.status(500).json({
                     err: "not able to retrieve the account"
                 });
-            })
+            });
     } else res.status(403).send('Unknown session');
-})
+});
 
 module.exports = router;

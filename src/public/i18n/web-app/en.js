@@ -13,7 +13,8 @@ var en = {
     five: "If you already have a key and request another one your old key will stop working.",
     six: "Keyed networks do not have access to any internal resources. They behave as if you were using a network off-site.",
     get: "Get a Key",
-    send: "Resend my Key (by Email)",
+    sendByEmail: "Resend my Key (by Email)",
+    sendBySMS: "Resend my Key (by SMS)",
     revoke: "Revoke my Key",
 
     errorTitle: "An error occured...",
@@ -51,7 +52,13 @@ var en = {
             close: 'Close',
             back: 'Back',
             cancel: "Cancel",
-            yes: "Yes"
+            yes: "Yes",
+            send: "Send"
+        },
+        sendBySms: {
+            message: "Please enter your phone number.",            
+            phone: "Phone Number",
+            success: "SMS sent successfully to"
         }
     },
 

@@ -1,0 +1,36 @@
+<style>
+    .country-list {
+        margin-top: -50px !important;
+    }
+</style>
+
+<md-dialog aria-label="Send By SMS">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-title" translate="sendBySms"></h2>
+        </div>
+    </md-toolbar>
+    <div ng-show="!isWorking" style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+    <md-progress-linear ng-show="isWorking" md-mode="indeterminate" class="md-accent"></md-progress-linear>
+    <md-dialog-content class="md-dialog-content" style="background-color: white !important">
+        <md-content style="width: 500px; background-color: white">
+            <form name="sendBySmsForm" style="margin-top: 25px;min-height: 200px;">
+                <label style="left: 50px;" translate="modal.sendBySms.message"></label>
+                <md-input-container class="md-block flex-gt-sm">
+                    <input type="tel" name="phone" ng-model="phone" id="phone" ng-intl-tel-input style="left: 50px;padding-left: 0;" required
+                        aria-label="phone number">
+                </md-input-container>
+            </form>
+            <div style="text-align: center; color: green; height: 40px; vertical-align: bottom; line-height: 40px;">
+                <span style="color: green" ng-show="success">
+                    <span translate="modal.sendBySms.success"></span> {{phone}}!</span>
+                <span style="color: red" ng-show="failed">{{failed}}</span>
+            </div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-primary md-raised" ng-click="sendBySms()" ng-disabled="!sendBySmsForm.phone.$valid" aria-label="send"
+            md-auto-focus="true" translate="modal.button.send">Send</md-button>
+        <md-button class="md-primary" ng-click="close()" aria-label="close" translate="modal.button.close">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>

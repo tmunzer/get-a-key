@@ -53,7 +53,8 @@ gak
             preferredCountries: ["al", "ad", "at", "by", "be", "ba", "bg", "hr", "cz", "dk",
                 "ee", "fo", "fi", "fr", "de", "gi", "gr", "va", "hu", "is", "ie", "it", "lv",
                 "li", "lt", "lu", "mk", "mt", "md", "mc", "me", "nl", "no", "pl", "pt", "ro",
-                "ru", "sm", "rs", "sk", "si", "es", "se", "ch", "ua", "gb"]
+                "ru", "sm", "rs", "sk", "si", "es", "se", "ch", "ua", "gb"
+            ]
         });
     }).config(function ($translateProvider) {
         //$translateProvider.useMissingTranslationHandlerLog();
@@ -91,7 +92,7 @@ gak.controller("AppCtrl", function ($scope, $mdDialog, $translate, MyKeyService)
         title: "",
         text: "",
     };
-    
+
 
     function userNotFound(error) {
         $mdDialog.show({
@@ -125,8 +126,8 @@ gak.controller("AppCtrl", function ($scope, $mdDialog, $translate, MyKeyService)
             }
         });
     }
-    
-    function checkMyKey () {
+
+    function checkMyKey() {
         $scope.isWorking = true;
         if (request) request.abort();
         request = MyKeyService.checkMyKey();
@@ -180,7 +181,7 @@ gak.controller("AppCtrl", function ($scope, $mdDialog, $translate, MyKeyService)
     $scope.deliverByEmail = function () {
         $scope.isWorking = true;
         if (request) request.abort();
-        request = MyKeyService.deliverMyKey();
+        request = MyKeyService.deliverMyKey("email");
         request.then(function (promise) {
             $scope.isWorking = false;
             if (promise && promise.error) {
@@ -190,21 +191,10 @@ gak.controller("AppCtrl", function ($scope, $mdDialog, $translate, MyKeyService)
         });
     };
     $scope.deliverBySMS = function () {
-        $scope.isWorking = true;
-        if (request) request.abort();
-        request = MyKeyService.deliverMyKey();
-        request.then(function (promise) {
-            $scope.isWorking = false;
-            if (promise && promise.error) {
-                if (promise.error.status == "not_found") userNotFound(promise.error);
-                else apiWarning(promise.error);
-            } else reqDone(promise.data);
-        });
-
-
         $mdDialog.show({
             controller: 'DialogSendBySmsController',
             templateUrl: 'modals/modalSendBySmsContent.html',
+            locals: {}
         });
     };
     $translate('errorTitle').then(function (errorTitle) {
@@ -240,6 +230,7 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
         });
         return httpReq(request);
     }
+
     function checkMyKey() {
         var canceller = $q.defer();
         var request = $http({
@@ -250,11 +241,12 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
         return httpReq(request);
     }
 
-    function deliverMyKey() {
+    function deliverMyKey(method, params) {
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/myKey/",
+            url: "/api/myKey/" + method,
             method: "POST",
+            data: params,
             timeout: canceller.promise
         });
         return httpReq(request);

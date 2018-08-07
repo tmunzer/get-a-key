@@ -12,7 +12,8 @@ var fr = {
     five: "Si vous avez déjà une clé et que vous en demandez une nouvelle, votre clé précédente arrêtera de fonctionner.",
     six: "Le réseau auquel vous accédez avec cette clé n'a pas accès aux ressources internes. Il vous permet uniquement d'accéder aux ressources externes.",
     get: "Obtenir une clé",
-    send: "Renvoyer ma clé (par E-mail)",
+    sendByEmail: "Renvoyer ma clé (par E-mail)",
+    sendBySMS: "Renvoyer ma clé (par SMS)",
     revoke: "Révoquer ma clé",
 
     errorTitle: "Une erreur est survenue...",
@@ -50,8 +51,14 @@ var fr = {
             close: 'Fermer',
             back: 'Retour',            
             cancel: "Annuler",
-            yes: "Oui"
+            yes: "Oui",
+            send: "Envoyer"
         },
+        sendBySms: {
+            message: "Veuillez indiquer votre numéro de téléphone.",            
+            phone: "Numéro de téléphone",
+            success: "SMS envoyé avec succès au"
+        }
     }
 };
 

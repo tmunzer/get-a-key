@@ -289,7 +289,7 @@ router.post("/myKey/sms", function (req, res, next) {
 
 // When admin is loading the "config" page (with the user group to use)
 router.get("/admin/config", function (req, res, next) {
-    var userGroupId;
+    var userGroupId, phoneCountry;
     // check if the admin is authenticated 
     if (req.session.xapi) {
         // ACS API call to get the list of User Groups
@@ -307,14 +307,13 @@ router.get("/admin/config", function (req, res, next) {
                         error: err
                     });
                     else if (account) {
-                        if (account.config) {
-                            userGroupId = account.config.userGroupId;
-                        }
+                        if (account.config) userGroupId = account.config.userGroupId;
+                        if (account.config.phoneCountry) phoneCountry = account.config.phoneCountry;
                         res.status(200).json({
                             loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
                             userGroups: userGroups,
                             userGroupId: userGroupId,
-                            phoneCountry: account.config.phoneCountry
+                            phoneCountry: phoneCountry
                         });
                     } else res.status(500).json({
                         error: "not able to retrieve the account"

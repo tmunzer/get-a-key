@@ -19,9 +19,10 @@ function getAccount(req, res, next) {
         .populate("config")
         .populate("azureAd")
         .populate("adfs")
+        .populate("customization")
         .exec(function (err, account) {
             if (err) res.render('error', { error: { message: err } });
-            else if (account) {
+            else if (account) {                
                 // store the usefull data in the user session
                 req.session.account = JSON.parse(JSON.stringify(account));
                 req.session.xapi = {

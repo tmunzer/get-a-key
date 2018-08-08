@@ -182,7 +182,11 @@ router.get("/exists", function (req, res, next) {
                     result: false
                 });
         });
-    } else res.status(403).send('Unknown session');
+    } else
+        res.status(200).json({
+            action: "check",
+            result: false
+        });
 });
 
 

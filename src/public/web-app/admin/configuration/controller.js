@@ -105,5 +105,5 @@ angular
         return {
             get: get,
             save: save
-        }
-    })
+        };
+    });

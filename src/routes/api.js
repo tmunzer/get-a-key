@@ -307,8 +307,8 @@ router.get("/admin/config", function (req, res, next) {
                         error: err
                     });
                     else if (account) {
-                        if (account.config) userGroupId = account.config.userGroupId;
-                        if (account.config.phoneCountry) phoneCountry = account.config.phoneCountry;
+                        if (account.config && account.config.userGroupId) userGroupId = account.config.userGroupId;
+                        if (account.config && account.config.phoneCountry) phoneCountry = account.config.phoneCountry;
                         res.status(200).json({
                             loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
                             userGroups: userGroups,

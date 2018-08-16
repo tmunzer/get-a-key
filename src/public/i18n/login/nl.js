@@ -1,4 +1,4 @@
-var en = {
+var nl = {
     language: "Taal",
     settings: "Instellingen",
     login: {

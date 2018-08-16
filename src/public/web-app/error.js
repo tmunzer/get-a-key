@@ -17,11 +17,11 @@ error
         $translateProvider
             .translations('en', en)
             .translations('fr', fr)
-			.translations('nl', nl)
+		    .translations('nl', nl)
             .registerAvailableLanguageKeys(['en', 'fr', 'nl'], {
                 'en_*': 'en',
                 'fr_*': 'fr',
-				'nl_*': 'nl'
+			    'nl_*': 'nl'
             })
             .determinePreferredLanguage()
             .fallbackLanguage('en')

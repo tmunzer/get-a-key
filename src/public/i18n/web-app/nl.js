@@ -1,5 +1,5 @@
 
-var en = {
+var nl = {
     language: "Taal",
     menu: "Menu",
     details: "Details",

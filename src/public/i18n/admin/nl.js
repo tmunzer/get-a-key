@@ -1,4 +1,4 @@
-var en = {
+var nl = {
     logout: "Logout",
     language: "language",
     save: "Save",

@@ -52,12 +52,17 @@ html
                         md-menu-content
                             md-menu-item
                                 md-button(ng-click="translate('en')")
-                                    span(style="display: inline-flex; margin-right: 5px;")
+                                    span(style="display: inline-flex; margin-right: 10px;")
                                         div.iti-flag.gb
                                     span English
                             md-menu-item
+                                md-button(ng-click="translate('nl')")
+                                    span(style="display: inline-flex; margin-right: 10px;")
+                                        div.iti-flag.nl
+                                    span Dutch 
+                            md-menu-item
                                 md-button(ng-click="translate('fr')")
-                                    span(style="display: inline-flex; margin-right: 5px;")
+                                    span(style="display: inline-flex; margin-right: 10px;")
                                         div.iti-flag.fr
                                     span Francais                                
                     md-button(aria-label="logout" href="/admin/logout/" style="margin: auto;")                        
@@ -80,6 +85,7 @@ html
 
         script(src="/i18n/admin/en.js")
         script(src="/i18n/admin/fr.js")
+        script(src="/i18n/admin/nl.js")
 
         script(src="/custom/colors/default")
         script(src="/bower_components/angular-aria/angular-aria.js")

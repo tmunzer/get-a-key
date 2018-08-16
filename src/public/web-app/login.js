@@ -17,9 +17,11 @@ login
         $translateProvider
             .translations('en', en)
             .translations('fr', fr)
-            .registerAvailableLanguageKeys(['en', 'fr'], {
+			.translations('nl', nl)
+            .registerAvailableLanguageKeys(['en', 'fr', 'nl'], {
                 'en_*': 'en',
-                'fr_*': 'fr'
+                'fr_*': 'fr',
+				'nl_*': 'nl'
             })
             .determinePreferredLanguage()
             .fallbackLanguage('en')

@@ -55,12 +55,17 @@ html
                             md-menu-content
                                 md-menu-item
                                     md-button(ng-click="translate('en')")
-                                        span(style="display: inline-flex; margin-right: 5px;")
+                                        span(style="display: inline-flex; margin-right: 10px;")
                                             div.iti-flag.gb
                                         span English
                                 md-menu-item
+                                    md-button(ng-click="translate('nl')")
+                                        span(style="display: inline-flex; margin-right: 10px;")
+                                            div.iti-flag.nl
+                                        span Dutch 
+                                md-menu-item
                                     md-button(ng-click="translate('fr')")
-                                        span(style="display: inline-flex; margin-right: 5px;")
+                                        span(style="display: inline-flex; margin-right: 10px;")
                                             div.iti-flag.fr
                                         span Francais                                
                     md-button(aria-label="logout" href="/logout/" style="margin: auto;")                        

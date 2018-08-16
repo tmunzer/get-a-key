@@ -7,6 +7,7 @@ html
         // [endif]
         meta(name="viewport" content="width=device-width, initial-scale=1")
 
+        link(rel="stylesheet" href="/bower_components/intl-tel-input/build/css/intlTelInput.css")
         link(rel='stylesheet' href='/css/ah-tm.tags.css')
         link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
         link(rel='stylesheet' href='/css/ah-tm.login.css')
@@ -52,12 +53,17 @@ html
                             md-menu-content
                                 md-menu-item
                                     md-button(ng-click="translate('en')")
-                                        span(style="display: inline-flex; margin-right: 5px;")
+                                        span(style="display: inline-flex; margin-right: 10px;")
                                             div.iti-flag.gb
                                         span English
                                 md-menu-item
+                                    md-button(ng-click="translate('nl')")
+                                        span(style="display: inline-flex; margin-right: 10px;")
+                                            div.iti-flag.nl
+                                        span Dutch      
+                                md-menu-item
                                     md-button(ng-click="translate('fr')")
-                                        span(style="display: inline-flex; margin-right: 5px;")
+                                        span(style="display: inline-flex; margin-right: 10px;")
                                             div.iti-flag.fr
                                         span Francais                                
         div.page-footer

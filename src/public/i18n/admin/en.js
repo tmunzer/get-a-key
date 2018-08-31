@@ -6,8 +6,12 @@ var en = {
     disabled: "Disabled",
     config: {
         config: "Configuration",
-        loginUrl: "LoginURL (to configure the CWP):",
-        userAccount: "User Account",
+        portalAccess: "Your Portal Access",
+        loginUrl: "URL to get access to your Login Page (to configure the CWP):",
+        userAccount: "Corporate Accounts",
+        guestAccount: "Guest Accounts",
+        userAccountInfo: "Allow corporate users to request a Network Access",
+        guestAccountInfo: "Allow corporate users to create Guest Accounts",
         userGroup: "User Group",
         customizeDefaultPhonePrefix: "Customize default phone number prefix"
     },

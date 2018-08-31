@@ -5,7 +5,11 @@ angular
         var request;
         $scope.isWorking = false;
         $scope.config = {
-            userGroupId: 0
+            corpEnabled: true,
+            userGroupId: 0,
+            guestEnabled: false,
+            guestGroupId: 0,
+            phoneCountry: "fr"
         };
         $scope.userGroups = [];
         $scope.loginUrl = "https://";
@@ -41,17 +45,17 @@ angular
         request.then(function (promise) {
             if (promise && promise.error) apiWarning(promise.error);
             else {
+                $scope.config = promise.data.config;
                 $scope.userGroups = promise.data.userGroups.userGroups;
-                if (promise.data.phoneCountry) $("#phone").intlTelInput("setCountry", promise.data.phoneCountry);
+                $("#phone").intlTelInput("setCountry", $scope.config.phoneCountry);
                 $scope.loginUrl = promise.data.loginUrl;
-                $scope.config.userGroupId = promise.data.userGroupId;
                 isWorking = false;
             }
         });
 
         $scope.save = function () {
-            var phoneCountry = $("#phone").intlTelInput("getSelectedCountryData").iso2;
-            request = ConfigurationService.save($scope.config.userGroupId, phoneCountry);
+            $scope.config.phoneCountry = $("#phone").intlTelInput("getSelectedCountryData").iso2;
+            request = ConfigurationService.save($scope.config);
             request.then(function (promise) {
                 if (promise && promise.error) apiWarning(promise.error);
                 else reqDone();
@@ -70,12 +74,12 @@ angular
             return httpReq(request);
         }
 
-        function save(userGroupId, phoneCountry) {
+        function save(config) {
             var canceller = $q.defer();
             var request = $http({
                 url: "/api/admin/config",
                 method: "POST",
-                data: ({ userGroupId: userGroupId, phoneCountry: phoneCountry}),
+                data: config,
                 timeout: canceller.promise
             });
             return httpReq(request);

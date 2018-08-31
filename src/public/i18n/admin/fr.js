@@ -6,8 +6,12 @@ var fr = {
     disabled: "Désactivé",
     config: {
         config: "Configuration",
-        loginUrl: "LoginURL (Pour configurer le portail captif):",
-        userAccount: "Comptes",
+        portalAccess: "Votre Accès au Portail",
+        loginUrl: "URL pour accéder à votre page de connexion (Pour configurer le portail captif):",
+        userAccount: "Comptes d'entreprise",
+        guestAccount: "Comptes visiteurs",
+        userAccountInfo: "Autoriser les employés à se créer un Accès Réseau",
+        guestAccountInfo: "Autoriser les employés à créer des Comptes Visiteurs",
         userGroup: "Groupe Utilisateurs",
         customizeDefaultPhonePrefix: "Personnaliser le préfixe télephonique par défaut"
     },

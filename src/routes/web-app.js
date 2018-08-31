@@ -19,15 +19,18 @@ function getCustom(req, res, next) {
         .exec(function (err, custom) {
             if (!err) req.custom = custom;
             next();
-        })
+        });
     else next();
 }
 /*================================================================
 ROUTES
 ================================================================*/
 router.get('/', getCustom, function (req, res, next) {
+    console.log(req);
     res.render('web-app', {
         title: 'Get a Key!',
+        corpEnabled: req.session.account.corpEnabled,
+        guestEnabled: req.session.account.guestEnabled,
         custom: req.custom
     });
 });

@@ -307,16 +307,19 @@ router.get("/admin/config", function (req, res, next) {
                         error: err
                     });
                     else if (account) {
+                        var config = {
+                            corpEnabled: true,
+                            userGroupId: account.config.userGroupId || 0,
+                            guestEnabled: false,
+                            guestGroupId: account.config.guestGroupId || 0,
+                            phoneCountry: account.config.phoneCountry || "fr"
+                        };
+                        if (account.config.corpEnabled != undefined) config.corpEnabled = account.config.corpEnabled;
+                        if (account.config.guestEnabled != undefined) config.guestEnabled = account.config.guestEnabled;
                         res.status(200).json({
                             loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
                             userGroups: userGroups,
-                            config: {
-                                corpEnabled : account.config.corpEnabled || true,
-                                userGroupId : account.config.userGroupId || 0,
-                                guestEnabled : account.config.guestEnabled || false,
-                                guestGroupId : account.config.guestGroupId || 0,
-                                phoneCountry : account.config.phoneCountry || "fr"
-                            }
+                            config: config
                         });
                     } else res.status(500).json({
                         error: "not able to retrieve the account"
@@ -328,14 +331,14 @@ router.get("/admin/config", function (req, res, next) {
 // Function to save the admin configuration
 function saveConfig(req, res) {
     var newConfig = {
-        corpEnabled : req.body.corpEnabled || true,
-        userGroupId : req.body.userGroupId || 0,
-        guestEnabled : req.body.guestEnabled || false,
-        guestGroupId : req.body.guestGroupId || 0,
-        phoneCountry : req.body.phoneCountry || "fr"
+        corpEnabled: true,
+        userGroupId: req.body.userGroupId || 0,
+        guestEnabled: false,
+        guestGroupId: req.body.guestGroupId || 0,
+        phoneCountry: req.body.phoneCountry || "fr"
     };
-    console.log(req.body);
-    console.log(newConfig);
+    if (req.body.corpEnabled != undefined) newConfig.corpEnabled = req.body.corpEnabled;
+    if (req.body.guestEnabled != undefined) newConfig.guestEnabled = req.body.guestEnabled;
     // retrieve the current Account in the DB
     Account
         .findById(req.session.account._id)
@@ -354,7 +357,7 @@ function saveConfig(req, res) {
                             error: err
                         });
                         else res.status(200).json({
-                            action: "save",
+                            action: "update",
                             status: 'done'
                         });
                     });

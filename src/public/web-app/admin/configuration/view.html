@@ -1,5 +1,5 @@
 <style>
-#phone {display: none;}
+	#phone {display: none;}
 .country-list {margin-top: -100px !important;}
 </style>
 
@@ -16,14 +16,14 @@
 				<span id="LoginUrl">{{ loginUrl }}</span>
 			</md-input-container>
 			<md-input-container class="md-block flex-gt-sm" style="min-height: 150px">
-					<label>
+				<label>
 					<span translate="config.customizeDefaultPhonePrefix"></span>
 					<span style="color: red">*</span>
 				</label>
 				<md-input-container class="md-block flex-gt-sm">
-						<input type="tel" name="phone" ng-model="phone" id="phone" ng-intl-tel-input style="left: 50px;padding-left: 0; color:black !important" required
-							aria-label="phone number">
-					</md-input-container>
+					<input type="tel" name="phone" ng-model="phone" id="phone" ng-intl-tel-input style="left: 50px;padding-left: 0; color:black !important"
+					    required aria-label="phone number">
+				</md-input-container>
 			</md-input-container>
 		</md-content>
 	</md-content>
@@ -32,11 +32,11 @@
 			<div class="md-toolbar-tools">
 				<!--<span translate="config.userAccount"></span>-->
 				<md-checkbox ng-model="config.corpEnabled" aria-label="enable corp access">
-						<span translate="config.userAccountInfo"></span>
-					</md-checkbox>
+					<span translate="config.userAccountInfo"></span>
+				</md-checkbox>
 			</div>
 		</md-toolbar>
-		<md-content layout-padding>		
+		<md-content layout-padding>
 			<md-input-container class="md-block flex-gt-sm">
 				<label>
 					<span translate="config.userGroup"></span>
@@ -45,32 +45,32 @@
 				<md-select ng-model="config.userGroupId" ng-selected="config.userGroupId" ng-disabled="!config.corpEnabled">
 					<md-option ng-repeat='userGroup in userGroups' value="{{userGroup.id}}">{{userGroup.name}}</md-option>
 				</md-select>
-			</md-input-container>			
+			</md-input-container>
 		</md-content>
 	</md-content>
 	<md-content md-whiteframe="5">
-			<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
-				<div class="md-toolbar-tools">
-					<!--<span translate="config.userAccount"></span>-->
-					<md-checkbox ng-model="config.guestEnabled" aria-label="enable guest access">
-							<span translate="config.guestAccountInfo"></span>
-						</md-checkbox>
-				</div>
-			</md-toolbar>
-			<md-content layout-padding>		
-				<md-input-container class="md-block flex-gt-sm">
-					<label>
-						<span translate="config.userGroup"></span>
-						<span style="color: red">*</span>
-					</label>
-					<md-select ng-model="config.guestGroupId" ng-selected="config.guestGroupId" ng-disabled="!config.guestEnabled">
-						<md-option ng-repeat='userGroup in userGroups' value="{{userGroup.id}}">{{userGroup.name}}</md-option>
-					</md-select>
-				</md-input-container>			
-			</md-content>
+		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
+			<div class="md-toolbar-tools">
+				<!--<span translate="config.userAccount"></span>-->
+				<md-checkbox ng-model="config.guestEnabled" aria-label="enable guest access">
+					<span translate="config.guestAccountInfo"></span>
+				</md-checkbox>
+			</div>
+		</md-toolbar>
+		<md-content layout-padding>
+			<md-input-container class="md-block flex-gt-sm">
+				<label>
+					<span translate="config.userGroup"></span>
+					<span style="color: red">*</span>
+				</label>
+				<md-select ng-model="config.guestGroupId" ng-selected="config.guestGroupId" ng-disabled="!config.guestEnabled">
+					<md-option ng-repeat='userGroup in userGroups' value="{{userGroup.id}}">{{userGroup.name}}</md-option>
+				</md-select>
+			</md-input-container>
 		</md-content>
+	</md-content>
 	<md-content layout="column" layout-gt-sm="row">
-		<md-button class="md-primary md-raised" ng-disabled="isWorking || config.userGroupId == 0" ng-click="save()" translate="save"
-		    aria-label="save"></md-button>
+		<md-button class="md-primary md-raised" ng-disabled="isWorking || !(config.corpEnabled || config.guestEnabled) || (config.corpEnabled && config.userGroupId == 0) || (config.guestEnabled && config.guestGroupId == 0)" ng-click="save()"
+		    translate="save" aria-label="save"></md-button>
 	</md-content>
 </md-content>

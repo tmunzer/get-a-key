@@ -9,6 +9,7 @@ var OAuth = require("../bin/aerohive/api/oauth");
 var devAccount = require('../config.js').devAccount;
 var Account = require('../bin/models/account');
 var Customization = require("../bin/models/customization");
+var Config = require("../bin/models/configuration");
 var Error = require('../routes/error');
 
 /*================================================================
@@ -167,11 +168,27 @@ function getCustom(req, res, next) {
             });
     else next();
 }
+// called to load the customized data (colors, logo, ...)
+function getConfig(req, res, next) {
+    if (!req.session.xapi && !req.session.passport) {
+        res.redirect('/login/');
+    } else if (req.session.account.config)
+        Config
+            .findById(req.session.account.config)
+            .exec(function (err, config) {
+                if (!err) req.config = config;
+                next();
+            });
+    else next();
+}
 
 // when user wants to display the customization preview (this will call the "getCustom" function to load custom values)
-router.get("/preview/", getCustom, function (req, res, next) {
+router.get("/preview/", getCustom, getConfig, function (req, res, next) {
+    console.log(req.config);
     res.render('web-app', {
         title: 'Get a Key!',
+        corpEnabled: req.config.corpEnabled,
+        guestEnabled: req.config.guestEnabled,
         custom: req.custom
     });
 });

@@ -184,7 +184,6 @@ function getConfig(req, res, next) {
 
 // when user wants to display the customization preview (this will call the "getCustom" function to load custom values)
 router.get("/preview/", getCustom, getConfig, function (req, res, next) {
-    console.log(req.config);
     res.render('web-app', {
         title: 'Get a Key!',
         corpEnabled: req.config.corpEnabled,

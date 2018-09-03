@@ -31,8 +31,9 @@ function getAccount(req, res, next) {
                     ownerId: account.ownerId
                 };
                 req.session.uurl = account._id;
-                req.session.groupId = account.config.userGroupId;
+                req.session.groupId = account.config.userGroupId || 0;
                 req.custom = req.session.account.customization;
+                req.session.guestGroupId = account.config.guestGroupId || 0;
                 // update the user session
                 req.session.save(function (err) {
                     next();

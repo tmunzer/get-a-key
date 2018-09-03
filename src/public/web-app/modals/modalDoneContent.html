@@ -8,8 +8,10 @@
         <div class="md-dialog-content">
             <div ng-show="items.action == 'create' && items.status == 'deleted_and_done'" translate="modal.done.message_oldKey" style="padding-bottom: 10px;"></div>
             <div ng-show="items.action == 'create'" translate="modal.done.message_created" translate-value-email={{items.email}}></div>
-            <div ng-show="items.action == 'create' && items.result.ssid" style="padding-top: 30px; text-align: center;"><span translate="modal.done.message_wifiNetwork"></span> <b>{{items.result.ssid | ssidStringFromArray}}</b></div>
-            <div ng-show="items.action == 'create'" style="padding-top: 10px; text-align: center;"><span translate="modal.done.message_yourKey"></span> <b>{{items.result.password}}</b></div>
+            <div ng-show="items.action == 'guest'" translate="modal.done.message_guest_created" translate-value-email={{items.email}}><br></div>
+            <div ng-show="items.action == 'guest' && items.result.expireTime" translate="modal.done.message_guest_expire" translate-value-time={{items.result.expireTime}}></div>
+            <div ng-show="(items.action == 'create' || items.action == 'guest') && items.result.ssid" style="padding-top: 30px; text-align: center;"><span translate="modal.done.message_wifiNetwork"></span> <b>{{items.result.ssid | ssidStringFromArray}}</b></div>
+            <div ng-show="items.action == 'create' || items.action == 'guest'" style="padding-top: 10px; text-align: center;"><span translate="modal.done.message_yourKey"></span> <b>{{items.result.password}}</b></div>
 
             <div ng-show="items.action == 'deliver'" translate="modal.done.message_delivered" translate-value-email={{items.email}}></div>
             <div ng-show="items.action == 'delete'" translate="modal.done.message_deleted" translate-value-email={{items.email}}></div>   

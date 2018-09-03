@@ -38,6 +38,8 @@ var en = {
         done: {
             title: "Finished!",
             message_created: "A new key has been generated. You will receive it at {{email}}.",
+            message_guest_created: "A new guest key has been generated. You will receive it at {{email}}.",
+            message_guest_expire: "This key is valid until <b>{{time | date:'yyyy-MM-dd HH:mm (UTC Z)' }}</b>.",
             message_oldKey: "Your key has been deleted. All your devices will be disconnected from the network and you will have to reconfigure them.",
             message_yourKey: "Your personnal key: ",
             message_wifiNetwork: "Wi-Fi Network: ",

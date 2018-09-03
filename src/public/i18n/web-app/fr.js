@@ -38,6 +38,8 @@ var fr = {
         done: {
             title: "Terminé!",
             message_created: "Une nouvelle clé a été générée. Elle a été envoyée à {{email}}.",
+            message_guest_created: "Une nouvelle clé Visiteur a été générée. Elle a été envoyée à {{email}}.",
+            message_guest_expire: "Cette clé est valide jusqu'au {{expireTime}}.",
             message_oldKey: "Votre clé a été supprimée. Tous vos équipements vont être déconnectés du réseau et devrons être reconfigurés.",
             message_yourKey: "Votre clé personnelle: ",
             message_wifiNetwork: "Réseau Wi-Fi: ",

@@ -157,7 +157,7 @@ html
                             md-button.md-primary(ng-disabled="isWorking || !keyExists" translate="revoke" ng-click="revoke()" aria-label="revoke") 
                         span.flex
                         if guestEnabled
-                            md-button.md-primary.md-raised(translate="generateGuestAccess")
+                            md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getGuestKey()" translate="generateGuestAccess" aria-label="generateGuestAccess")
 
 
         script(src="/bower_components/jquery/dist/jquery.min.js")

@@ -64,6 +64,20 @@ function createCredential(req, callback) {
     });
 }
 
+function createGuest(req, guestUsername, callback) {
+    var hmCredentialsRequestVo = {
+        userName: guestUsername,
+        email: req.session.email,
+        groupId: req.session.guestGroupId,
+        policy: "PERSONAL",
+        deliverMethod: "EMAIL"
+    };
+    API.identity.credentials.createCredential(req.session.xapi, devAccount, null, null, hmCredentialsRequestVo, function (err, result) {
+        if (err) callback(err, null);
+        else callback(null, result);
+    });
+}
+
 // ACS API call to delete a Guest account
 function deleteCredential(req, account, callback) {
     // if we get the account, removing it
@@ -112,6 +126,30 @@ function deliverCredentialBySms(req, account, phoneNumber, callback) {
  ================================================================*/
 
 /*==================   USER API   ===========================*/
+// When user requests for a guest key
+router.get("/guestKey", function (req, res, next) {
+    // check if the user is authenticated 
+    if (req.session.passport) {
+        if (req.session.email) {
+            var user = req.session.email.substring(0, req.session.email.indexOf("@") );
+            var uuid = Date.now().toString().substring(2,10);
+            var guestUsername = user + '_' + uuid;
+            createGuest(req, guestUsername, function(err, result){
+                if (err) res.status(500).json({
+                    error: err
+                });
+                else res.status(200).json({
+                    action: "guest",
+                    email: req.session.email,
+                    status: 'done',
+                    result: result
+                });            
+            });
+        } else res.status(403).send('Unknown email');
+    } else res.status(403).send('Unknown session');
+});
+
+
 
 // When user wants to get a new key
 router.get("/myKey", function (req, res, next) {

@@ -28,8 +28,8 @@ ROUTES
 router.get('/', getCustom, function (req, res, next) {
     res.render('web-app', {
         title: 'Get a Key!',
-        corpEnabled: req.session.account.corpEnabled,
-        guestEnabled: req.session.account.guestEnabled,
+        corpEnabled: req.session.account.config.corpEnabled,
+        guestEnabled: req.session.account.config.guestEnabled,
         custom: req.custom
     });
 });

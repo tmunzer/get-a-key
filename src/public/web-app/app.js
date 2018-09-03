@@ -140,6 +140,17 @@ gak.controller("AppCtrl", function ($scope, $mdDialog, $translate, MyKeyService)
         });
     }
 
+    $scope.getGuestKey = function (){
+        $scope.isWorking = true;
+        if (request) request.abort();
+        request = MyKeyService.getGuestKey();
+        request.then(function (promise){
+            $scope.isWorking = false;
+            if (promise && promise.error) apiWarning(promise.error);
+            else reqDone(promise.data);
+        })
+    }
+
     $scope.getMyKey = function () {
         $scope.isWorking = true;
         if (request) request.abort();
@@ -232,6 +243,26 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
         });
         return httpReq(request);
     }
+    
+    function getGuestKey() {
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/guestKey",
+            method: "GET",
+            timeout: canceller.promise
+        });
+        return httpReq(request);
+    }
+
+    function getMyKey() {
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/myKey",
+            method: "GET",
+            timeout: canceller.promise
+        });
+        return httpReq(request);
+    }
 
     function checkMyKey() {
         var canceller = $q.defer();
@@ -291,6 +322,7 @@ gak.factory("MyKeyService", function ($http, $q, $rootScope) {
         getMyKey: getMyKey,
         checkMyKey: checkMyKey,
         deliverMyKey: deliverMyKey,
-        removeMyKey: removeMyKey
+        removeMyKey: removeMyKey,
+        getGuestKey:getGuestKey
     };
 });

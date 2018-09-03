@@ -73,91 +73,114 @@ html
                         span {{"logout" | translate}}
 
             
-        div(id="main")
-            md-content.panel(md-whiteframe="7" layout="column")
-                md-toolbar.md-hue-2
-                    div.md-toolbar-tools 
-                        if custom && custom.app && custom.app.enable
-                            h2=custom.app.title
-                        else
-                            h2(translate="title")
-                div(ng-hide="isWorking" style="background-color: #{{color}}; height: 5px; width: 100%")
-                md-progress-linear(ng-show="isWorking" md-mode="indeterminate" class="md-accent")
-                md-content(style="padding: 0 40px 10px 40px" )                
-                    md-list.flex
-                        md-subheader.md-no-sticky 
-                            if custom && custom.app && custom.app.enable
-                                h2=custom.app.text
-                            else
-                                h2(translate="header")
-                        md-divider
-                        if custom && custom.app && custom.app.enable
-                            for row in custom.app.rows
-                                md-list-item 
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px;")=row.icon
-                                    div.md-list-item-text(layout="column")                        
-                                        span=row.text
+        div(id="main" layout="column")
+            div(ng-hide="isWorking" style="background-color: #{{color}}; height: 5px; width: 100%")
+            md-progress-linear(ng-show="isWorking" md-mode="indeterminate" class="md-accent")
+            div( layout-gt-sm="row")
+                if corpEnabled
+                    md-content.panel(md-whiteframe="7" layout="column")
+                        md-toolbar.md-hue-2
+                            div.md-toolbar-tools 
+                                if custom && custom.app && custom.app.enable
+                                    h2=custom.app.title
+                                else
+                                    h2(translate="title")
+                        md-content(style="padding: 0 40px 10px 40px" )                
+                            md-list.flex
+                                md-subheader.md-no-sticky 
+                                    if custom && custom.app && custom.app.enable
+                                        h2=custom.app.text
+                                    else
+                                        h2(translate="header")
                                 md-divider
-                        else
-                            if corpEnabled
-                                md-list-item 
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px;") business
-                                    div.md-list-item-text(layout="column")                        
-                                        span(translate="one")
+                                if custom && custom.app && custom.app.enable
+                                    for row in custom.app.rows
+                                        md-list-item 
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;")=row.icon
+                                            div.md-list-item-text(layout="column")                        
+                                                span=row.text
+                                        md-divider
+                                else
+                                    if corpEnabled
+                                        md-list-item 
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;") business
+                                            div.md-list-item-text(layout="column")                        
+                                                span(translate="one")
+                                        md-divider
+                                        md-list-item       
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;") fingerprint
+                                            div.md-list-item-text(layout="column")
+                                                span(translate="two")
+                                        md-divider
+                                        md-list-item       
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;") block
+                                            div.md-list-item-text(layout="column")
+                                                span(translate="three")
+                                        md-divider
+                                        md-list-item     
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;") recent_actors  
+                                            div.md-list-item-text(layout="column")
+                                                span(translate="four")
+                                        md-divider
+                                        md-list-item       
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;") vpn_key
+                                            div.md-list-item-text(layout="column")
+                                                span(translate="five")
+                                        md-divider
+                                        md-list-item       
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;") cloud_done
+                                            div.md-list-item-text(layout="column")
+                                                span(translate="six")
+                                        md-divider 
+                                br
+                            md-content(layout="column")
+                                md-button.md-primary.md-raised(ng-disabled="isWorking || keyExists" ng-click="getMyKey()" translate="get" aria-label="get")                             
+                                md-button.md-primary.md-raised(ng-disabled="isWorking || !keyExists" translate="sendByEmail" ng-click="deliverByEmail()" aria-label="sendByEmail") 
+                                md-button.md-primary.md-raised(ng-disabled="isWorking || !keyExists" translate="sendBySMS" ng-click="deliverBySMS()" aria-label="sendBySMS") 
+                                md-button.md-primary(ng-disabled="isWorking || !keyExists" translate="revoke" ng-click="revoke()" aria-label="revoke") 
+
+                if guestEnabled
+                    md-content.panel(md-whiteframe="7" layout="column")
+                        md-toolbar.md-hue-2
+                            div.md-toolbar-tools 
+                                if custom && custom.app && custom.app.enable
+                                    h2=custom.app.title_guest
+                                else
+                                    h2(translate="title_guest")
+                        md-content(style="padding: 0 40px 10px 40px" )                
+                            md-list.flex
+                                md-subheader.md-no-sticky 
+                                    if custom && custom.app && custom.app.enable
+                                        h2=custom.app.text
+                                    else
+                                        h2(translate="header")
                                 md-divider
-                                md-list-item       
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px;") fingerprint
-                                    div.md-list-item-text(layout="column")
-                                        span(translate="two")
-                                md-divider
-                                md-list-item       
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px;") block
-                                    div.md-list-item-text(layout="column")
-                                        span(translate="three")
-                                md-divider
-                                md-list-item     
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px;") recent_actors  
-                                    div.md-list-item-text(layout="column")
-                                        span(translate="four")
-                                md-divider
-                                md-list-item       
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px;") vpn_key
-                                    div.md-list-item-text(layout="column")
-                                        span(translate="five")
-                                md-divider
-                                md-list-item       
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px;") cloud_done
-                                    div.md-list-item-text(layout="column")
-                                        span(translate="six")
-                                md-divider
-                            if corpEnabled && guestEnabled
-                                md-divider
-                            if guestEnabled
-                                md-list-item 
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px; background-color: white; color: gray") access_time
-                                    div.md-list-item-text(layout="column")                        
-                                        span(translate="guest_one")
-                                md-divider
-                                md-list-item       
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px; background-color: white; color: gray") supervisor_account
-                                    div.md-list-item-text(layout="column")
-                                        span(translate="guest_two")
-                                md-divider
-                                md-list-item       
-                                    i.material-icons.md-avatar-icon(style="min-width: 25px; background-color: white; color: gray") cloud_queue
-                                    div.md-list-item-text(layout="column")
-                                        span(translate="guest_three")
-                                md-divider
-                    br                
-                    md-content(layout="column" layout-gt-sm="row")
-                        if corpEnabled
-                            md-button.md-primary.md-raised(ng-disabled="isWorking || keyExists" ng-click="getMyKey()" translate="get" aria-label="get") 
-                            md-button.md-primary.md-raised(ng-disabled="isWorking || !keyExists" translate="sendByEmail" ng-click="deliverByEmail()" aria-label="sendByEmail") 
-                            md-button.md-primary.md-raised(ng-disabled="isWorking || !keyExists" translate="sendBySMS" ng-click="deliverBySMS()" aria-label="sendBySMS") 
-                            md-button.md-primary(ng-disabled="isWorking || !keyExists" translate="revoke" ng-click="revoke()" aria-label="revoke") 
-                        span.flex
-                        if guestEnabled
-                            md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getGuestKey()" translate="generateGuestAccess" aria-label="generateGuestAccess")
+                                if custom && custom.app && custom.app.enable_guest
+                                    for row in custom.app.rows_guest
+                                        md-list-item 
+                                            i.material-icons.md-avatar-icon(style="min-width: 25px;")=row.icon
+                                            div.md-list-item-text(layout="column")                        
+                                                span=row.text
+                                        md-divider
+                                else               
+                                    md-list-item 
+                                        i.material-icons.md-avatar-icon(style="min-width: 25px; background-color: white; color: gray") access_time
+                                        div.md-list-item-text(layout="column")                        
+                                            span(translate="guest_one")
+                                    md-divider
+                                    md-list-item       
+                                        i.material-icons.md-avatar-icon(style="min-width: 25px; background-color: white; color: gray") supervisor_account
+                                        div.md-list-item-text(layout="column")
+                                            span(translate="guest_two")
+                                    md-divider
+                                    md-list-item       
+                                        i.material-icons.md-avatar-icon(style="min-width: 25px; background-color: white; color: gray") cloud_queue
+                                        div.md-list-item-text(layout="column")
+                                            span(translate="guest_three")
+                                    md-divider
+                            br                
+                            md-content(layout="column")
+                                md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getGuestKey()" translate="generateGuestAccess" aria-label="generateGuestAccess")
 
 
         script(src="/bower_components/jquery/dist/jquery.min.js")

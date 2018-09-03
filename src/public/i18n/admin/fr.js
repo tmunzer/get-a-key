@@ -38,7 +38,8 @@ var fr = {
             text: "Texte"
         },
         app: {
-            app: "Page de l'application",
+            app: "Cadre de l'application pour les Clés d'Entreprise",
+            app_guest: "Cadre de l'application pour les Clés Visiteur",
             messages: "Messages",
             iconSrc: "Cette application utilise des icones \"material design\" pré-définies. Vous pouvez trouver la liste complète sur ",
             title: "Titre",

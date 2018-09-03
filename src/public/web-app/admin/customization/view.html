@@ -16,7 +16,8 @@
 				<legend translate="custom.logo.header"></legend>
 				<md-input-container class="md-block">
 					<form>
-						<input type="file" name="header" ng-file-select-logo="onFileSelect($logoHeaderFile)" aria-label="logo header" ng-disabled="!logo.enable">
+						<input type="file" name="header" ng-file-select-logo="onFileSelect($logoHeaderFile)" aria-label="logo header"
+						    ng-disabled="!logo.enable">
 					</form>
 					<b>Preview:</b><br />
 					<img ng-src="{{logo.header}}">
@@ -27,7 +28,8 @@
 				<legend translate="custom.logo.login"></legend>
 				<md-input-container class="md-block">
 					<form>
-						<input type="file" name="login" ng-file-select-logo="onFileSelect($logoLoginFile)" aria-label="logo login" ng-disabled="!logo.enable">
+						<input type="file" name="login" ng-file-select-logo="onFileSelect($logoLoginFile)" aria-label="logo login"
+						    ng-disabled="!logo.enable">
 					</form>
 					<b>Preview:</b><br />
 					<img ng-src="{{logo.login}}">
@@ -60,7 +62,7 @@
 			</md-input-container>
 			<div flex-gt-sm="20">
 				<div md-color-picker ng-model="colors.color" label="{{'custom.color.mainColor' | translate}}" ng-disabled="!colors.enable"
-				 open-on-input="true" md-color-alpha-channel="false" md-color-hex="true" md-color-rgb="false" md-color-hsl="false">
+				    open-on-input="true" md-color-alpha-channel="false" md-color-hex="true" md-color-rgb="false" md-color-hsl="false">
 				</div>
 			</div>
 		</div>
@@ -118,7 +120,8 @@
 						<div class="md-toolbar-tools">
 							<md-input-container class="md-block">
 								<label for="appTitle" translate="custom.app.title" style="color: {{textColor}}"></label>
-								<input id="appTitle" type="text" ng-model="app.title" ng-disabled="!app.enable" style="color: {{textColor}}" md-maxlength="100">
+								<input id="appTitle" type="text" ng-model="app.title" ng-disabled="!app.enable" style="color: {{textColor}}"
+								    md-maxlength="100">
 							</md-input-container>
 						</div>
 					</md-toolbar>
@@ -135,7 +138,7 @@
 							</md-subheader>
 							<md-divider></md-divider>
 							<md-list-item ng-repeat="row in app.rows" layout="row">
-								<md-button class="md-primary" ng-click="removeRow(row.index)" ng-disabled="!app.enable">
+								<md-button class="md-primary" ng-click="removeRow(row.index, app)" ng-disabled="!app.enable">
 									<i class="material-icons">remove_circle_outline</i>
 								</md-button>
 								<md-input-container class="md-block" flex="10">
@@ -152,20 +155,90 @@
 								<md-divider></md-divider>
 							</md-list-item>
 						</md-list>
-						<md-button class="md-primary" ng-click="addRow()" ng-disabled="!app.enable">
+						<md-button class="md-primary" ng-click="addRow(app)" ng-disabled="!app.enable">
+							<i class="material-icons">add_circle_outline</i>
+						</md-button>
+					</md-content>
+				</md-content>
+			</form>
+		</div>
+	</md-content>
+
+
+	<md-content md-whiteframe="5">
+		<md-toolbar class="md-hue-2" style="height: 40px;min-height: 40px;">
+			<div class="md-toolbar-tools">
+				<span>{{"custom.app.app_guest" | translate}}</span>
+				<span flex></span>
+				<md-input-container>
+					<md-switch ng-model="app_guest.enable" aria-label="App Enable">
+						{{ status.app | translate }}
+					</md-switch>
+				</md-input-container>
+			</div>
+		</md-toolbar>
+		<div layout-padding>
+
+
+			<div>
+				<span translate="custom.app.iconSrc"></span> <a target="_blank" href="https://material.io/icons/">https://material.io/icons/</a>
+			</div>
+			<form name="appForm">
+				<md-content style="margin: 20px" md-whiteframe="7" layout="column">
+					<md-toolbar class="md-hue-2" style="background-color: {{colors.color}}; color: {{textColor}}">
+						<div class="md-toolbar-tools">
+							<md-input-container class="md-block">
+								<label for="appTitle" translate="custom.app.title" style="color: {{textColor}}"></label>
+								<input id="appTitle" type="text" ng-model="app_guest.title" ng-disabled="!app_guest.enable" style="color: {{textColor}}"
+								    md-maxlength="100">
+							</md-input-container>
+						</div>
+					</md-toolbar>
+					<div style="background-color: #{{color}}; height: 5px; width: 100%"></div>
+					<md-content style="padding: 0 40px 10px 40px">
+						<md-list flex>
+							<md-subheader class="md-no-sticky">
+								<h2>
+									<md-input-container class="md-block" style="margin: 0">
+										<label for="appTitle" translate="custom.app.text"></label>
+										<input id="appTitle" type="text" ng-model="app_guest.text" ng-disabled="!app_guest.enable" md-maxlength="200">
+									</md-input-container>
+								</h2>
+							</md-subheader>
+							<md-divider></md-divider>
+							<md-list-item ng-repeat="row in app_guest.rows" layout="row">
+								<md-button class="md-primary" ng-click="removeRow(row.index, app_guest)" ng-disabled="!app_guest.enable">
+									<i class="material-icons">remove_circle_outline</i>
+								</md-button>
+								<md-input-container class="md-block" flex="10">
+									<label for="icon-{{$index}}" translate="custom.app.icon"></label>
+									<input id="icon-{{$index}}" type="text" ng-model="row.icon" ng-disabled="!app_guest.enable">
+								</md-input-container>
+								<span flex="10"></span>
+								<i class="material-icons md-avatar-icon" style="min-width: 25px;">{{row.icon}}</i>
+								<md-input-container class="md-block" flex="80">
+									<label for="text-{{$index}}" translate="custom.app.text"></label>
+									<textarea id="text-{{$index}}" ng-model="row.text" md-maxlength="500" ng-disabled="!app_guest.enable"></textarea>
+								</md-input-container>
+
+								<md-divider></md-divider>
+							</md-list-item>
+						</md-list>
+						<md-button class="md-primary" ng-click="addRow(app_guest)" ng-disabled="!app_guest.enable">
 							<i class="material-icons">add_circle_outline</i>
 						</md-button>
 					</md-content>
 				</md-content>
 			</form>
 	</md-content>
-	</div>
+</div>
 
-	</md-content>
-	<md-content layout="column" layout-gt-sm="row">
-		<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save" aria-label="save"></md-button>
-		<md-button target=_blank href="/admin/preview" class="md-primary" ng-disabled="isWorking || !isValid()" translate="custom.preview"
-		 aria-label="preview"></md-button>
-	</md-content>
-	</md-content>
+</md-content>
+<md-content layout="column" layout-gt-sm="row">
+	<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save"
+	    aria-label="save"></md-button>
+	<md-button target=_blank href="/admin/preview" class="md-primary" ng-disabled="isWorking || !isValid()" translate="custom.preview"
+	    aria-label="preview"></md-button>
+</md-content>
+</md-content>
 </div>

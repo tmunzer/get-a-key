@@ -30,6 +30,12 @@ angular
             title: "",
             rows: [{ index: 0, icon: "", text: "" }]
         }
+        $scope.app_guest = {
+            enable: false,
+            title: "",
+            rows: [{ index: 0, icon: "", text: "" }],
+            test: "test"
+        }
 
         // color picker options
         $scope.colorPicker = {
@@ -106,13 +112,13 @@ angular
                 });
         };
 
-        $scope.addRow = function () {
-            $scope.app.rows.push({ index: $scope.app.rows.length, icon: "", text: "" });
+        $scope.addRow = function (xapp) {
+            xapp.rows.push({ index: xapp.rows.length, icon: "", text: "" });
         }
-        $scope.removeRow = function (index) {
-            $scope.app.rows.splice(index, 1);
-            for (var i = 0; i < $scope.app.rows.length; i++) {
-                $scope.app.rows[i].index = i;
+        $scope.removeRow = function (index, xapp) {
+            xapp.rows.splice(index, 1);
+            for (var i = 0; i < xapp.rows.length; i++) {
+                xapp.rows[i].index = i;
             }
         }
 
@@ -126,7 +132,7 @@ angular
 
         $scope.save = function () {
             $scope.isWorking = true;
-            request = CustomizationService.save($scope.logo, $scope.colors, $scope.login, $scope.app);
+            request = CustomizationService.save($scope.logo, $scope.colors, $scope.login, $scope.app, $scope.app_guest);
             request.then(function (promise) {
                 if (promise && promise.error) apiWarning(promise.error);
                 else reqDone();
@@ -142,7 +148,8 @@ angular
                 if ($scope.colors.color.indexOf("#" < 0)) $scope.colors.color = "#" + $scope.colors.color;
                 if (promise.data.login) $scope.login = promise.data.login;
                 if (promise.data.app) $scope.app = promise.data.app;
-                if ($scope.app.rows.length == 0) $scope.app.rows = [{ index: 0, icon: "", text: "" }]
+                if (promise.data.app_guest) $scope.app_guest = promise.data.app_guest;
+                if ($scope.app.rows.length == 0) $scope.app.rows = [{ index: 0, icon: "", text: "" }];
             }
         })
     })
@@ -204,7 +211,7 @@ angular
             return httpReq(request);
         }
 
-        function save(logo, colors, login, app) {
+        function save(logo, colors, login, app, app_guest) {
             var data = {
                 logo: logo,
                 colors: colors,
@@ -213,7 +220,8 @@ angular
                     title: login.title,
                     text: login.text
                 },
-                app: app
+                app: app,
+                app_guest: app_guest
             }
             var canceller = $q.defer();
             var request = $http({

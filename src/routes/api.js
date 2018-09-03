@@ -467,8 +467,8 @@ function saveCustomization(custom, req, cb) {
     if (req.body.app) custom.app = req.body.app;
     else custom.app.enable = false;
 
-    if (req.body.app) custom.app = req.body.app;
-    else custom.app.enable = false;
+    if (req.body.app_guest) custom.app_guest = req.body.app_guest;
+    else custom.app_guest.enable = false;
 
     custom.save(function (err, result) {
         if (err) cb(err);

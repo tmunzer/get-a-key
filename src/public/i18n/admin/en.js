@@ -38,7 +38,8 @@ var en = {
             text: "Text"
         },
         app: {
-            app: "Application page",
+            app: "Application Frame for Corporate keys",
+            app_guest: "Application Frame for Guest keys",
             messages: "Messages",
             iconSrc: "This Application is using predifiened \"material design\" icons. You can find the entire list at ",
             title: "Title",

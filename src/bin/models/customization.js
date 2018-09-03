@@ -30,6 +30,20 @@ const CustomizationSchema = new mongoose.Schema({
         ]
 
     },
+    app_guest:
+    {
+        enable: { type: Boolean, required: true },
+        title: { type: String },
+        text: { type: String },
+        rows: [
+            {
+                index: { type: String },
+                icon: { type: String },
+                text: { type: String }
+            }
+        ]
+
+    },
     created_at: { type: Date },
     updated_at: { type: Date }
 });

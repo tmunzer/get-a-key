@@ -51,7 +51,7 @@ SCRIPT_CONF=`pwd`"/ah-ref-app.conf"
 SCRIPT_NAME="get-a-key"
 
 APP_NAME="get-a-key"
-APP_IMG="tmunzer/get-a-key"
+APP_IMG="tmunzer/get-a-key:guest"
 OAUTH_CALLBACK="/admin/oauth/reg"
 APP_CNF_LOC="/app"
 

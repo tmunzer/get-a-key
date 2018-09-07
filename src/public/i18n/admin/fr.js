@@ -13,7 +13,13 @@ var fr = {
         userAccountInfo: "Autoriser les employés à se créer un Accès Réseau",
         guestAccountInfo: "Autoriser les employés à créer des Comptes Visiteurs",
         userGroup: "Groupe Utilisateurs",
-        customizeDefaultPhonePrefix: "Personnaliser le préfixe télephonique par défaut"
+        customizeDefaultPhonePrefix: "Personnaliser le préfixe télephonique par défaut",
+        note: "NOTE:",
+        corp_1: "Si cette option est activée, les employés pour se créer une clé personnelle (par exemple, pour un équipement BYOD)",
+        corp_2: "Un employé ne peut avoir qu'UNE SEULE clé à la fois. S'il demande une nouvelle clé, la clé précédente sera révoquée.",
+        guest_1: "Si cette option est activée, les employés pour créer des clés pour leurs VISITEURS.",
+        guest_2: "Un employé peut générer plusieurs clés visisteur.",
+        guest_3: "Il est de votre responsabilité de configurer le \"User Group\" pour que les comptes aient une durée de vie limitée."
     },
     custom: {
         custom: "Personnalisation",

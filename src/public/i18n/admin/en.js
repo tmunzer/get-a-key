@@ -13,7 +13,13 @@ var en = {
         userAccountInfo: "Allow corporate users to request a Network Access",
         guestAccountInfo: "Allow corporate users to create Guest Accounts",
         userGroup: "User Group",
-        customizeDefaultPhonePrefix: "Customize default phone number prefix"
+        customizeDefaultPhonePrefix: "Customize default phone number prefix",
+        note: "NOTE:",
+        corp_1: "If this option is enabled, Corporate users can request for a personnal key (for BYOD devices for example).",
+        corp_2: "A Corporate user can have only ONE key at a time. If a user a requesting for a new key, the previous one will be revoked.",
+        guest_1: "If this option is enabled, Corporate users can request for a key for their GUEST.",
+        guest_2: "A Corporate user can generate multiple Guest key.",
+        guest_3: "It's your responsability to configure the User Group with lifetime limited accounts."
     },
     custom: {
         custom: "Customization",

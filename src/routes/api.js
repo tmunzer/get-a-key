@@ -131,10 +131,10 @@ router.get("/guestKey", function (req, res, next) {
     // check if the user is authenticated 
     if (req.session.passport) {
         if (req.session.email) {
-            var user = req.session.email.substring(0, req.session.email.indexOf("@") );
-            var uuid = Date.now().toString().substring(2,10);
+            var user = req.session.email.substring(0, req.session.email.indexOf("@"));
+            var uuid = Date.now().toString().substring(2, 10);
             var guestUsername = user + '_' + uuid;
-            createGuest(req, guestUsername, function(err, result){
+            createGuest(req, guestUsername, function (err, result) {
                 if (err) res.status(500).json({
                     error: err
                 });
@@ -143,7 +143,7 @@ router.get("/guestKey", function (req, res, next) {
                     email: req.session.email,
                     status: 'done',
                     result: result
-                });            
+                });
             });
         } else res.status(403).send('Unknown email');
     } else res.status(403).send('Unknown session');
@@ -345,12 +345,19 @@ router.get("/admin/config", function (req, res, next) {
                         error: err
                     });
                     else if (account) {
+                        var userGroupId = 0;
+                        var guestGroupId = 0;
+                        var phoneCountry = "fr";
+                        if (account.config &&  account.config.userGroupId) userGroupId = account.config.userGroupId;
+                        if (account.config &&  account.config.guestGroupId) guestGroupId = account.config.guestGroupId;
+                        if (account.config &&  account.config.phoneCountry) phoneCountry = account.config.phoneCountry;
+                        if (req.body.guestEnabled != undefined) newConfig.guestEnabled = req.body.guestEnabled;
                         var config = {
                             corpEnabled: true,
-                            userGroupId: account.config.userGroupId || 0,
+                            userGroupId: userGroupId,
                             guestEnabled: false,
-                            guestGroupId: account.config.guestGroupId || 0,
-                            phoneCountry: account.config.phoneCountry || "fr"
+                            guestGroupId: guestGroupId,
+                            phoneCountry: phoneCountry
                         };
                         if (account.config.corpEnabled != undefined) config.corpEnabled = account.config.corpEnabled;
                         if (account.config.guestEnabled != undefined) config.guestEnabled = account.config.guestEnabled;

@@ -424,7 +424,10 @@ function saveConfig(req, res) {
                     }
                 });
             } else res.status(500).json({
-                error: "not able to retrieve the account"
+                error: {
+                    status: 500,
+                    message: "not able to retrieve the account"
+                }
             });
         });
 }
@@ -521,7 +524,10 @@ router.post("/admin/custom/", function (req, res, next) {
                         }
                     });
                 } else res.status(500).json({
-                    err: "not able to retrieve the account"
+                    error: {
+                        status: 500,
+                        message: "not able to retrieve the account"
+                    }
                 });
             });
     } else res.status(403).send('Unknown session');

@@ -432,9 +432,12 @@ function saveConfig(req, res) {
 router.post("/admin/config", function (req, res, next) {
     // check if the admin is authenticated 
     if (req.session.xapi) {
-        if (req.body.userGroupId) saveConfig(req, res);
+        if (req.body.userGroupId || req.body.guestGroupId) saveConfig(req, res);
         else res.status(500).send({
-            error: "userGroupId value is missing."
+            error: {
+                status: 500,
+                message: "You have to select at least a user group for Corporate access or for Guest access."
+            }
         });
     } else res.status(403).send('Unknown session');
 });

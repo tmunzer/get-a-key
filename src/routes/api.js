@@ -348,10 +348,9 @@ router.get("/admin/config", function (req, res, next) {
                         var userGroupId = 0;
                         var guestGroupId = 0;
                         var phoneCountry = "fr";
-                        if (account.config &&  account.config.userGroupId) userGroupId = account.config.userGroupId;
-                        if (account.config &&  account.config.guestGroupId) guestGroupId = account.config.guestGroupId;
-                        if (account.config &&  account.config.phoneCountry) phoneCountry = account.config.phoneCountry;
-                        if (req.body.guestEnabled != undefined) newConfig.guestEnabled = req.body.guestEnabled;
+                        if (account.config && account.config.userGroupId != undefined) userGroupId = account.config.userGroupId;
+                        if (account.config && account.config.guestGroupId != undefined) guestGroupId = account.config.guestGroupId;
+                        if (account.config && account.config.phoneCountry != undefined) phoneCountry = account.config.phoneCountry;                        
                         var config = {
                             corpEnabled: true,
                             userGroupId: userGroupId,
@@ -359,8 +358,8 @@ router.get("/admin/config", function (req, res, next) {
                             guestGroupId: guestGroupId,
                             phoneCountry: phoneCountry
                         };
-                        if (account.config.corpEnabled != undefined) config.corpEnabled = account.config.corpEnabled;
-                        if (account.config.guestEnabled != undefined) config.guestEnabled = account.config.guestEnabled;
+                        if (account.config && account.config.corpEnabled != undefined) config.corpEnabled = account.config.corpEnabled;
+                        if (account.config && account.config.guestEnabled != undefined) config.guestEnabled = account.config.guestEnabled;
                         res.status(200).json({
                             loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
                             userGroups: userGroups,

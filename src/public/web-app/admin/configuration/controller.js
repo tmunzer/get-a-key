@@ -13,6 +13,9 @@ angular
         };
         $scope.userGroups = [];
         $scope.loginUrl = "https://";
+        $scope.loginUrlDefault = "https://";  
+        $scope.loginUrlUnique = "https://";  
+        $scope.displayDefault = false;
 
         function apiWarning(warning) {
             isWorking = false;
@@ -41,6 +44,11 @@ angular
             };
         }
 
+        $scope.$watch("config.isDefault", function(){
+            if ($scope.config.isDefault == true) $scope.loginUrl = $scope.loginUrlDefault;
+            else $scope.loginUrl = $scope.loginUrlUnique;
+        })
+
         request = ConfigurationService.get();
         request.then(function (promise) {
             if (promise && promise.error) apiWarning(promise.error);
@@ -48,7 +56,9 @@ angular
                 $scope.config = promise.data.config;
                 $scope.userGroups = promise.data.userGroups.userGroups;
                 $("#phone").intlTelInput("setCountry", $scope.config.phoneCountry);
-                $scope.loginUrl = promise.data.loginUrl;
+                $scope.displayDefault = promise.data.displayDefault;
+                $scope.loginUrlUnique = promise.data.loginUrl;
+                $scope.loginUrlDefault = promise.data.loginUrlDefault;
                 isWorking = false;
             }
         });

@@ -121,6 +121,18 @@ function deliverCredentialBySms(req, account, phoneNumber, callback) {
 
     } else callback();
 }
+
+function displayDefaultOption(cb) {
+    // retrieve the default account in the DB based on the req params 
+    Account
+        .findOne({ isDefault: true })
+        .exec(function (err, account) {
+            if (err) res.render('error', { error: { message: err } });
+            else if (account) {
+                cb(false);
+            } else cb(true);
+        });
+}
 /*================================================================
  ROUTES
  ================================================================*/
@@ -338,37 +350,46 @@ router.get("/admin/config", function (req, res, next) {
             else
                 // retrieve the account in DB to get the currently selected user group
                 Account
-                .findById(req.session.account._id)
-                .populate("config")
-                .exec(function (err, account) {
-                    if (err) res.status(500).json({
-                        error: err
-                    });
-                    else if (account) {
-                        var userGroupId = 0;
-                        var guestGroupId = 0;
-                        var phoneCountry = "fr";
-                        if (account.config && account.config.userGroupId != undefined) userGroupId = account.config.userGroupId;
-                        if (account.config && account.config.guestGroupId != undefined) guestGroupId = account.config.guestGroupId;
-                        if (account.config && account.config.phoneCountry != undefined) phoneCountry = account.config.phoneCountry;                        
-                        var config = {
-                            corpEnabled: true,
-                            userGroupId: userGroupId,
-                            guestEnabled: false,
-                            guestGroupId: guestGroupId,
-                            phoneCountry: phoneCountry
-                        };
-                        if (account.config && account.config.corpEnabled != undefined) config.corpEnabled = account.config.corpEnabled;
-                        if (account.config && account.config.guestEnabled != undefined) config.guestEnabled = account.config.guestEnabled;
-                        res.status(200).json({
-                            loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
-                            userGroups: userGroups,
-                            config: config
+                    .findById(req.session.account._id)
+                    .populate("config")
+                    .exec(function (err, account) {
+                        if (err) res.status(500).json({
+                            error: err
                         });
-                    } else res.status(500).json({
-                        error: "not able to retrieve the account"
+                        else if (account) {
+                            displayDefaultOption(function (display) {
+                                var isDefault = false;
+                                var displayDefault = display;
+                                var userGroupId = 0;
+                                var guestGroupId = 0;
+                                var phoneCountry = "fr";
+                                var config = {
+                                    isDefault: isDefault,
+                                    corpEnabled: true,
+                                    userGroupId: userGroupId,
+                                    guestEnabled: false,
+                                    guestGroupId: guestGroupId,
+                                    phoneCountry: phoneCountry
+                                };
+                                if (account.isDefault && account.isDefault == true) config.isDefault = account.isDefault;
+                                if (account.config && account.config.userGroupId != undefined) config.userGroupId = account.config.userGroupId;
+                                if (account.config && account.config.guestGroupId != undefined) config.guestGroupId = account.config.guestGroupId;
+                                if (account.config && account.config.phoneCountry != undefined) config.phoneCountry = account.config.phoneCountry;
+                                if (account.config && account.config.corpEnabled != undefined) config.corpEnabled = account.config.corpEnabled;
+                                if (account.config && account.config.guestEnabled != undefined) config.guestEnabled = account.config.guestEnabled;
+                                res.status(200).json({
+                                    displayDefault: displayDefault,
+                                    loginUrl: "https://" + serverHostname + "/login/" + account._id + "/",
+                                    loginUrlDefault: "https://" + serverHostname + "/login/",
+                                    userGroups: userGroups,
+                                    config: config,
+                                    accout: account
+                                });
+                            })
+                        } else res.status(500).json({
+                            error: "not able to retrieve the account"
+                        });
                     });
-                });
         });
     } else res.status(403).send('Unknown session');
 });
@@ -381,55 +402,65 @@ function saveConfig(req, res) {
         guestGroupId: req.body.guestGroupId || 0,
         phoneCountry: req.body.phoneCountry || "fr"
     };
+    var isDefault = false;
+    if (req.body.isDefault != undefined) isDefault = req.body.isDefault;
     if (req.body.corpEnabled != undefined) newConfig.corpEnabled = req.body.corpEnabled;
     if (req.body.guestEnabled != undefined) newConfig.guestEnabled = req.body.guestEnabled;
     // retrieve the current Account in the DB
-    Account
-        .findById(req.session.account._id)
-        .exec(function (err, account) {
-            if (err) res.status(500).json({
-                error: err
-            });
-            else if (account) {
-                // if the current account already has a configuration
-                if (account.config) {
-                    // update the account configuration
-                    Config.update({
-                        _id: account.config
-                    }, newConfig, function (err, savedConfig) {
-                        if (err) res.status(500).json({
-                            error: err
-                        });
-                        else res.status(200).json({
-                            action: "update",
-                            status: 'done'
-                        });
-                    });
-                    // if the current account has no configuration, create it
-                } else Config(newConfig).save(function (err, savedConfig) {
+    Account.update({ _id: req.session.account._id }, { isDefault: isDefault }, function (err) {
+        if (err) res.status(500).json({
+            error: err
+        });
+        else {
+            Account
+                .findById(req.session.account._id)
+                .exec(function (err, account) {
                     if (err) res.status(500).json({
                         error: err
                     });
-                    else {
-                        account.config = savedConfig;
-                        account.save(function (err, savedAccount) {
+                    else if (account) {
+                        // if the current account already has a configuration
+                        if (account.config) {
+                            // update the account configuration
+                            Config.update({
+                                _id: account.config
+                            }, newConfig, function (err, savedConfig) {
+                                if (err) res.status(500).json({
+                                    error: err
+                                });
+                                else res.status(200).json({
+                                    action: "update",
+                                    status: 'done'
+                                });
+                            });
+                            // if the current account has no configuration, create it
+                        } else Config(newConfig).save(function (err, savedConfig) {
                             if (err) res.status(500).json({
                                 error: err
                             });
-                            else res.status(200).json({
-                                action: "save",
-                                status: 'done'
-                            });
+                            else {
+                                account.config = savedConfig;
+                                account.save(function (err, savedAccount) {
+                                    if (err) res.status(500).json({
+                                        error: err
+                                    });
+                                    else res.status(200).json({
+                                        action: "save",
+                                        status: 'done'
+                                    });
+                                });
+                            }
                         });
-                    }
+                    } else res.status(500).json({
+                        error: {
+                            status: 500,
+                            message: "not able to retrieve the account"
+                        }
+                    });
                 });
-            } else res.status(500).json({
-                error: {
-                    status: 500,
-                    message: "not able to retrieve the account"
-                }
-            });
-        });
+        }
+    });
+
 }
 // Called when admin save the new configuration
 router.post("/admin/config", function (req, res, next) {

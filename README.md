@@ -5,7 +5,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/master/get-a-key_v2.png?raw=true)
+![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/guest/get-a-key_v2.png?raw=true)
 
 # Get-a-Key v1
 * full user interface customization

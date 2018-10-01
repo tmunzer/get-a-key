@@ -18,7 +18,7 @@ This program is free software: you can redistribute it and/or modify it under th
   * A Corporate user can generate only one Corporate access and many Guest accesses.
   * The portal can be configured to only display the frame to generate Corporate access, Guest access, or both.
   * The Guest account is sent to the corporate user email.
-* Possibility to define a portal as "default". This will let users access the login page from https://<fqdn>/login, instead of using the unique URL.
+* Possibility to define a portal as "default". This will let users access the login page from https://_fqdn_/login, instead of using the unique URL.
 * AzureAD and ADFS integration
 * Docker version (deployement script available below) with NGINX and Let's Encrypt
 

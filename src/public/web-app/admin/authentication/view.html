@@ -9,15 +9,17 @@
 			<md-radio-group ng-model="admin.method">
 				<div layout="row" layout-align="start center">
 					<md-radio-button value="azure" class="md-primary" style="margin: auto 5px;">
-						<span>AzureAD</span>						
+						<span>AzureAD</span>
 					</md-radio-button>
-					<md-button ng-disabled="admin.method!='azure'" href="/admin/help/azureAd" target=_blank class="md-primary md-raised">Configuration Help</md-button>
+					<md-button ng-disabled="admin.method!='azure'" href="/admin/help/azureAd" target=_blank class="md-primary md-raised">Configuration
+						Help</md-button>
 				</div>
 				<div layout="row" layout-align="start center">
 					<md-radio-button value="adfs" class="md-primary" style="margin: auto 5px;">
-						<span>ADFS</span>						
+						<span>ADFS</span>
 					</md-radio-button>
-					<md-button ng-disabled="admin.method!='adfs'" href="/admin/help/adfs" target=_blank class="md-primary md-raised">Configuration Help</md-button>
+					<md-button ng-disabled="admin.method!='adfs'" href="/admin/help/adfs" target=_blank class="md-primary md-raised">Configuration
+						Help</md-button>
 				</div>
 			</md-radio-group>
 			</span>
@@ -35,15 +37,15 @@
 				<md-content layout-padding>
 					<md-input-container class="md-block flex-gt-sm md-input-focused">
 						<label for="azureAdSignin" translate="authentication.azureAd.signinURL"></label>
-						<span id="azureAdSignin" disabled="disabled">{{admin.azureAd.signin}}</span>
+						<span id="azureAdSignin" disabled="disabled">{{admin.signin}}</span>
 					</md-input-container>
 					<md-input-container class="md-block flex-gt-sm md-input-focused">
 						<label for="azureAdCallback" translate="authentication.azureAd.callbackURL"></label>
-						<span id="azureAdCallback" disabled="disabled">{{admin.azureAd.callback}}</span>
+						<span id="azureAdCallback" disabled="disabled">{{admin.callback}}</span>
 					</md-input-container>
 					<md-input-container class="md-block flex-gt-sm md-input-focused">
 						<label for="azureAdLogout" translate="authentication.azureAd.logoutURL"></label>
-						<span id="azureAdLogout" disabled="disabled">{{admin.azureAd.logout}}</span>
+						<span id="azureAdLogout" disabled="disabled">{{admin.logout}}</span>
 					</md-input-container>
 				</md-content>
 			</md-content>
@@ -70,8 +72,8 @@
 								<span translate="authentication.azureAd.groupsFilter"></span><span>:</span>
 							</md-checkbox>
 						</md-input-container>
-						<md-chips ng-class="{'chips_disabled': !admin.azureAd.userGroupsFilter}" ng-model="admin.azureAd.userGroups" md-separator-keys="customKeys"
-						 readonly="!admin.azureAd.userGroupsFilter"></md-chips>
+						<md-chips ng-class="{'chips_disabled': !admin.azureAd.userGroupsFilter}" ng-model="admin.azureAd.userGroups"
+						 md-separator-keys="customKeys" readonly="!admin.azureAd.userGroupsFilter"></md-chips>
 					</md-container>
 				</md-content>
 			</md-content>
@@ -125,14 +127,15 @@
 				</div>
 			</md-toolbar>
 			<div layout-margin>
-			<div>To use this app with your ADFS, you will have to import your ADFS Metadata.</div>
-			<div>To retrieve your ADFS Metadata, you can manually download them, or indicate your ADFS FQDN below, and use the "Download"				
-				Button</div>
+				<div>To use this app with your ADFS, you will have to import your ADFS Metadata.</div>
+				<div>To retrieve your ADFS Metadata, you can manually download them, or indicate your ADFS FQDN below, and use the
+					"Download"
+					Button</div>
 			</div>
 			<div flex layout="row" layout-margin>
 				<md-input-container class="md-block flex-gt-sm" flex=50>
 					<label for="adfsServer">
-						<span translate="authentication.adfs.server"></span>	
+						<span translate="authentication.adfs.server"></span>
 					</label>
 					<input id="adfsServer" type="text" ng-model="admin.adfs.server" />
 				</md-input-container>
@@ -145,9 +148,9 @@
 			<div layout="column" layout-margin>
 				<md-input-container layout="column" flex=66 md-whiteframe="2">
 					<label for="adfsMetadata">
-							<span translate="authentication.adfs.pasteAdfsMetadata"></span>
-							<span style="color: red">*</span>
-						</label>
+						<span translate="authentication.adfs.pasteAdfsMetadata"></span>
+						<span style="color: red">*</span>
+					</label>
 					<textarea id="adfsMetadata" ng-model="admin.adfs.metadata" style="min-height: 182px; max-height: 200px; overflow-y: scroll;"></textarea>
 				</md-input-container>
 				<md-container layout="row">
@@ -168,10 +171,11 @@
 				</md-container>
 				<md-contaier layout="column">
 					<div ng-repeat="cert in admin.adfs.certs">
-							<md-input-container class="md-block flex-gt-sm md-input-focused">
-									<label for="adfsLogoutUrl">X509 Certificate #{{$index}}</label>
-									<textarea id="adfsLogoutUrl" ng-disabled="true" style="min-height: 24px; max-height: 240px; overflow-y: scroll;">{{cert}}</textarea>
-								</md-input-container>
+						<md-input-container class="md-block flex-gt-sm md-input-focused">
+							<label for="adfsLogoutUrl">X509 Certificate #{{$index}}</label>
+							<textarea id="adfsLogoutUrl" ng-disabled="true" style="min-height: 24px; max-height: 240px; overflow-y: scroll;">{{cert}}</textarea>
+						</md-input-container>
+					</div>
 				</md-contaier>
 			</div>
 		</md-content>
@@ -181,15 +185,16 @@
 					<span>APP Metdata</span>
 				</div>
 			</md-toolbar>
-			<div layout-margin>You will have create a "Relying Party Trust" on your ADFS. To do so, you can download the App Metadata (including its
+			<div layout-margin>You will have create a "Relying Party Trust" on your ADFS. To do so, you can download the App
+				Metadata (including its
 				certificate) by using the button below.</div>
 			<md-button class='md-primary md-raised' ng-disabled="" ng-href="/api/auth/cert" translate="authentication.adfs.getAppCertificate"
 			 aria-label="Get App Certificate"></md-button>
-
 		</md-content>
 	</div>
 
 	<md-content layout="column" layout-gt-sm="row">
-		<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save" aria-label="get"></md-button>
+		<md-button class="md-primary md-raised" ng-disabled="isWorking || !isValid()" ng-click="save()" translate="save"
+		 aria-label="get"></md-button>
 	</md-content>
 </md-content>

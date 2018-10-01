@@ -67,7 +67,7 @@ function saveAzureAd(req, res) {
                 // if the current account already has a AzureAd configuration
                 if (account.azureAd)
                     // update it
-                    azureAd.update({
+                    Azure.update({
                         _id: account.azureAd
                     }, req.body.config, function (err, result) {
                         if (err) res.status(500).json({
@@ -80,7 +80,7 @@ function saveAzureAd(req, res) {
                         });
                     });
                 // if the current account has no AzureAd aconfiguration, create it
-                else azureAd(req.body.config).save(function (err, result) {
+                else Azure(req.body.config).save(function (err, result) {
                     if (err) res.status(500).json({
                         error: err
                     });

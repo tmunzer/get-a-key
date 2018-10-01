@@ -141,8 +141,13 @@ angular
             if (promise && promise.error) apiWarning(promise.error);
             else {
                 if (promise.data.method) $scope.admin.method = promise.data.method;
-                if (promise.data.azure) $scope.admin.azureAd = promise.data.azure;
+                if (promise.data.azureAd) $scope.admin.azureAd = promise.data.azureAd;
+                if (promise.data.callback) $scope.admin.callback = promise.data.callback;
+                if (promise.data.logout) $scope.admin.logout = promise.data.logout;
+                if (promise.data.signin) $scope.admin.signin = promise.data.signin;
                 if (promise.data.adfs) $scope.admin.adfs = promise.data.adfs;
+                if ($scope.admin.azureAd != null) $scope.admin.method = "azure";
+                else $scope.method = "adfs";
             }
         });
 
@@ -166,7 +171,6 @@ angular
         };
 
         $scope.save = function () {
-            console.log($scope.admin.method);
             $scope.isWorking = true;
             if ($scope.admin.method == 'azure') {
                 azureAdSaveConfig();

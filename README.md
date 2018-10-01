@@ -5,11 +5,20 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/master/get-a-key.png?raw=true)
+![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/master/get-a-key_v2.png?raw=true)
 
 # Get-a-Key v1
 * full user interface customization
 * full configuration interface
+* AzureAD and ADFS integration
+* Docker version (deployement script available below) with NGINX and Let's Encrypt
+
+# Get-a-Key v2
+* Possibility to let a corporate user generate a Guest PPSK from the portal. 
+  * A Corporate user can generate only one Corporate access and many Guest accesses.
+  * The portal can be configured to only display the frame to generate Corporate access, Guest access, or both.
+  * The Guest account is sent to the corporate user email.
+* Possibility to define a portal as "default". This will let users access the login page from https://<fqdn>/login, instead of using the unique URL.
 * AzureAD and ADFS integration
 * Docker version (deployement script available below) with NGINX and Let's Encrypt
 

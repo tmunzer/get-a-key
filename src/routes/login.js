@@ -83,8 +83,8 @@ function displayEmptyLogin(req, res){
 function displayLogin(req, res){
     // determine the authenticaiton method (Azure / ADFS) and generate the corresponding login link
     var method = "";
-    if (req.session.account.azureAd) method = "/aad/" + req.params.account_id + "/login";
-    else if (req.session.account.adfs) method = "/adfs/" + req.params.account_id + "/login";
+    if (req.session.account.azureAd) method = "/aad/" + req.session.account._id + "/login";
+    else if (req.session.account.adfs) method = "/adfs/" + req.session.account._id + "/login";
     res.render("login", {
         title: 'Get a Key!',
         oauthUrl: "https://cloud.aerohive.com/thirdpartylogin?client_id=" + devAccount.clientID + "&redirect_uri=" + devAccount.redirectUrl,
@@ -106,7 +106,6 @@ router.get("/login/:account_id/callback", function (req, res) {
 });
 // When the generic login page is called
 router.get("/login",getDefaultAccount, function (req, res) {
-    console.log(req.session.account);
     if (req.session.account && req.session.account.isDefault == true) displayLogin(req, res);
     else displayEmptyLogin(req, res);
 });

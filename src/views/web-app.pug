@@ -78,7 +78,7 @@ html
             md-progress-linear(ng-show="isWorking" md-mode="indeterminate" class="md-accent")
             div( layout-gt-sm="row")
                 if corpEnabled
-                    md-content.panel(md-whiteframe="7" layout="column")
+                    md-content.panel(md-whiteframe="7" layout="column" flex)
                         md-toolbar.md-hue-2
                             div.md-toolbar-tools 
                                 if custom && custom.app && custom.app.enable
@@ -141,7 +141,7 @@ html
 
                 if guestEnabled
                     if custom && custom.app_guest && custom.app_guest.enable
-                        md-content.panel(md-whiteframe="7" layout="column")
+                        md-content.panel(md-whiteframe="7" layout="column" flex)
                             md-toolbar.md-hue-2
                                 div.md-toolbar-tools                             
                                     h2=custom.app_guest.title                                
@@ -161,7 +161,7 @@ html
                                     md-button.md-primary.md-raised(ng-disabled="isWorking" ng-click="getGuestKey()" translate="generateGuestAccess" aria-label="generateGuestAccess")
 
                     else
-                        md-content.panel(md-whiteframe="7" layout="column")
+                        md-content.panel(md-whiteframe="7" layout="column" flex)
                             md-toolbar.md-hue-2
                                 div.md-toolbar-tools                                     
                                     h2(translate="title_guest")

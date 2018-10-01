@@ -99,7 +99,7 @@
     float: left;
 }
 
-img {
+.logo img {
 
     cursor: pointer;
     height: 55px;

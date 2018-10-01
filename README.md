@@ -19,8 +19,6 @@ This program is free software: you can redistribute it and/or modify it under th
   * The portal can be configured to only display the frame to generate Corporate access, Guest access, or both.
   * The Guest account is sent to the corporate user email.
 * Possibility to define a portal as "default". This will let users access the login page from https://_fqdn_/login, instead of using the unique URL.
-* AzureAD and ADFS integration
-* Docker version (deployement script available below) with NGINX and Let's Encrypt
 
 ## Install
 This Reference Application can be used as a standalone Application, or it can be deployed as a Docker Image.

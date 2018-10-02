@@ -37,7 +37,8 @@ function getAccount(req, res, next) {
             // this is configured under the Advanced tab in AD FS relying party
             signatureAlgorithm: 'sha256',
             //forceAuthn: true,
-            additionalParams: {}
+            additionalParams: {},
+            disableRequestedAuthnContext: true
           },
           function (profile, done) {
             return done(null,

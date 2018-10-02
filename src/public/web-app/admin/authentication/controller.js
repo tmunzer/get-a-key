@@ -147,7 +147,7 @@ angular
                 if (promise.data.signin) $scope.admin.signin = promise.data.signin;
                 if (promise.data.adfs) $scope.admin.adfs = promise.data.adfs;
                 if ($scope.admin.azureAd != null) $scope.admin.method = "azure";
-                else $scope.method = "adfs";
+                else $scope.admin.method = "adfs";
             }
         });
 

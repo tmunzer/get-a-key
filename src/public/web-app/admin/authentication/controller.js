@@ -2,29 +2,30 @@ angular
     .module('Authentication')
     .controller("AuthenticationCtrl", function ($scope, $mdDialog, $mdConstant, ConfigService) {
         $scope.customKeys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.TAB];
-
+        azureAd = {
+            clientId: "",
+            clientSecret: "",
+            tenant: "",
+            resource: "",
+            allowExternalUsers: false,
+            userGroupsFilter: false,
+            userGroups: []
+        };
+        adfs = {
+            server: "",
+            entityID: "",
+            loginUrl: "",
+            logoutUrl: "",
+            entryPoint: "",
+            certs: [],
+            metadata: undefined
+        }
         var initialized = false;
         var request;
         $scope.isWorking = false;
         $scope.admin = {
-            azureAd: null, /*{
-                clientId: "",
-                clientSecret: "",
-                tenant: "",
-                resource: "",
-                allowExternalUsers: false,
-                userGroupsFilter: false,
-                userGroups: []
-            },*/
-            adfs: null, /*{
-                server: "",
-                entityID: "",
-                loginUrl: "",
-                logoutUrl: "",
-                entryPoint: "",
-                certs: [],
-                metadata: undefined
-            },*/
+            azureAd:azureAd,
+            adfs: adfs,
             method: "adfs"
         };
 
@@ -146,7 +147,7 @@ angular
                 if (promise.data.logout) $scope.admin.logout = promise.data.logout;
                 if (promise.data.signin) $scope.admin.signin = promise.data.signin;
                 if (promise.data.adfs) $scope.admin.adfs = promise.data.adfs;
-                if ($scope.admin.azureAd != null) $scope.admin.method = "azure";
+                if ($scope.admin.azureAd != azureAd) $scope.admin.method = "azure";
                 else $scope.admin.method = "adfs";
             }
         });

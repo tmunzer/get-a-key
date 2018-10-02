@@ -11,7 +11,7 @@
 			</div>
 		</md-toolbar>
 		<md-content layout-padding>
-			<md-input-contaier>
+			<md-input-contaier ng-show="displayDefault">
 				<md-checkbox ng-model="config.isDefault" aria-label="Default Portal">
 					<div><b>Use this portal as the default Portal?</b></div>
 					<div>If enabled, users will be able to see this portal and log in from <i style="text-decoration: underline;">{{ loginUrlDefault }}</i>, instead of having to reach <i style="text-decoration: underline;">{{ loginUrlUnique }}</i>.</div>

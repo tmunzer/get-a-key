@@ -122,13 +122,13 @@ function deliverCredentialBySms(req, account, phoneNumber, callback) {
     } else callback();
 }
 
-function displayDefaultOption(cb) {
+function displayDefaultOption(req, cb) {
     // retrieve the default account in the DB based on the req params 
     Account
         .findOne({ isDefault: true })
         .exec(function (err, account) {
             if (err) res.render('error', { error: { message: err } });
-            else if (account) {
+            else if (account && account._id != req.session.account._id) {
                 cb(false);
             } else cb(true);
         });
@@ -357,7 +357,7 @@ router.get("/admin/config", function (req, res, next) {
                             error: err
                         });
                         else if (account) {
-                            displayDefaultOption(function (display) {
+                            displayDefaultOption(req, function (display) {
                                 var isDefault = false;
                                 var displayDefault = display;
                                 var userGroupId = 0;

@@ -7,7 +7,7 @@ angular
         var request;
         $scope.isWorking = false;
         $scope.admin = {
-            azureAd: {
+            azureAd: null, /*{
                 clientId: "",
                 clientSecret: "",
                 tenant: "",
@@ -15,8 +15,8 @@ angular
                 allowExternalUsers: false,
                 userGroupsFilter: false,
                 userGroups: []
-            },
-            adfs: {
+            },*/
+            adfs: null, /*{
                 server: "",
                 entityID: "",
                 loginUrl: "",
@@ -24,7 +24,7 @@ angular
                 entryPoint: "",
                 certs: [],
                 metadata: undefined
-            },
+            },*/
             method: "adfs"
         };
 

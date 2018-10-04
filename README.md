@@ -5,7 +5,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/guest/get-a-key_v2.png?raw=true)
+![Get-a-Key](https://github.com/tmunzer/get-a-key/blob/2.0/get-a-key_v2.png?raw=true)
 
 # Get-a-Key v1
 * full user interface customization
@@ -51,7 +51,7 @@ The Automation script will allow you to easily
 * Manage HTTPS certificates with self-signed certificates or with let's encrypt image (the script will automatically download and deploy the let's encrypt container if needed)
 * Download and Deploy dependencies, like NGINX and MongoDB container
 * Download, Deploy, Update the application container
-To use this script, just download it [here](https://raw.githubusercontent.com/tmunzer/get-a-key/guest/get-a-key.sh), and run it in a terminal.
+To use this script, just download it [here](https://raw.githubusercontent.com/tmunzer/get-a-key/2.0/get-a-key.sh), and run it in a terminal.
 
 #### Manual deployment
 If you are manually deploying this container, you will need to a reverse proxy to manage HTTPS.

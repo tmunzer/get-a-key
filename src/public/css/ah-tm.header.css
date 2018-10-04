@@ -103,6 +103,7 @@
 
     cursor: pointer;
     height: 55px;
+    width: auto;
     vertical-align: middle;
     margin: auto;
 }

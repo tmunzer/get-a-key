@@ -16,7 +16,7 @@ var nl = {
     sendByEmail: "Mijn Sleutel opnieuw verzenden (per e-mail)",
     sendBySMS: "Mijn Sleutel opnieuw verzenden (per sms)",
     revoke: "Verwijder mijn sleutel",
-
+    generateGuestAccess: "Gastentoegang genereren",
     errorTitle: "Er is een fout opgetreden ...",
     newKeyTitle: "Hier is uw sleutel!",
     successTitle: "Success!",
@@ -36,7 +36,7 @@ var nl = {
             title: "Klaar!",
             message_created: "Er is een nieuwe sleutel gegenereerd. U ontvangt hem op {{email}}. ",
             message_guest_created: "Een nieuwe gasten sleutel is gegenereerd. U zal deze ontvangen op {{email}}.",
-            message_guest_expire: "Deze sleutel is gelding tot <b>{{time | date:'yyyy-MM-dd HH:mm (UTC Z)' }}</b>.",
+            message_guest_expire: "Deze sleutel is geldig tot <b>{{time | date:'yyyy-MM-dd HH:mm (UTC Z)' }}</b>.",
             message_oldKey: "Al uw apparaten worden losgekoppeld van het netwerk en u moet ze opnieuw configureren.",
             message_yourKey: "Uw persoonlijke sleutel: ",
             message_wifiNetwork: "Wi-Fi Netwerk: ",

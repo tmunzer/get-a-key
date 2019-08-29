@@ -1,3 +1,7 @@
+# NO LONGER MAINTAINED
+As of August 30, 2019 this project is no longer maintained. It should still (probably) work, but I am no longer providing support, fixing issues, or adding new features.
+
+
 # Get-a-Key
 This application provides a single page app to get a PPSK from HMNG service. This App can use AzureAD or ADFS to authenticate users.
 

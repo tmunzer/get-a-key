@@ -19,7 +19,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-azure-ad-oauth2": "0.0.4",
-    "passport-saml": "^0.33.0",
+    "passport-saml": "^3.1.0",
     "pug": "^2.0.0-beta6",
     "serve-favicon": "^2.5.0"
   }
